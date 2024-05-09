@@ -1,5 +1,5 @@
 "use client";
-import styles from "./style.module.scss";
+// import styles from "./style.module.scss";
 import Link from "next/link";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -11,9 +11,13 @@ export default function Header() {
   const [isActive, setIsActive] = useState(false);
 
   return (
-    <div className={styles.header}>
-      <div className={styles.bar}>
-        <div className={styles.eventContainer}>
+    <div className="max-w-[1100px] my-0 mx-auto">
+      <div className="h-auto pt-2 gap-4 flex items-center justify-end text-[13px]">
+        <div>회원가입</div>
+        <div>로그인</div>
+      </div>
+      <div className="flex items-center justify-between">
+        <div className="">
           <Image
             src={`/images/btn_halfttobak.0d0c008c.gif`}
             width={270}
@@ -32,12 +36,13 @@ export default function Header() {
         <motion.div
           variants={opacity}
           animate={!isActive ? "open" : "closed"}
-          className={styles.shopContainer}
+          className="w-[270px] flex flex-col justify-center items-end"
         >
-          <div className={styles.search}>
+          {/* <div className={""}>
             <Search />
-          </div>
-          <div className={styles.el}>
+          </div> */}
+
+          <div className="flex gap-[10px]">
             <svg
               width="19"
               height="20"
@@ -57,20 +62,16 @@ export default function Header() {
           </div>
         </motion.div>
       </div>
-      <div className={styles.barSecond}>
+      <div className="flex">
         {/* Menu */}
         <div
           onClick={() => {
             setIsActive(!isActive);
           }}
-          className={styles.el_second}
+          className={""}
         >
-          <div
-            className={`${styles.burger} ${
-              isActive ? styles.burgerActive : ""
-            }`}
-          ></div>
-          <div className={styles.label}>
+          <div className={`${""} ${isActive ? "" : ""}`}></div>
+          <div className={""}>
             <motion.p
               variants={opacity}
               animate={!isActive ? "open" : "closed"}
@@ -94,7 +95,7 @@ export default function Header() {
         variants={background}
         initial="initial"
         animate={isActive ? "open" : "closed"}
-        className={styles.background}
+        className={""}
       ></motion.div>
       <AnimatePresence mode="wait">{isActive && <Nav />}</AnimatePresence>
     </div>

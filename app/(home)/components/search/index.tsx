@@ -3,7 +3,7 @@ import { motion, useAnimation, useViewportScroll } from "framer-motion";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import styles from "./style.module.scss";
+// import styles from "./style.module.scss";
 function Search() {
   const [searchOpen, setSearchOpen] = useState(false);
   const inputAnimation = useAnimation();
@@ -24,7 +24,7 @@ function Search() {
     setValue("keyword", "");
   };
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+    <form onSubmit={handleSubmit(onSubmit)} className={""}>
       <motion.svg
         onClick={toggleSearch}
         animate={{ x: searchOpen ? -200 : 0 }}
@@ -32,7 +32,7 @@ function Search() {
         fill="currentColor"
         viewBox="0 0 20 20"
         xmlns="http://www.w3.org/2000/svg"
-        className={styles.searchSvg}
+        className={""}
       >
         <path
           fillRule="evenodd"
@@ -43,7 +43,7 @@ function Search() {
       <motion.input
         placeholder="검색어를 입력해주세요."
         animate={inputAnimation}
-        className={styles.inputSearch}
+        className={""}
         initial={{ scaleX: 0 }}
         transition={{ type: "linear" }}
         {...register("keyword", { required: true, minLength: 2 })}
