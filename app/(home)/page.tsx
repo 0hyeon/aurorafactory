@@ -1,5 +1,41 @@
+import Slide from "@/components/slide";
 import Image from "next/image";
 
 export default function Home() {
-  return <main>main</main>;
+  return (
+    <>
+      <main className={""}>
+        <Slide />
+        <div
+          className="
+    max-w-[1100px]
+    mx-auto
+    my-0
+    "
+        >
+          {/* <SlideSmall />
+          <Best data={slideData} />
+          <HashTag />
+          <Tabs />
+          <Youtube />
+          <Best data={slideData} />
+          <SlideSmall /> */}
+        </div>
+      </main>
+      <div
+        className="
+  w-full
+  mx-auto
+  my-0
+  border-t-[1px]
+  border-b-[1px]
+  border-t-[#efefef]
+  border-b-[#efefef]
+  bg-[#f9fafb]
+  "
+      >
+        {/* <Footer /> */}
+      </div>
+    </>
+  );
 }
