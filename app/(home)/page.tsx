@@ -1,4 +1,8 @@
+import Best from "@/components/Best";
+import HashTag from "@/components/hashtag";
 import Slide from "@/components/slide";
+import SlideSmall from "@/components/slideSmall";
+import { slideData } from "@/static/data";
 import Image from "next/image";
 
 export default function Home() {
@@ -7,16 +11,12 @@ export default function Home() {
       <main className={""}>
         <Slide />
         <div
-          className="
-    max-w-[1100px]
-    mx-auto
-    my-0
-    "
+          className="max-w-[1100px] mx-auto my-0"
         >
-          {/* <SlideSmall />
+          <SlideSmall />
           <Best data={slideData} />
           <HashTag />
-          <Tabs />
+          {/* <Tabs />
           <Youtube />
           <Best data={slideData} />
           <SlideSmall /> */}
