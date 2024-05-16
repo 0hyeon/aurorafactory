@@ -11,7 +11,7 @@ export default function Header() {
   const [isActive, setIsActive] = useState(false);
 
   return (
-    <div className="max-w-[1000px] my-0 mx-auto z-10 relative pb-[10px]">
+    <div className="max-w-[1100px] my-0 mx-auto">
       <div className="h-auto pt-2 gap-4 flex items-center justify-end text-[13px]">
         <div>회원가입</div>
         <div>로그인</div>
@@ -70,23 +70,8 @@ export default function Header() {
           }}
           className="flex items-center justify-center gap-2 cursor-pointer"
         >
-          <div
-            className={`relative pointer-events-none ${
-              isActive ? "top-0" : ""
-            }`}
-          >
-            <div
-              className={`w-5 h-[0.1px] bg-black transition-all duration-1000 cubic-bezier(0.76, 0, 0.24, 1) ${
-                isActive ? "rotate-45 top-0" : "mb-2"
-              }`}
-            ></div>
-            <div
-              className={`w-5 h-[0.1px] bg-black transition-all duration-1000 cubic-bezier(0.76, 0, 0.24, 1) ${
-                isActive ? "-rotate-45 top-0" : ""
-              }`}
-            ></div>
-          </div>
-          <div className="flex relative items-center">
+          <div className={`${""} ${isActive ? "" : ""}`}></div>
+          <div className={""}>
             <motion.p
               variants={opacity}
               animate={!isActive ? "open" : "closed"}
