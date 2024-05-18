@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const productSchema = z.object({
-  photos: z.array(z.string()).min(1, "At least one photo is required"),
+  photos: z.string().min(1, "At least one photo is required"),
   photo: z.string({
     required_error: "photo is required",
   }),

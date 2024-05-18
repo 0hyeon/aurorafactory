@@ -6,19 +6,21 @@ import getSession from "@/lib/session";
 import { redirect } from "next/navigation";
 
 export async function uploadProduct(formData: FormData) {
-  console.log(formData);
+  console.log("formData : ",formData);
   const data = {
+    photos: formData.get("photos"),
     photo: formData.get("photo"),
     title: formData.get("title"),
     price: formData.get("price"),
     description: formData.get("description"),
   };
+  console.log("data :",data )
   const result = productSchema.safeParse(data);
   if (!result.success) {
     return result.error.flatten();
   } else {
-    const session = await getSession();
-    if (session.id) {
+    // const session = await getSession();
+    // if (session.id) {
       const product = await db.product.create({
         data: {
           title: result.data.title,
@@ -27,7 +29,7 @@ export async function uploadProduct(formData: FormData) {
           photo: result.data.photo,
           user: {
             connect: {
-              id: session.id,
+              id: 1,
             },
           },
         },
@@ -37,7 +39,7 @@ export async function uploadProduct(formData: FormData) {
       });
       redirect(`/products/${product.id}`);
       //redirect("/products")
-    }
+    // }
   }
 }
 

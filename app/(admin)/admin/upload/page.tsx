@@ -42,7 +42,7 @@ export default function AddProduct() {
       setUploadUrl(uploadURL);
       setValue(
         "photo",
-        `https://imagedelivery.net/aSbksvJjax-AUC7qVnaC4A/${id}`
+        `https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/${id}`
       );
     }
     console.log(file)
@@ -60,17 +60,15 @@ export default function AddProduct() {
       const uploadResponse = await getUploadUrl();
       if (uploadResponse.success) {
         const { id, uploadURL } = uploadResponse.result;
-        dummyid.push(id)
+        dummyid.push(`https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/${id}`);
+
         setPhotoPreview((prev) => [...prev, previewUrl]);
         setSlideUploadUrl((prev) => [...prev, uploadURL]);
         setSlideFile((prev) => [...prev, file]);
       }
     }
-    setValue(
-      `photos`,
-      dummyid.map((id)=> `https://imagedelivery.net/aSbksvJjax-AUC7qVnaC4A/${id}`)
-      
-    );
+    setValue("photos", dummyid.join(','));
+
   };
   console.log(slideFile)
 
@@ -86,6 +84,8 @@ export default function AddProduct() {
       if (response.status !== 200) {
       }
     }
+    console.log("file : ",file)
+    console.log("slideFile : ",slideFile)
     if(slideFile.length > 0){
       for (let index = 0; index < slideFile.length; index++) {
         const slideFormData = new FormData();
@@ -106,11 +106,30 @@ export default function AddProduct() {
     formData.append("price", data.price + "");
     formData.append("description", data.description);
     formData.append("photo", data.photo);
-    console.log(data.photo)
+    formData.append("photos", data.photos);
+    console.log("data.photo  : ",data.photo)//https://imagedelivery.net/aSbksvJjax-AUC7qVnaC4A/201ed09f-9386-4ff1-9321-bb505acdd100
+    // formData.append("photos[]", data.photos);
+
+    // if (data.photos && data.photos.length) {
+    //   data.photos.forEach(photoUrl => {
+    //     formData.append("photos[]", photoUrl);
+    //   });
+    // }
+
+   
+    // data.photos.forEach((photoUrl) => {
+    //   formData.append("photos[]", photoUrl);
+    // });
+  
+    console.log("formData : ",formData)
+
     const errors = await uploadProduct(formData);
     if (errors) {
       // setError("")
-      console.log(errors)
+      console.log("errors : ",errors)
+    }else {
+      // If all async operations complete successfully, refresh the page
+      window.location.reload();
     }
 
   });
@@ -130,7 +149,9 @@ export default function AddProduct() {
         <label
           htmlFor="photo"
           className="border-2 aspect-square flex items-center justify-center flex-col text-neutral-300 border-neutral-300 rounded-md border-dashed cursor-pointer bg-center bg-cover"
-          style={{ backgroundImage: `url(${preview})` }}
+          style={{ backgroundImage: `url(${preview})`, backgroundSize: 'contain',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat' }}
         >
           {preview === "" ? (
             <>
@@ -166,8 +187,8 @@ export default function AddProduct() {
           <input
             onChange={onSlideImageChange}
             type="file"
-            id="slidePhoto"
-            name="slidePhoto"
+            id="photos"
+            name="photos"
             accept="image/*"
             className="hidden"
             multiple
