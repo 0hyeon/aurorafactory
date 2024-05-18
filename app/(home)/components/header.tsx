@@ -14,7 +14,7 @@ export default function Header() {
     <div className="max-w-[1100px] my-0 mx-auto">
       <div className="h-auto pt-2 gap-4 flex items-center justify-end text-[13px]">
         <div>회원가입</div>
-        <div>로그인</div>
+        <div><Link href={"/login"}>로그인</Link></div>
       </div>
       <div className="flex items-center justify-between">
         <div className="">

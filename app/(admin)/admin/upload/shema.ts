@@ -11,6 +11,9 @@ export const productSchema = z.object({
   description: z.string({
     required_error: "Description is required",
   }),
+  category: z.string({
+    required_error: "category is required",
+  }),
   price: z.coerce.number({
     required_error: "Price is required",
   }),

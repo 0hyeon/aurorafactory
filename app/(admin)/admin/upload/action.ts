@@ -12,34 +12,52 @@ export async function uploadProduct(formData: FormData) {
     photo: formData.get("photo"),
     title: formData.get("title"),
     price: formData.get("price"),
+    category: formData.get("category"),
     description: formData.get("description"),
   };
-  console.log("data :",data )
   const result = productSchema.safeParse(data);
+  
   if (!result.success) {
     return result.error.flatten();
   } else {
     // const session = await getSession();
     // if (session.id) {
-      const product = await db.product.create({
-        data: {
-          title: result.data.title,
-          description: result.data.description,
-          price: result.data.price,
-          photo: result.data.photo,
-          user: {
-            connect: {
-              id: 1,
-            },
+    let photoUrls:string[] = [];
+    
+    if (typeof data.photos === 'string') {
+      photoUrls = data.photos.split(',');
+    }
+
+    console.log("photoUrls : ",photoUrls);
+    console.log(data)
+    const product = await db.product.create({
+      data: {
+        title: result.data.title,
+        description: result.data.description,
+        price: result.data.price,
+        photo: result.data.photo,
+        category : result.data.category,
+        user: {
+          connect: {
+            id: 1,
           },
         },
-        select: {
-          id: true,
+        slideimages: {
+          connectOrCreate: photoUrls.map((src : any) => {
+            return {
+                where: { src:src },
+                create: { src:src },
+            };
+          }),
         },
-      });
-      redirect(`/products/${product.id}`);
-      //redirect("/products")
-    // }
+      },
+      select: {
+        id: true,
+      },
+    });
+    redirect(`/products/${product.id}`);
+        //redirect("/products")
+      // }
   }
 }
 

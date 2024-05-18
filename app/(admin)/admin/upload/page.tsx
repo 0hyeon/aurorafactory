@@ -8,6 +8,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ProductType, productSchema } from "./shema";
 import { getUploadUrl, uploadProduct } from "./action";
 import Image from "next/image";
+import Select from "@/components/Selcect";
+import { CATEGORIES } from "@/lib/constants";
 
 export default function AddProduct() {
   const [uploadUrl, setUploadUrl] = useState("");
@@ -107,22 +109,7 @@ export default function AddProduct() {
     formData.append("description", data.description);
     formData.append("photo", data.photo);
     formData.append("photos", data.photos);
-    console.log("data.photo  : ",data.photo)//https://imagedelivery.net/aSbksvJjax-AUC7qVnaC4A/201ed09f-9386-4ff1-9321-bb505acdd100
-    // formData.append("photos[]", data.photos);
-
-    // if (data.photos && data.photos.length) {
-    //   data.photos.forEach(photoUrl => {
-    //     formData.append("photos[]", photoUrl);
-    //   });
-    // }
-
-   
-    // data.photos.forEach((photoUrl) => {
-    //   formData.append("photos[]", photoUrl);
-    // });
-  
-    console.log("formData : ",formData)
-
+    formData.append("category", data.category);
     const errors = await uploadProduct(formData);
     if (errors) {
       // setError("")
@@ -143,6 +130,7 @@ export default function AddProduct() {
     e.preventDefault();  
     await onSubmit();
   };
+  console.log(errors)
   return (
     <div className="w-1/4 mx-auto my-10">
       <form onSubmit={onValid} className="p-5 flex flex-col gap-5">
@@ -238,7 +226,10 @@ export default function AddProduct() {
           {...register("description")}
           errors={[errors.description?.message ?? ""]}
         />
+        <Select data={CATEGORIES} name="category" register={register} />
+
         <Button text="작성 완료" type="submit" />
+
       </form>
     </div>
   );

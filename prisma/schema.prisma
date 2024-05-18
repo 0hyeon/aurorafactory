@@ -39,19 +39,20 @@ model Product {
   price       Float
   photo       String
   description String
+  category  String
   created_at  DateTime @default(now())
   updated_at  DateTime @default(now())
   user        User     @relation(fields: [userId], references: [id])
   userId      Int
-  // slideimages slideImage[]
+  slideimages slideImage[]
   @@index([userId])
 }
 
-// model slideImage {
-//   id        Int      @id @default(autoincrement())
-//   src       String   @unique
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-//   product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
-//   productId Int
-// }
+model slideImage {
+  id        Int      @id @default(autoincrement())
+  src       String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+}

@@ -7,11 +7,16 @@ import React from "react";
 import { useFormState } from "react-dom";
 import { login } from "./actions";
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants";
+import Script from 'next/script'
+import AddressSearch from "@/components/address";
+ 
 
 export default function LogIn() {
   const [state, dispatch] = useFormState(login, null);
   return (
+    
     <div className="flex flex-col gap-10 py-8 px-6">
+       <Script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js" />
       <div className="flex flex-col gap-2 *:font-medium">
         <h1 className="text-2xl">안녕하세요!</h1>
         <h2 className="text-xl">Log In with email and password.</h2>
@@ -34,7 +39,7 @@ export default function LogIn() {
         />
         <Button type="submit" text="Log In" />
       </form>
-
+      <AddressSearch />
       <SocialLogin />
     </div>
   );
