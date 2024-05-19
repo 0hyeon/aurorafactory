@@ -16,8 +16,10 @@ model User {
   email      String?    @unique
   password   String?
   phone      String?    @unique
-  github_id  String?    @unique
   avatar     String?
+  address    String?
+  postaddress String?
+  detailaddress String?
   created_at DateTime   @default(now())
   updated_at DateTime   @default(now())
   SMSToken   SMSToken[]

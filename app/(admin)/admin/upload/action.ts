@@ -1,8 +1,7 @@
 "use server";
-import { productSchema } from "./shema";
+import { productSchema } from "./schema";
 
 import db from "@/lib/db";
-import getSession from "@/lib/session";
 import { redirect } from "next/navigation";
 
 export async function uploadProduct(formData: FormData) {

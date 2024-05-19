@@ -18,7 +18,7 @@ export default function Button({
       type={type}
       disabled={pending}
       onClick={onClick}
-      className="primary-btn h-10 disabled:bg-neutral-400 disabled:text-neutral-300 disabled:cursor-not-allowed"
+      className="w-full primary-btn h-10 disabled:bg-neutral-400 disabled:text-neutral-300 disabled:cursor-not-allowed bg-black text-white rounded-md"
     >
       {pending ? "Loading..." : text}
     </button>

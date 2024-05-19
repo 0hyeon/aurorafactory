@@ -11,39 +11,42 @@ declare global {
     zonecode: string;
   }
   
-  export default function Addr() {
+  export default function Addr({register,errors,setValue}:{register:any,errors:any,setValue:any}) {
     const onClickAddr = () => {
       new window.daum.Postcode({
         oncomplete: function (data: IAddr) {
-          (document.getElementById("addr") as HTMLInputElement).value =
-            data.address;
-          (document.getElementById("zipNo") as HTMLInputElement).value =
-            data.zonecode;
-          document.getElementById("addrDetail")?.focus();
+          setValue("address", data.address);
+          setValue("postaddress", data.zonecode);
+          document.getElementById("detailaddress")?.focus();
         },
       }).open();
     };
   
     return (
         <>
-        <button onClick={onClickAddr}>주소검색</button>
+        <button type="button" className="h-10 text-left" onClick={onClickAddr}>주소검색</button>
           <Input
-            id="addr"
-            name="addr"
+            id="address"
+            placeholder="도로명주소"
+            {...register("address")}
             type="text"
-            readOnly
             onClick={onClickAddr}
+            errors={[errors?.address?.message ?? ""]}
           />
           <Input
-            name="zipNo"
-            id="zipNo"
+            {...register("postaddress")}
+            placeholder="우편주소"
+            id="postaddress"
             type="text"
             readOnly
-          />
+            errors={[errors?.postaddress?.message ?? ""]}
+            />
           <Input
-            name="addrDetail"
-            id="addrDetail"
+            {...register("detailaddress")}
+            placeholder="상세주소"
+            id="detailaddress"
             type="text"
+            errors={[errors?.detailaddress?.message ?? ""]}
           />
         </>
     );

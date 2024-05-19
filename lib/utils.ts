@@ -1,3 +1,6 @@
+import db from "@/lib/db";
+import chalk from "chalk";
+
 export function formatToTimeAgo(date: string): string {
   const dayInMs = 1000 * 60 * 60 * 24;
   const time = new Date(date).getTime();
@@ -12,3 +15,4 @@ export function formatToWon(price: number) {
 export function cls(...classnames: string[]) {
   return classnames.join(" ");
 }
+

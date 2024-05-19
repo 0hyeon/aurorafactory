@@ -4,7 +4,14 @@ const nextConfig = {
     nextScriptWorkers: true,
   },
   images: {
-    domains: ["imagedelivery.net"],
+    remotePatterns: [
+      {
+        hostname: "avatars.githubusercontent.com",
+      },
+      {
+        hostname: "imagedelivery.net",
+      },
+    ],
   },
 };
 

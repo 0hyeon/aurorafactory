@@ -5,7 +5,7 @@ import { PhotoIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ProductType, productSchema } from "./shema";
+import { ProductType, productSchema } from "./schema";
 import { getUploadUrl, uploadProduct } from "./action";
 import Image from "next/image";
 import Select from "@/components/Selcect";
@@ -226,7 +226,7 @@ export default function AddProduct() {
           {...register("description")}
           errors={[errors.description?.message ?? ""]}
         />
-        <Select data={CATEGORIES} name="category" register={register} />
+        <Select data={CATEGORIES} name="category" register={register} errors={errors} />
 
         <Button text="작성 완료" type="submit" />
 

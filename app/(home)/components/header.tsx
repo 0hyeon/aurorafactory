@@ -11,9 +11,9 @@ export default function Header() {
   const [isActive, setIsActive] = useState(false);
 
   return (
-    <div className="max-w-[1100px] my-0 mx-auto">
-      <div className="h-auto pt-2 gap-4 flex items-center justify-end text-[13px]">
-        <div>회원가입</div>
+    <div className="max-w-[1100px] my-0 mx-auto relative">
+      <div className="h-auto pt-4 gap-4 flex items-center justify-end text-[12px]">
+        <div><Link href={"/signup"}>회원가입</Link></div>
         <div><Link href={"/login"}>로그인</Link></div>
       </div>
       <div className="flex items-center justify-between">
@@ -62,7 +62,7 @@ export default function Header() {
           </div>
         </motion.div>
       </div>
-      <div className="flex justify-between">
+      <div className="flex justify-between pb-4">
         {/* Menu */}
         <div
           onClick={() => {
@@ -70,8 +70,7 @@ export default function Header() {
           }}
           className="flex items-center justify-center gap-2 cursor-pointer"
         >
-          <div className={`${""} ${isActive ? "" : ""}`}></div>
-          <div className={""}>
+          <div className="relative">
             <motion.p
               variants={opacity}
               animate={!isActive ? "open" : "closed"}
@@ -80,7 +79,7 @@ export default function Header() {
             </motion.p>
             <motion.p
               variants={opacity}
-              className="absolute opacity-0"
+              className="absolute opacity-0 top-0"
               animate={isActive ? "open" : "closed"}
             >
               Close
