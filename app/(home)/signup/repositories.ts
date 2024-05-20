@@ -25,10 +25,10 @@ export const getUserIdWithEmail = async (email: string) => {
   return result;
 };
 
-export const getUserIdWithUsername = async (username: string) => {
-  const result = await db.user.findUnique({
-    where: { username },
-    select: { id: true },
-  });
-  return result;
-};
+// export const getUserIdWithUsername = async (username: string) => {
+//   const result = await db.user.findUnique({
+//     where: { username },
+//     select: { id: true },
+//   });
+//   return result;
+// };

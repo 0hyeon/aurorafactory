@@ -1,4 +1,5 @@
-"use client";
+'use client';
+
 import Button from "@/components/button";
 import Input from "@/components/input";
 import SocialLogin from "@/components/social-login";
@@ -24,10 +25,7 @@ export default function LogIn() {
   });
   console.log("errors  :",errors)
 
-  const onValid = async (e:any) => {
-    e.preventDefault();  
-    await onSubmit();
-  };
+  
   const onSubmit = handleSubmit(async (data) => {
     console.log("data :",data)
     const formData = new FormData();
@@ -49,6 +47,10 @@ export default function LogIn() {
     }
 
   });
+  const onValid = async (e:any) => {
+    e.preventDefault();  
+    await onSubmit();
+  };
   return (
     <div className="flex flex-col gap-10 py-8 px-6 max-w-[1100px] mx-auto mt-20 border-[1px] border-black rounded-md">
        <Script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js" />

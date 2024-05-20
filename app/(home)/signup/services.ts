@@ -2,8 +2,9 @@
 import bcrypt from 'bcrypt';
 
 import { z } from 'zod';
-import { saveLoginSession } from '@/lib/session';
-import { createUser, getUserIdWithEmail, getUserIdWithUsername } from './repositories';
+import getSession, { saveLoginSession } from '@/lib/session';
+import { createUser, getUserIdWithEmail } from './repositories';
+import { redirect } from 'next/navigation';
 
 export const signIn = async (data: any) => {
   console.log("signIn Data : ",data)
@@ -12,9 +13,11 @@ export const signIn = async (data: any) => {
 
   // 데이터베이스에 사용자 정보 저장
   const user = await createUser(data, hashedPassword);
+  const session = await getSession();
+    session.id = user.id;
+    await session.save();
 
-  // 로그인
-  await saveLoginSession(user);
+    redirect("/profile");
 };
 
 export const isExistUser = async (
@@ -25,7 +28,7 @@ export const isExistUser = async (
   const user =
     flag === 'email'
       ? await getUserIdWithEmail(data.email)
-      : await getUserIdWithUsername(data.username);
+      : await getUserIdWithEmail(data.email)
   if (user) {
     ctx.addIssue({
       code: 'custom',
