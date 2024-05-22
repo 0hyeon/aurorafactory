@@ -1,4 +1,3 @@
-'use server'
 import bcrypt from 'bcrypt';
 
 import { z } from 'zod';
@@ -17,7 +16,7 @@ export const signIn = async (data: any) => {
     session.id = user.id;
     await session.save();
 
-    redirect("/profile");
+    redirect("/");
 };
 
 export const isExistUser = async (
