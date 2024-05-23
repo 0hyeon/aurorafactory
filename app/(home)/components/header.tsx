@@ -7,15 +7,15 @@ import { opacity, background } from "./anim";
 import Image from "next/image";
 import Search from "./search";
 import Nav from "./nav";
+import { getUserProfile } from "@/lib/session";
+import { Username } from "./username";
+import Profile from "@/components/profile/page";
 export default function Header() {
   const [isActive, setIsActive] = useState(false);
 
   return (
     <div className="max-w-[1100px] my-0 mx-auto relative">
-      <div className="h-auto pt-4 gap-4 flex items-center justify-end text-[12px]">
-        <div><Link href={"/signup"}>회원가입</Link></div>
-        <div><Link href={"/login"}>로그인</Link></div>
-      </div>
+     
       <div className="flex items-center justify-between">
         <div className="">
           <Image

@@ -39,7 +39,7 @@ export const saveLoginSession = async (user: SessionContent) => {
   await session.save(); // 정보 암호화 후 쿠키에 저장
   // SMS 로그인이라면, 인증토큰 삭제
   user.user_id && (await db.sMSToken.delete({ where: { id: user.id } }));
-  redirect('/profile');
+  redirect('/');
 };
 
 // 로그아웃 - 쿠키에서 사용자 정보 제거

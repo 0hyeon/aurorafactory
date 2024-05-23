@@ -22,11 +22,12 @@ export default function LogIn() {
     <div className="flex flex-col gap-10 py-8 px-6 max-w-[1100px] mx-auto mt-20 border-[1px] border-black rounded-md">
       <Script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js" />
       <div className="flex flex-col gap-2 *:font-medium">
-        <h2 className="text-xl">Log In with email and password.</h2>
+        <h1 className="text-2xl">안녕하세요!</h1>
+        <h2 className="text-xl">가입을 위해 아래 양식을 채워주세요!</h2>
       </div>
-      <form action={dispatch} className="flex flex-col gap-6">
-        <div className="flex *:p-5">
-          <div className="w-1/2 gap-4 flex flex-col">
+      <form action={dispatch} className="flex flex-col gap-16">
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="w-full flex flex-col gap-4">
             <Input
               required
               type="text"
@@ -60,7 +61,7 @@ export default function LogIn() {
               errors={state?.fieldErrors?.confirm_password}
             />
           </div>
-          <div className="w-1/2 gap-4 flex flex-col">
+          <div className="w-full gap-4 flex flex-col">
           <AddressSearch addressData={addressData} setAddressData={setAddressData} state={state} />
           </div>
         </div>
