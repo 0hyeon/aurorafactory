@@ -55,7 +55,7 @@ export default function Best({ data }: { data: IslideData[] }) {
             <div key={slide.id} className="">
               <SwiperSlide key={slide.id}>
                 <Link
-                  href={`/product-details/${slide.id}`}
+                  href={`/products/${slide.id}`}
                   style={{ textDecoration: "none", color: "unset" }}
                 >
                   <div className="relative w-[260px] h-[260px]">

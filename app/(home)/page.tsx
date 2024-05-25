@@ -5,7 +5,6 @@ import HashTag from "@/components/hashtag";
 import Slide from "@/components/slide";
 import SlideSmall from "@/components/slideSmall";
 import { slideData } from "@/static/data";
-import Image from "next/image";
 
 export default function Home() {
   return (
