@@ -6,6 +6,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { unstable_cache as nextCache, revalidateTag } from "next/cache";
+import Slide from "../components/slide";
+import Button from "@/components/button";
 
 async function getIsOwner(userId: number) {
   const session = await getSession();
@@ -79,26 +81,41 @@ export default async function ProductDetail({
     "use server";
     revalidateTag("product-title"); //next cache의 세번째인자 tags 에 해당 문자열있으면 getCachedProductTitle 가 재할당
   };
+  const onClickCart = () => {
+    alert("onClickCart");
+  };
+  const onClickPurchase = () => {
+    alert("onClickPurchase");
+  };
   return (
     <div className="w-full max-w-[1100px] mx-auto">
       <div className="flex ">
         <div className="w-[500px]">
           <div className="relative aspect-square">
-            <Image
-              fill
-              className="object-contain"
-              src={`${product.photo}/public`}
-              alt={product.title}
-            />
+            <Slide data={product} />
           </div>
         </div>
         <div className="w-[500px]">
           <div className="p-5 ">
             <h1 className="text-2xl font-semibold">{product.title}</h1>
-            <p>{product.description}</p>
-            <span className="font-semibold text-xl">
-              {formatToWon(product.price)}원
-            </span>
+            <div className="font-semibold text-xl">
+              category : {product.category}
+            </div>
+            <div className="font-semibold text-xl">
+              description : {product.description}
+            </div>
+            <div className="font-semibold text-xl">
+              price : {formatToWon(product.price)}
+            </div>
+            <div className="font-semibold text-xl">title : {product.title}</div>
+            <div className="flex flex-col gap-10">
+              <button className="p-5 bg-white text-blue-400 rounded-md border-gray-400 border font-semibold text-xl">
+                장바구니
+              </button>
+              <button className="p-5 bg-blue-400 text-white rounded-md border-gray-400 border font-semibold text-xl">
+                구매하기
+              </button>
+            </div>
           </div>
         </div>
       </div>
