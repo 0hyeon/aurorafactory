@@ -84,9 +84,6 @@ export default async function ProductDetail({
   const onClickCart = () => {
     alert("onClickCart");
   };
-  const onClickPurchase = () => {
-    alert("onClickPurchase");
-  };
   return (
     <div className="w-full max-w-[1100px] mx-auto">
       <div className="flex ">
@@ -108,14 +105,9 @@ export default async function ProductDetail({
               price : {formatToWon(product.price)}
             </div>
             <div className="font-semibold text-xl">title : {product.title}</div>
-            <div className="flex flex-col gap-10">
-              <button className="p-5 bg-white text-blue-400 rounded-md border-gray-400 border font-semibold text-xl">
-                장바구니
-              </button>
-              <button className="p-5 bg-blue-400 text-white rounded-md border-gray-400 border font-semibold text-xl">
-                구매하기
-              </button>
-            </div>
+            <button className="p-5 bg-white text-blue-400 rounded-md border-gray-400 border font-semibold text-xl">
+              장바구니
+            </button>
           </div>
         </div>
       </div>

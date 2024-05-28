@@ -47,7 +47,7 @@ export default function AddProduct() {
         `https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/${id}`
       );
     }
-    console.log(file)
+    console.log(file);
   };
 
   const onSlideImageChange = async (
@@ -55,7 +55,7 @@ export default function AddProduct() {
   ) => {
     const files = event.target.files;
     if (!files || files.length === 0) return;
-    const dummyid = []
+    const dummyid = [];
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       const previewUrl = URL.createObjectURL(file);
@@ -69,13 +69,11 @@ export default function AddProduct() {
         setSlideFile((prev) => [...prev, file]);
       }
     }
-    setValue("photos", dummyid.join(','));
-
+    setValue("photos", dummyid.join(","));
   };
-  console.log(slideFile)
+  console.log(slideFile);
 
   const onSubmit = handleSubmit(async (data) => {
-    
     if (file) {
       const formData = new FormData();
       formData.append("file", file);
@@ -86,9 +84,9 @@ export default function AddProduct() {
       if (response.status !== 200) {
       }
     }
-    console.log("file : ",file)
-    console.log("slideFile : ",slideFile)
-    if(slideFile.length > 0){
+    console.log("file : ", file);
+    console.log("slideFile : ", slideFile);
+    if (slideFile.length > 0) {
       for (let index = 0; index < slideFile.length; index++) {
         const slideFormData = new FormData();
         slideFormData.append("file", slideFile[index]);
@@ -98,27 +96,26 @@ export default function AddProduct() {
         });
         if (slideResponse.status !== 200) {
           console.error(`Failed to upload slide image ${index}`);
-          continue
+          continue;
         }
       }
-
     }
     const formData = new FormData();
     formData.append("title", data.title);
     formData.append("price", data.price + "");
     formData.append("description", data.description);
     formData.append("photo", data.photo);
+    formData.append("discount", String(data.discount));
     formData.append("photos", data.photos);
     formData.append("category", data.category);
     const errors = await uploadProduct(formData);
     if (errors) {
       // setError("")
-      console.log("errors : ",errors)
-    }else {
+      console.log("errors : ", errors);
+    } else {
       // If all async operations complete successfully, refresh the page
       window.location.reload();
     }
-
   });
 
   const deleteHandler = (index: number) => {
@@ -126,20 +123,23 @@ export default function AddProduct() {
     setSlideFile((prev) => prev.filter((_, idx) => idx !== index));
     setSlideUploadUrl((prev) => prev.filter((_, idx) => idx !== index));
   };
-  const onValid = async (e:any) => {
-    e.preventDefault();  
+  const onValid = async (e: any) => {
+    e.preventDefault();
     await onSubmit();
   };
-  console.log(errors)
+  console.log(errors);
   return (
     <div className="w-1/4 mx-auto my-10">
       <form onSubmit={onValid} className="p-5 flex flex-col gap-5">
         <label
           htmlFor="photo"
           className="border-2 aspect-square flex items-center justify-center flex-col text-neutral-300 border-neutral-300 rounded-md border-dashed cursor-pointer bg-center bg-cover"
-          style={{ backgroundImage: `url(${preview})`, backgroundSize: 'contain',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat' }}
+          style={{
+            backgroundImage: `url(${preview})`,
+            backgroundSize: "contain",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
         >
           {preview === "" ? (
             <>
@@ -226,10 +226,21 @@ export default function AddProduct() {
           {...register("description")}
           errors={[errors.description?.message ?? ""]}
         />
-        <Select data={CATEGORIES} name="category" register={register} errors={errors} />
+        <Input
+          type="number"
+          required
+          placeholder="할인율"
+          {...register("discount")}
+          errors={[errors.discount?.message ?? ""]}
+        />
+        <Select
+          data={CATEGORIES}
+          name="category"
+          register={register}
+          errors={errors}
+        />
 
         <Button text="작성 완료" type="submit" />
-
       </form>
     </div>
   );

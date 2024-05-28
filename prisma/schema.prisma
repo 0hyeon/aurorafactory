@@ -42,6 +42,7 @@ model Product {
   photo       String
   description String
   category  String
+  discount String?
   created_at  DateTime @default(now())
   updated_at  DateTime @default(now())
   user        User     @relation(fields: [userId], references: [id])

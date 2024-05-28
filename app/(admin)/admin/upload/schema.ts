@@ -17,6 +17,7 @@ export const productSchema = z.object({
   price: z.coerce.number({
     required_error: "Price is required",
   }),
+  discount: z.coerce.string().optional(),
 });
 
 export type ProductType = z.infer<typeof productSchema>;
