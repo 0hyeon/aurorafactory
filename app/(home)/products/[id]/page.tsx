@@ -17,8 +17,11 @@ async function getIsOwner(userId: number) {
   return false;
 }
 
-const getCachedProduct = nextCache(getProduct, ["product-detail"], {
+export const getCachedProduct = nextCache(getProduct, ["product-detail"], {
   tags: ["product-detail"],
+});
+export const getCachedProducts = nextCache(getProducts, ["products"], {
+  tags: ["products"],
 });
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
@@ -58,6 +61,10 @@ export async function getProduct(id: number) {
       slideimages: true,
     },
   });
+  return product;
+}
+export async function getProducts() {
+  const product = db.product.findMany({});
   return product;
 }
 
