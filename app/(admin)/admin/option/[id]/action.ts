@@ -1,62 +1,74 @@
+//action.ts
 "use server";
-import { productSchema } from "./schema";
-
+import { OptionSchema } from "./schema";
 import db from "@/lib/db";
+import { unstable_cache as nextCache, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
-
-export async function uploadProduct(formData: FormData) {
+export async function uploadProductOption(formData: FormData) {
   console.log("formData : ", formData);
   const data = {
-    photos: formData.get("photos"),
-    photo: formData.get("photo"),
-    title: formData.get("title"),
-    price: formData.get("price"),
-    discount: formData.get("discount"),
-    category: formData.get("category"),
-    description: formData.get("description"),
+    color: formData.get("color"),
+    quantity: formData.get("quantity"),
+    plusdiscount: formData.get("plusdiscount"),
+    connectProductId: formData.get("connectProductId"),
   };
-  const result = productSchema.safeParse(data);
-
+  const result = OptionSchema.safeParse(data);
+  console.log("result : ", result);
   if (!result.success) {
     return result.error.flatten();
   } else {
     // const session = await getSession();
     // if (session.id) {
-    let photoUrls: string[] = [];
 
-    if (typeof data.photos === "string") {
-      photoUrls = data.photos.split(",");
-    }
-
-    console.log(data);
-    const product = await db.product.create({
+    const productOption = await db.productOption.create({
       data: {
-        title: result.data.title,
-        description: result.data.description,
-        price: result.data.price,
-        photo: result.data.photo,
-        category: result.data.category,
-        discount: result.data.discount,
-        user: {
+        quantity: +result.data.quantity,
+        color: result.data.color,
+        plusdiscount: +result.data.plusdiscount,
+        product: {
           connect: {
-            id: 1,
+            id: Number(result.data.connectProductId),
           },
-        },
-        slideimages: {
-          connectOrCreate: photoUrls.map((src: any) => {
-            return {
-              where: { src: src },
-              create: { src: src },
-            };
-          }),
         },
       },
       select: {
         id: true,
       },
     });
-    redirect(`/products/${product.id}`);
-    //redirect("/products")
-    // }
+    revalidateTag("product-detail");
+    redirect("/admin/option");
+    return null;
   }
 }
+async function getProduct(id: number) {
+  const product = db.product.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      user: {
+        select: {
+          username: true,
+          avatar: true,
+        },
+      },
+      slideimages: true,
+      productoption: true,
+    },
+  });
+
+  console.log("Fetched Product: ", product); // 디버깅을 위한 로그 추가
+
+  return product;
+}
+async function delProductOption(id: number) {
+  const product = db.productOption.findUnique({
+    where: {
+      id,
+    },
+  });
+  return product;
+}
+export const getCachedProduct = nextCache(getProduct, ["product-detail"], {
+  tags: ["product-detail"],
+});

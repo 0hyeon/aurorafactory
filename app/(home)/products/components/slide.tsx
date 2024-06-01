@@ -25,7 +25,11 @@ export default function Slide({ data }: { data: any }) {
     clickable: true,
     renderBullet: function (index: number, className: string) {
       return (
-        '<span class=" navi-wrap ' + className + '">' + (index + 1) + "</span>"
+        '<span class="!w-5 !h-5 !bg-black navi-wrap ' +
+        className +
+        '">' +
+        // (index + 1) +
+        "</span>"
       );
     },
   };
@@ -45,6 +49,7 @@ export default function Slide({ data }: { data: any }) {
           delay: 4000,
           disableOnInteraction: false, // 사용자 상호작용시 슬라이더 일시 정지 비활성
         }}
+        pagination={pagination}
         onActiveIndexChange={(e) => setSwiperIndex(e.realIndex)}
         onSwiper={(e) => {
           setSwiper(e);
@@ -59,7 +64,7 @@ export default function Slide({ data }: { data: any }) {
                     alt={String(slide.id)}
                     src={`${slide.src}/public`}
                     fill
-                    className="object-cover"
+                    className="object-contain"
                   />
                 </div>
               </SwiperSlide>

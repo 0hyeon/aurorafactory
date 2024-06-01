@@ -9,13 +9,11 @@ import Search from "./search";
 import Nav from "./nav";
 import { getUserProfile } from "@/lib/session";
 import { Username } from "./username";
-import Profile from "@/components/profile/page";
 export default function Header() {
   const [isActive, setIsActive] = useState(false);
 
   return (
     <div className="max-w-[1100px] my-0 mx-auto relative">
-     
       <div className="flex items-center justify-between">
         <div className="">
           <Image

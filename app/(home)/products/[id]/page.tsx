@@ -1,13 +1,9 @@
 import db from "@/lib/db";
 import getSession from "@/lib/session";
 import { formatToWon } from "@/lib/utils";
-import { UserIcon } from "@heroicons/react/24/solid";
-import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { unstable_cache as nextCache, revalidateTag } from "next/cache";
 import Slide from "../components/slide";
-import Button from "@/components/button";
 
 async function getIsOwner(userId: number) {
   const session = await getSession();
@@ -61,6 +57,7 @@ export async function getProduct(id: number) {
       slideimages: true,
     },
   });
+  console.log("product : ", product);
   return product;
 }
 export async function getProducts() {
@@ -112,7 +109,7 @@ export default async function ProductDetail({
               price : {formatToWon(product.price)}
             </div>
             <div className="font-semibold text-xl">title : {product.title}</div>
-            <button className="p-5 bg-white text-blue-400 rounded-md border-gray-400 border font-semibold text-xl">
+            <button className="p-3 bg-white text-blue-400 rounded-md border-gray-400 border font-semibold text-base">
               장바구니
             </button>
           </div>

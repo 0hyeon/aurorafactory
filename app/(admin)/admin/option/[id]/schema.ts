@@ -1,23 +1,18 @@
 import { z } from "zod";
 
 export const OptionSchema = z.object({
-  photos: z.string().min(1, "At least one photo is required"),
-  photo: z.string({
-    required_error: "photo is required",
+  quantity: z.string({
+    required_error: "quantity is required",
   }),
-  title: z.string({
-    required_error: "Title is required",
+  color: z.string({
+    required_error: "color is required",
   }),
-  description: z.string({
-    required_error: "Description is required",
+  plusdiscount: z.string({
+    required_error: "plusdiscount is required",
   }),
-  category: z.string({
-    required_error: "category is required",
+  connectProductId: z.string({
+    required_error: "connectProductId is required",
   }),
-  price: z.coerce.number({
-    required_error: "Price is required",
-  }),
-  discount: z.coerce.string().optional(),
 });
 
 export type OptionType = z.infer<typeof OptionSchema>;
