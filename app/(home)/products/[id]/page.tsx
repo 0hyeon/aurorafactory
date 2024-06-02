@@ -4,6 +4,7 @@ import { formatToWon } from "@/lib/utils";
 import { notFound } from "next/navigation";
 import { unstable_cache as nextCache, revalidateTag } from "next/cache";
 import Slide from "../components/slide";
+import CartButton from "./components/cart";
 
 async function getIsOwner(userId: number) {
   const session = await getSession();
@@ -85,9 +86,6 @@ export default async function ProductDetail({
     "use server";
     revalidateTag("product-title"); //next cache의 세번째인자 tags 에 해당 문자열있으면 getCachedProductTitle 가 재할당
   };
-  const onClickCart = () => {
-    alert("onClickCart");
-  };
   return (
     <div className="w-full max-w-[1100px] mx-auto">
       <div className="flex ">
@@ -109,9 +107,7 @@ export default async function ProductDetail({
               price : {formatToWon(product.price)}
             </div>
             <div className="font-semibold text-xl">title : {product.title}</div>
-            <button className="p-3 bg-white text-blue-400 rounded-md border-gray-400 border font-semibold text-base">
-              장바구니
-            </button>
+            <CartButton />
           </div>
         </div>
       </div>
