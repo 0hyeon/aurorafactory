@@ -1,3 +1,4 @@
+import { formatToWon } from "@/lib/utils";
 import { productOption } from "@prisma/client";
 import React from "react";
 
@@ -11,6 +12,13 @@ function SelectComponent({
   discount: any;
 }) {
   console.log("options : ", options);
+  const plusDiscount = (plusdiscount: any) => {
+    console.log("plusdiscount : ", plusdiscount);
+    console.log("price : ", Number(price));
+    console.log("discount : ", discount);
+
+    return formatToWon(price * (1 - Number(discount) / 100));
+  };
   return (
     <div className="mt-4">
       <label
@@ -35,6 +43,7 @@ function SelectComponent({
                 }
                 ${price}
                 ${discount}
+                ${plusDiscount(option?.plusdiscount)}
                 `}
             </option>
           ))}
