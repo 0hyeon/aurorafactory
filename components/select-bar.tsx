@@ -11,13 +11,10 @@ function SelectComponent({
   price: number;
   discount: any;
 }) {
-  console.log("options : ", options);
-  const plusDiscount = (plusdiscount: any) => {
-    console.log("plusdiscount : ", plusdiscount);
-    console.log("price : ", Number(price));
-    console.log("discount : ", discount);
-
-    return formatToWon(price * (1 - Number(discount) / 100));
+  const plusDiscount = (plusdiscount: number) => {
+    const resultDiscount = Number(plusdiscount) + Number(discount);
+    console.log("resultDiscount : ", resultDiscount);
+    return formatToWon(price * (1 - Number(resultDiscount) / 100));
   };
   return (
     <div className="mt-4">
@@ -41,10 +38,7 @@ function SelectComponent({
                     ? `추가할인율 ${option.plusdiscount}%`
                     : ""
                 }
-                ${price}
-                ${discount}
-                ${plusDiscount(option?.plusdiscount)}
-                `}
+                ${option.plusdiscount && plusDiscount(option?.plusdiscount)}원`}
             </option>
           ))}
       </select>

@@ -107,32 +107,34 @@ export default async function ProductDetail({
                 {product.title}
               </h1>
             </div>
-            <div className="font-semibold text-xl">
-              category : {product.category}
+            <div className="pt-3 pb-[18px] px-[5px] border-b border-[#d5dbdc]">
+              <div className="flex items-center gap-2">
+                <div className="font-medium text-sm line-through text-gray-500">
+                  {formatToWon(product.price)}원
+                </div>
+                <div className="font-semibold text-xl text-orange-600">
+                  {`${product.discount}%`}
+                </div>
+              </div>
+              <div className="font-extrabold text-xl">
+                {discountedPrice(product)}원
+              </div>
+              <div className="text-base pt-3 flex items-center gap-2">
+                {product.category}
+                <div className="text-sm">원산지: 국내산</div>
+              </div>
             </div>
-            <div className="font-semibold text-xl">
-              description : {product.description}
-            </div>
-            <div className="font-semibold text-xl">
-              price : {formatToWon(product.price)}원
-            </div>
-            <div className="font-semibold text-xl">
-              discount : {`${product.discount}%`}
-            </div>
-            <div className="font-semibold text-xl">
-              판매가 : {discountedPrice(product)}원
-            </div>
-
+            <div className="py-[28px] text-base">{product.description}</div>
             <div className="pb-[18px] px-[5px] border-b border-[#d5dbdc]">
-              <div>제품선택</div>
               <SelectComponent
                 options={product?.productoption}
                 price={product?.price}
                 discount={product.discount}
               />
             </div>
-            <div className="font-semibold text-xl">title : {product.title}</div>
-            <CartButton />
+            <div className="pt-10">
+              <CartButton />
+            </div>
           </div>
         </div>
       </div>

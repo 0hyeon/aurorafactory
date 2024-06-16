@@ -7,9 +7,9 @@ export default function CartButton() {
   return (
     <button
       onClick={onClickCart}
-      className="p-3 bg-white text-blue-400 rounded-md border-gray-400 border font-semibold text-base"
+      className="w-1/2 p-3 bg-white hover:bg-blue-400 hover:text-white text-blue-400 rounded-md border-gray-400 border font-semibold text-base hover:border-blue-400 duration-300"
     >
-      Add to Cart
+      장바구니담기
     </button>
   );
 }
