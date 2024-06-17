@@ -11,19 +11,20 @@ datasource db {
 }
 
 model User {
-  id         Int        @id @default(autoincrement())
-  username   String     
-  email      String?    @unique
-  password   String?
-  phone      String?    @unique
-  avatar     String?
-  address    String?
-  postaddress String?
+  id            Int        @id @default(autoincrement())
+  username      String
+  email         String?    @unique
+  password      String?
+  phone         String?    @unique
+  avatar        String?
+  address       String?
+  postaddress   String?
   detailaddress String?
-  created_at DateTime   @default(now())
-  updated_at DateTime   @default(now())
-  SMSToken   SMSToken[]
-  Product    Product[]
+  created_at    DateTime   @default(now())
+  updated_at    DateTime   @default(now())
+  SMSToken      SMSToken[]
+  Product       Product[]
+  Cart          Cart[]
 }
 
 model SMSToken {
@@ -36,35 +37,37 @@ model SMSToken {
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
+  id          Int          @id @default(autoincrement())
   title       String
   price       Float
   photo       String
   description String
-  category  String
-  discount String?
-  created_at  DateTime @default(now())
-  updated_at  DateTime @default(now())
-  user        User     @relation(fields: [userId], references: [id])
+  category    String
+  discount    String?
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @default(now())
+  user        User         @relation(fields: [userId], references: [id])
   userId      Int
   slideimages slideImage[]
-  
+
   productoption productOption[]
+
   @@index([userId])
 }
 
 model productOption {
-  id          Int      @id @default(autoincrement())
-  product        Product     @relation(fields: [productId], references: [id])
-  productId      Int
-  quantity  Int?
-  color String?
+  id           Int      @id @default(autoincrement())
+  product      Product  @relation(fields: [productId], references: [id])
+  productId    Int
+  quantity     Int?
+  color        String?
   plusdiscount Int?
-  created_at  DateTime @default(now())
-  updated_at  DateTime @default(now())
-  @@index([productId])
+  created_at   DateTime @default(now())
+  updated_at   DateTime @default(now())
 
+  @@index([productId])
 }
+
 model slideImage {
   id        Int      @id @default(autoincrement())
   src       String   @unique
@@ -72,4 +75,12 @@ model slideImage {
   updatedAt DateTime @updatedAt
   product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int
+}
+
+model Cart {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
