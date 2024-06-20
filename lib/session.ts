@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import db from "./db";
 import { notFound, redirect } from "next/navigation";
 import { SessionContent } from "./types";
+import { getCartCount } from "@/app/(home)/components/action";
 
 //세션 가져오기 - 복호화 된 쿠키 반환
 export default async function getSession() {

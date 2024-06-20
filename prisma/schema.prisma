@@ -34,6 +34,8 @@ model SMSToken {
   updated_at DateTime @default(now())
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     Int
+
+  @@index([userId])
 }
 
 model Product {
@@ -51,19 +53,23 @@ model Product {
   slideimages slideImage[]
 
   productoption productOption[]
+  cart          Cart[]
 
   @@index([userId])
 }
 
 model productOption {
-  id           Int      @id @default(autoincrement())
-  product      Product  @relation(fields: [productId], references: [id])
-  productId    Int
+  id Int @id @default(autoincrement())
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+
   quantity     Int?
   color        String?
   plusdiscount Int?
   created_at   DateTime @default(now())
   updated_at   DateTime @default(now())
+  cart         Cart[]
 
   @@index([productId])
 }
@@ -75,12 +81,28 @@ model slideImage {
   updatedAt DateTime @updatedAt
   product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int
+
+  @@index([productId])
 }
 
 model Cart {
-  id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int
+  id Int @id @default(autoincrement())
+
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+
+  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+
+  productOption   productOption? @relation(fields: [productOptionId], references: [id], onDelete: Cascade)
+  productOptionId Int
+
+  quantity Int
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([productId])
+  @@index([userId])
+  @@index([productOptionId])
 }

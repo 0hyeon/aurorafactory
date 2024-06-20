@@ -1,7 +1,7 @@
 "use client";
 // import styles from "./style.module.scss";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { opacity, background } from "./anim";
 import Image from "next/image";
@@ -9,8 +9,19 @@ import Search from "./search";
 import Nav from "./nav";
 import { getUserProfile } from "@/lib/session";
 import { Username } from "./username";
+import { getCartCount } from "./action";
 export default function Header() {
   const [isActive, setIsActive] = useState(false);
+  const [cartCount, setCartCount] = useState<any>(0);
+
+  async function fetchCartCount() {
+    const count = (await getCartCount()) as any;
+    // setCartCount(count === undefined ? 0 : count[0]["_count"]["Cart"]);
+    setCartCount(count);
+  }
+  useEffect(() => {
+    fetchCartCount();
+  }, [fetchCartCount]);
 
   return (
     <div className="max-w-[1100px] my-0 mx-auto relative">
@@ -39,6 +50,7 @@ export default function Header() {
           {/* <div className={""}>
             <Search />
           </div> */}
+
           <Link href={"/cart"}>
             <div className="flex gap-[10px]">
               <svg
@@ -56,7 +68,7 @@ export default function Header() {
                   strokeLinejoin="round"
                 ></path>
               </svg>
-              <p>Cart(0)</p>
+              <p>Cart({cartCount ? cartCount : 0})</p>
             </div>
           </Link>
         </motion.div>

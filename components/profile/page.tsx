@@ -11,7 +11,7 @@ const Profile = async () => {
           <>
             <h1 className="text-[16px]">어서 오세요 {user?.username}님!</h1>
             <form action={logout}>
-              <button>Log out</button>
+              <button>로그아웃</button>
             </form>
           </>
         ) : (

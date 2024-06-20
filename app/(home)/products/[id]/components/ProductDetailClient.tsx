@@ -1,16 +1,25 @@
 "use client";
 import React, { useState } from "react";
-import { formatToWon } from "@/lib/utils";
 import Slide from "../../components/slide";
 import CartButton from "./cart";
+import { formatToWon } from "@/lib/utils";
 import SelectComponent from "@/components/select-bar";
-import { Product, productOption } from "@prisma/client";
 
 interface ProductDetailClientProps {
-  product: Product & {
+  product: {
+    id: number;
+    title: string;
+    price: number;
+    photo: string;
+    description: string;
+    category: string;
+    discount: string | null;
+    created_at: Date;
+    updated_at: Date;
+    userId: number;
     user: {
       username: string;
-      avatar: string | null; // Allow avatar to be nullable
+      avatar: string | null;
     };
     slideimages: {
       id: number;
@@ -32,21 +41,51 @@ interface ProductDetailClientProps {
   params: number;
 }
 
-const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
-  const [selectedOption, setSelectedOption] = useState<string>("");
+const ProductDetailClient: React.FC<ProductDetailClientProps> = ({
+  product,
+  params,
+}) => {
+  const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
   const [calculatedPrice, setCalculatedPrice] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(1);
 
-  const handleOptionSelect = (optionDetails: string, price: string) => {
-    setSelectedOption(optionDetails);
-    setCalculatedPrice(price);
-  };
-  const incrementQuantity = () => {
-    setQuantity((prevQuantity) => prevQuantity + 1);
+  const handleOptionSelect = (
+    optionDetails: string,
+    price: string,
+    pdOptionId: number
+  ) => {
+    if (
+      selectedOptions.length > 0 &&
+      selectedOptions.some((option) => option.id === pdOptionId)
+    ) {
+      alert("이미 선택된 옵션입니다.");
+      return;
+    }
+    setSelectedOptions((prevOptions) => [
+      ...prevOptions,
+      { optionDetails, price, id: pdOptionId, quantity: 1 },
+    ]);
   };
 
-  const decrementQuantity = () => {
-    setQuantity((prevQuantity) => (prevQuantity > 1 ? prevQuantity - 1 : 1));
+  const handleQuantityChange = (optionId: number, change: number) => {
+    setSelectedOptions((prevOptions) =>
+      prevOptions.map((option) =>
+        option.id === optionId
+          ? { ...option, quantity: option.quantity + change }
+          : option
+      )
+    );
+  };
+  const handleRemoveOption = (optionId: number) => {
+    setSelectedOptions((prevOptions) =>
+      prevOptions.filter((option) => option.id !== optionId)
+    );
+  };
+  const getTotalPrice = () => {
+    return selectedOptions.reduce((total, option) => {
+      const optionPrice = parseInt(option.price.replace(/[^0-9]/g, ""), 10);
+      return total + optionPrice * option.quantity;
+    }, 0);
   };
 
   return (
@@ -95,29 +134,50 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
               />
             </div>
 
-            {selectedOption && (
+            {selectedOptions.length > 0 && (
               <>
                 <div className="mt-4">
                   <h2 className="text-lg font-semibold">선택된 옵션</h2>
-                  <div className="mt-2">{selectedOption}</div>
-                  <div className="flex items-center mt-4">
-                    <button
-                      className="px-2 py-1 border border-gray-300"
-                      onClick={decrementQuantity}
-                    >
-                      -
-                    </button>
-                    <span className="mx-4">{quantity}</span>
-                    <button
-                      className="px-2 py-1 border border-gray-300"
-                      onClick={incrementQuantity}
-                    >
-                      +
-                    </button>
+                  <div className="mt-2">
+                    {selectedOptions.map((option, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between"
+                      >
+                        <div>{option.optionDetails}</div>
+                        <div className="flex items-center mt-4">
+                          <button
+                            className="px-2 py-1 border border-gray-300"
+                            onClick={() => handleQuantityChange(option.id, -1)}
+                            disabled={option.quantity <= 1}
+                          >
+                            -
+                          </button>
+                          <span className="mx-4">{option.quantity}</span>
+                          <button
+                            className="px-2 py-1 border border-gray-300"
+                            onClick={() => handleQuantityChange(option.id, 1)}
+                          >
+                            +
+                          </button>
+                          <button
+                            className="ml-4 px-2 py-1 border border-gray-300 text-red-600"
+                            onClick={() => handleRemoveOption(option.id)}
+                          >
+                            x
+                          </button>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                </div>
-                <div className="pt-10">
-                  {params && <CartButton quantity={quantity} cartId={params} />}
+                  <div className="mt-4 font-extrabold text-xl">
+                    총 가격: {formatToWon(getTotalPrice())}원
+                  </div>
+                  <div className="pt-10">
+                    {params && (
+                      <CartButton options={selectedOptions} cartId={params} />
+                    )}
+                  </div>
                 </div>
               </>
             )}

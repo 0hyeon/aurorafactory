@@ -3,11 +3,19 @@ import { formatToWon } from "@/lib/utils";
 import { productOption } from "@prisma/client";
 
 interface SelectComponentProps {
-  options: productOption[];
+  options: {
+    id: number;
+    productId: number;
+    quantity: number | null;
+    color: string | null;
+    plusdiscount: number | null;
+    created_at: Date;
+    updated_at: Date;
+  }[];
   price: number;
   discount: number;
   quantity: number;
-  onSelect: (optionDetails: string, calculatedPrice: string) => void;
+  onSelect: (optionDetails: string, price: string, pdOptionId: number) => void;
 }
 
 const SelectComponent: React.FC<SelectComponentProps> = ({
@@ -19,7 +27,7 @@ const SelectComponent: React.FC<SelectComponentProps> = ({
 }) => {
   const [selectedOption, setSelectedOption] = useState<any>(null);
 
-  const calculatePrice = (selectedOption: productOption | null) => {
+  const calculatePrice = (selectedOption: any | null) => {
     if (selectedOption) {
       const resultDiscount =
         Number(selectedOption.plusdiscount || 0) + discount;
@@ -44,9 +52,9 @@ const SelectComponent: React.FC<SelectComponentProps> = ({
           : ""
       } ${calculatedPrice}원`;
 
-      onSelect(optionDetails, calculatedPrice);
+      onSelect(optionDetails, calculatedPrice, selected?.id);
     } else {
-      onSelect("", ""); // Reset if no option is selected
+      onSelect("", "", NaN);
     }
   };
 
@@ -61,7 +69,7 @@ const SelectComponent: React.FC<SelectComponentProps> = ({
           : ""
       } ${calculatedPrice}원`;
 
-      onSelect(optionDetails, calculatedPrice);
+      onSelect(optionDetails, calculatedPrice, selectedOption?.id);
     }
   }, [quantity]);
 
