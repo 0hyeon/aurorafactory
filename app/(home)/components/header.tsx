@@ -1,24 +1,21 @@
 "use client";
 // import styles from "./style.module.scss";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { opacity, background } from "./anim";
+import { opacity } from "./anim";
 import Image from "next/image";
-import Search from "./search";
 import Nav from "./nav";
-import { getUserProfile } from "@/lib/session";
-import { Username } from "./username";
 import { getCartCount } from "./action";
 export default function Header() {
   const [isActive, setIsActive] = useState(false);
   const [cartCount, setCartCount] = useState<any>(0);
 
-  async function fetchCartCount() {
+  const fetchCartCount = useCallback(async () => {
     const count = (await getCartCount()) as any;
-    // setCartCount(count === undefined ? 0 : count[0]["_count"]["Cart"]);
     setCartCount(count);
-  }
+  }, []);
+
   useEffect(() => {
     fetchCartCount();
   }, [fetchCartCount]);
