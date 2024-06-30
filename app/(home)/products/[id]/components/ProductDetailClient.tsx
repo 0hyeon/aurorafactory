@@ -47,7 +47,7 @@ const ProductDetailClient: React.FC<ProductDetailClientProps> = ({
 }) => {
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
   const [quantity, setQuantity] = useState<number>(1);
-  const [alertOption, setAlertOption] = useState<number | null>(null);
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
 
   const handleOptionSelect = useCallback(
     (optionDetails: string, price: string, pdOptionId: number) => {
@@ -55,8 +55,11 @@ const ProductDetailClient: React.FC<ProductDetailClientProps> = ({
         return;
       }
       setSelectedOptions((prevOptions) => {
-        if (prevOptions.some((option) => option.id === pdOptionId)) {
-          setAlertOption(pdOptionId);
+        const isOptionAlreadySelected = prevOptions.some(
+          (option) => option.id === pdOptionId
+        );
+        if (isOptionAlreadySelected) {
+          setAlertMessage("이미 선택된 옵션입니다.");
           return prevOptions;
         }
         return [
@@ -69,11 +72,11 @@ const ProductDetailClient: React.FC<ProductDetailClientProps> = ({
   );
 
   useEffect(() => {
-    if (alertOption !== null) {
-      alert("이미 선택된 옵션입니다.");
-      setAlertOption(null);
+    if (alertMessage !== null) {
+      alert(alertMessage);
+      setAlertMessage(null);
     }
-  }, [alertOption]);
+  }, [alertMessage]);
 
   const handleQuantityChange = (optionId: number, change: number) => {
     setSelectedOptions((prevOptions) =>
@@ -119,12 +122,14 @@ const ProductDetailClient: React.FC<ProductDetailClientProps> = ({
                   {formatToWon(product.price)}원
                 </div>
                 <div className="font-semibold text-xl text-orange-600">
-                  {`${product.discount}%`}
+                  {product.discount ? `${product.discount}%` : ""}
                 </div>
               </div>
               <div className="font-extrabold text-xl">
                 {formatToWon(
-                  product.price * (1 - Number(product.discount) / 100)
+                  product.discount
+                    ? product.price * (1 - Number(product.discount) / 100)
+                    : product.price
                 )}
                 원
               </div>
@@ -138,9 +143,10 @@ const ProductDetailClient: React.FC<ProductDetailClientProps> = ({
               <SelectComponent
                 options={product.productoption}
                 price={product.price}
-                discount={Number(product.discount)}
+                discount={Number(product.discount) || 0}
                 quantity={quantity}
                 onSelect={handleOptionSelect}
+                selectedOptions={selectedOptions}
               />
             </div>
 
