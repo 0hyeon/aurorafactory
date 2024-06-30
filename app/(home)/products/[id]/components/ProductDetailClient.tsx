@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Slide from "../../components/slide";
 import CartButton from "./cart";
 import { formatToWon } from "@/lib/utils";
@@ -46,26 +46,34 @@ const ProductDetailClient: React.FC<ProductDetailClientProps> = ({
   params,
 }) => {
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
-  const [calculatedPrice, setCalculatedPrice] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(1);
+  const [alertOption, setAlertOption] = useState<number | null>(null);
 
-  const handleOptionSelect = (
-    optionDetails: string,
-    price: string,
-    pdOptionId: number
-  ) => {
-    if (
-      selectedOptions.length > 0 &&
-      selectedOptions.some((option) => option.id === pdOptionId)
-    ) {
+  const handleOptionSelect = useCallback(
+    (optionDetails: string, price: string, pdOptionId: number) => {
+      if (isNaN(pdOptionId)) {
+        return;
+      }
+      setSelectedOptions((prevOptions) => {
+        if (prevOptions.some((option) => option.id === pdOptionId)) {
+          setAlertOption(pdOptionId);
+          return prevOptions;
+        }
+        return [
+          ...prevOptions,
+          { optionDetails, price, id: pdOptionId, quantity: 1 },
+        ];
+      });
+    },
+    []
+  );
+
+  useEffect(() => {
+    if (alertOption !== null) {
       alert("이미 선택된 옵션입니다.");
-      return;
+      setAlertOption(null);
     }
-    setSelectedOptions((prevOptions) => [
-      ...prevOptions,
-      { optionDetails, price, id: pdOptionId, quantity: 1 },
-    ]);
-  };
+  }, [alertOption]);
 
   const handleQuantityChange = (optionId: number, change: number) => {
     setSelectedOptions((prevOptions) =>
@@ -76,11 +84,13 @@ const ProductDetailClient: React.FC<ProductDetailClientProps> = ({
       )
     );
   };
+
   const handleRemoveOption = (optionId: number) => {
     setSelectedOptions((prevOptions) =>
       prevOptions.filter((option) => option.id !== optionId)
     );
   };
+
   const getTotalPrice = () => {
     return selectedOptions.reduce((total, option) => {
       const optionPrice = parseInt(option.price.replace(/[^0-9]/g, ""), 10);
