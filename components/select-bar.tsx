@@ -108,7 +108,7 @@ const SelectComponent: React.FC<SelectComponentProps> = ({
         value="" // 선택된 값은 state로 관리
       >
         <option value="" disabled>
-          --옵션--
+          --옵션을 선택해주세요--
         </option>
         {options.map((option) => (
           <option key={option.id} value={option.id}>

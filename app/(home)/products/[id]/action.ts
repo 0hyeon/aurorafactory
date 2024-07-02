@@ -12,7 +12,7 @@ export async function cartCreate({ quantity, cartId, optionId }: IcartCreate) {
   console.log("cart action data: ", { quantity, cartId, optionId });
   const session = await getSession();
   console.log("session: ", session);
-  if (!session.id) return { message: "로그인 후 이용해주세요" };
+  if (!session.id) return { ok: false, message: " 로그인 후 이용해주세요" };
 
   const existingCartItem = await db.cart.findFirst({
     where: {
@@ -23,7 +23,7 @@ export async function cartCreate({ quantity, cartId, optionId }: IcartCreate) {
   });
 
   if (existingCartItem) {
-    return { message: "이미 장바구니에 담긴 상품입니다" };
+    return { ok: false, message: "이미 장바구니에 담긴 상품입니다" };
   }
 
   const productOptionExists = await db.productOption.findUnique({
@@ -33,6 +33,7 @@ export async function cartCreate({ quantity, cartId, optionId }: IcartCreate) {
   if (!productOptionExists) {
     console.log("Product option not found: ", optionId);
     return {
+      ok: false,
       message: "해당 옵션을 찾을 수 없습니다. 관리자에게 문의바랍니다.",
     };
   }
@@ -60,7 +61,6 @@ export async function cartCreate({ quantity, cartId, optionId }: IcartCreate) {
       id: true,
     },
   });
-  console.log("cart: ", cart);
 
-  return { message: "장바구니에 담았습니다.", cartId: cart.id };
+  return { ok: true, smessage: "장바구니에 담았습니다.", cartId: cart.id };
 }
