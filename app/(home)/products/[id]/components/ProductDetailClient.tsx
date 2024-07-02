@@ -4,6 +4,7 @@ import Slide from "../../components/slide";
 import CartButton from "./cart";
 import { formatToWon } from "@/lib/utils";
 import SelectComponent from "@/components/select-bar";
+import { User, productOption, slideImage } from "@prisma/client";
 
 interface ProductDetailClientProps {
   product: {
@@ -17,26 +18,9 @@ interface ProductDetailClientProps {
     created_at: Date;
     updated_at: Date;
     userId: number;
-    user: {
-      username: string;
-      avatar: string | null;
-    };
-    slideimages: {
-      id: number;
-      src: string;
-      createdAt: Date;
-      updatedAt: Date;
-      productId: number;
-    }[];
-    productoption: {
-      id: number;
-      productId: number;
-      quantity: number | null;
-      color: string | null;
-      plusdiscount: number | null;
-      created_at: Date;
-      updated_at: Date;
-    }[];
+    user: User;
+    slideimages: slideImage;
+    productoption: productOption;
   };
   params: number;
 }
@@ -48,9 +32,14 @@ const ProductDetailClient: React.FC<ProductDetailClientProps> = ({
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
   const [quantity, setQuantity] = useState<number>(1);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
-
+  console.log(selectedOptions);
   const handleOptionSelect = useCallback(
-    (optionDetails: string, price: string, pdOptionId: number) => {
+    (
+      optionDetails: string,
+      price: string,
+      pdOptionId: number,
+      dummycount: number
+    ) => {
       if (isNaN(pdOptionId)) {
         return;
       }
@@ -64,7 +53,13 @@ const ProductDetailClient: React.FC<ProductDetailClientProps> = ({
         }
         return [
           ...prevOptions,
-          { optionDetails, price, id: pdOptionId, quantity: 1 },
+          {
+            optionDetails,
+            price,
+            id: pdOptionId,
+            quantity: 1,
+            dummycount: dummycount,
+          },
         ];
       });
     },

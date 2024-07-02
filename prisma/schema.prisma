@@ -64,9 +64,9 @@ model productOption {
   product   Product @relation(fields: [productId], references: [id])
   productId Int
 
-  quantity     Int?
+  quantity     Int
   color        String?
-  plusdiscount Int?
+  plusdiscount Int
   created_at   DateTime @default(now())
   updated_at   DateTime @default(now())
   cart         Cart[]

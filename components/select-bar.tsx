@@ -1,32 +1,30 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
 import { formatToWon } from "@/lib/utils";
+import { productOption } from "@prisma/client";
 
 interface SelectComponentProps {
-  options: {
-    id: number;
-    productId: number;
-    quantity: number | null;
-    color: string | null;
-    plusdiscount: number | null;
-    created_at: Date;
-    updated_at: Date;
-  }[];
+  options: any;
   price: number;
   discount: number;
   quantity: number;
-  onSelect: (optionDetails: string, price: string, pdOptionId: number) => void;
+  onSelect: (
+    optionDetails: string,
+    price: string,
+    pdOptionId: number,
+    dummycount: number
+  ) => void;
   selectedOptions: any[]; // 추가
 }
 
-const SelectComponent: React.FC<SelectComponentProps> = ({
+const SelectComponent = ({
   options,
   price,
   discount,
   quantity,
   onSelect,
   selectedOptions, // 추가
-}) => {
+}: SelectComponentProps) => {
   const calculatePrice = useCallback(
     (selectedOption: any) => {
       const resultDiscount =
@@ -40,12 +38,12 @@ const SelectComponent: React.FC<SelectComponentProps> = ({
     (event: React.ChangeEvent<HTMLSelectElement>) => {
       const selectedValue = event.target.value;
       if (selectedValue === "") {
-        onSelect("", "", NaN);
+        onSelect("", "", NaN, NaN);
         return;
       }
 
       const selected = options.find(
-        (option) => option.id === Number(selectedValue)
+        (option: any) => option.id === Number(selectedValue)
       );
 
       const isOptionAlreadySelected = selectedOptions.some(
@@ -61,11 +59,18 @@ const SelectComponent: React.FC<SelectComponentProps> = ({
         const calculatedPrice = calculatePrice(selected);
         const optionDetails = `${selected.quantity}장 ${selected.color} ${
           selected.plusdiscount && selected.plusdiscount > 0
-            ? `( 추가할인율 ${selected.plusdiscount}% )`
-            : ""
-        } ${calculatedPrice}원`;
+            ? `( 추가할인율 ${selected.plusdiscount}% ) / `
+            : "/"
+        } 장당 ${calculatedPrice}원
+        총 ${formatToWon(selected.quantity * Number(calculatedPrice))}원
+        `;
 
-        onSelect(optionDetails, calculatedPrice, selected.id);
+        onSelect(
+          optionDetails,
+          calculatedPrice,
+          selected.id,
+          selected.quantity
+        );
       }
     },
     [options, calculatePrice, onSelect, selectedOptions]
@@ -110,7 +115,7 @@ const SelectComponent: React.FC<SelectComponentProps> = ({
         <option value="" disabled>
           --옵션을 선택해주세요--
         </option>
-        {options.map((option) => (
+        {options.map((option: productOption) => (
           <option key={option.id} value={option.id}>
             {`${option.quantity}장 ${option.color} ${
               option.plusdiscount && option.plusdiscount > 0

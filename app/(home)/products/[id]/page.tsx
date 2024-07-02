@@ -58,7 +58,6 @@ export async function getProduct(id: number) {
       productoption: true,
     },
   });
-  console.log("product : ", product);
   return product;
 }
 
@@ -78,7 +77,6 @@ export default async function ProductDetail({
   }
 
   const product = await getCachedProduct(id);
-  console.log("product : ", product);
   if (!product) {
     return notFound();
   }
