@@ -1,6 +1,5 @@
 "use server";
 import React, { useCallback, useEffect, useState } from "react";
-import { getCartCount } from "../components/action";
 import { getCart } from "./action";
 import CartList from "./components/CartList";
 

@@ -19,7 +19,7 @@ const CartButton = ({ options, cartId }: CartButtonProps) => {
         cartCreate({ quantity, cartId, optionId: id })
       )
     );
-
+    console.log("cart responses : ", responses);
     const notLoggedIn = responses.some(
       (response) => response.message === "로그인 후 이용해주세요"
     );
@@ -72,7 +72,7 @@ const CartButton = ({ options, cartId }: CartButtonProps) => {
             <div className="flex flex-col gap-3">
               <div className="flex flex-row items-center justify-center gap-3">
                 <ShoppingCartIcon className="h-10" />
-                <p className="font-semibold text-lg">장바구니에 담았습니다.</p>
+                <p className="font-semibold text-lg">{popupMessage}</p>
               </div>
 
               <div className="mt-4 flex justify-center gap-5">

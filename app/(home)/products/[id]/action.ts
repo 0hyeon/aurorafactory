@@ -62,5 +62,5 @@ export async function cartCreate({ quantity, cartId, optionId }: IcartCreate) {
     },
   });
 
-  return { ok: true, smessage: "장바구니에 담았습니다.", cartId: cart.id };
+  return { ok: true, message: "장바구니에 담았습니다.", cartId: cart.id };
 }

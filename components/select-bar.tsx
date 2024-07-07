@@ -59,10 +59,10 @@ const SelectComponent = ({
         const calculatedPrice = calculatePrice(selected);
         const optionDetails = `${selected.quantity}장 ${selected.color} ${
           selected.plusdiscount && selected.plusdiscount > 0
-            ? `( 추가할인율 ${selected.plusdiscount}% ) / `
-            : "/"
+            ? `( 추가할인율 ${selected.plusdiscount}% ) * `
+            : " * "
         } 장당 ${calculatedPrice}원
-        총 ${formatToWon(selected.quantity * Number(calculatedPrice))}원
+        = ${formatToWon(selected.quantity * Number(calculatedPrice))}원
         `;
 
         onSelect(
