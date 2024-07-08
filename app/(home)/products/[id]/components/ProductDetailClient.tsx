@@ -25,10 +25,7 @@ interface ProductDetailClientProps {
   params: number;
 }
 
-const ProductDetailClient: React.FC<ProductDetailClientProps> = ({
-  product,
-  params,
-}) => {
+const ProductDetailClient = ({ product, params }: any) => {
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
   const [quantity, setQuantity] = useState<number>(1);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);

@@ -1,6 +1,7 @@
 "use server";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
+import { revalidateTag } from "next/cache";
 
 interface IcartCreate {
   quantity: number;
@@ -61,6 +62,6 @@ export async function cartCreate({ quantity, cartId, optionId }: IcartCreate) {
       id: true,
     },
   });
-
+  revalidateTag("cart");
   return { ok: true, message: "장바구니에 담았습니다.", cartId: cart.id };
 }
