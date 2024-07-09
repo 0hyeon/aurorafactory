@@ -18,7 +18,6 @@ interface ProductOptionWithProduct extends productOption {
 }
 
 export default function CartList({ data }: any) {
-  console.log("cartList data : ", data);
   const totalPrice = data.reduce(
     (acc: any, item: any) => acc + item.totalPrice,
     0
