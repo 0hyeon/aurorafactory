@@ -28,7 +28,7 @@ export default async function TabLayout({
       </div>
       <Header />
       <div className="w-full max-w-[1100px] mx-auto">
-        <div className="pt-[60px]">{children}</div>
+        <div className="pt-[60px] pb-[60px]">{children}</div>
       </div>
     </div>
   );
