@@ -3,6 +3,7 @@ import { Cart, productOption, Product } from "@prisma/client";
 import { formatToWon } from "@/lib/utils";
 import Image from "next/image";
 import { useState } from "react";
+import Purchase from "./Purchase";
 
 interface ProductOptionWithProduct extends productOption {
   product: Product & { photo: string | null };
@@ -96,6 +97,7 @@ export default function CartList({ data }: CartListProps) {
       <div className="total-price text-2xl font-semibold">
         총 가격: {formatToWon(totalPrice)}원
       </div>
+      <Purchase data={""} />
     </div>
   );
 }
