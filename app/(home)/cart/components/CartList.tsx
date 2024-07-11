@@ -20,6 +20,7 @@ interface CartListProps {
 }
 
 export default function CartList({ data }: CartListProps) {
+  console.log("datacart : ", data);
   const [cart, setCart] = useState<CartWithProductOption[]>(data);
 
   const handleQuantityChange = (id: number, delta: number) => {
@@ -37,7 +38,10 @@ export default function CartList({ data }: CartListProps) {
     );
   };
 
-  const totalPrice = cart.reduce((acc, item) => acc + item.totalPrice, 0);
+  const totalPrice = cart.reduce(
+    (acc, item) => acc + item.totalPrice * item.option.quantity,
+    0
+  );
 
   return (
     <div className="flex flex-col gap-3">
