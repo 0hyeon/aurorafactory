@@ -20,9 +20,38 @@ interface CartListProps {
   data: CartWithProductOption[];
 }
 
+const calculateTotalPrice = (
+  basePrice: number,
+  discount: string | number | null,
+  plusDiscount: string | number | null,
+  quantity: number,
+  quantityInOption: number
+) => {
+  const finalDiscount = (Number(discount) || 0) + (Number(plusDiscount) || 0);
+  const discountedPrice = basePrice * (1 - finalDiscount / 100);
+  return discountedPrice * quantity * quantityInOption;
+};
+
+const dicountedPrice = ({ item }: { item: any }) => {
+  const plusDiscount = Number(item.option.plusdiscount);
+  const discountPercent = Number(item.option.product.discount);
+  const objdiscount = 1 - (plusDiscount + discountPercent) / 100;
+  return item.basePrice * objdiscount;
+};
+
 export default function CartList({ data }: CartListProps) {
-  console.log("datacart : ", data);
-  const [cart, setCart] = useState<CartWithProductOption[]>(data);
+  const [cart, setCart] = useState<CartWithProductOption[]>(() =>
+    data.map((item) => ({
+      ...item,
+      totalPrice: calculateTotalPrice(
+        item.basePrice,
+        item.option.product.discount,
+        item.option.plusdiscount,
+        item.quantity,
+        item.option.quantity
+      ),
+    }))
+  );
 
   const handleQuantityChange = (id: number, delta: number) => {
     setCart((prevCart) =>
@@ -31,21 +60,27 @@ export default function CartList({ data }: CartListProps) {
           ? {
               ...item,
               quantity: item.quantity + delta,
-              totalPrice:
-                item.basePrice * (item.quantity + delta) * item.option.quantity,
+              totalPrice: calculateTotalPrice(
+                item.basePrice,
+                item.option.product.discount,
+                item.option.plusdiscount,
+                item.quantity + delta,
+                item.option.quantity
+              ),
             }
           : item
       )
     );
   };
 
-  const totalPrice = cart.reduce(
-    (acc, item) => acc + item.totalPrice * item.option.quantity,
-    0
-  );
+  const handleRemoveItem = (id: number) => {
+    setCart((prevCart) => prevCart.filter((item) => item.id !== id));
+  };
+
+  const totalPrice = cart.reduce((acc, item) => acc + item.totalPrice, 0);
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-8">
       {cart.map((item) => (
         <div className="flex" key={item.id}>
           <div className="relative block w-56 h-56 flex-grow-0">
@@ -59,36 +94,56 @@ export default function CartList({ data }: CartListProps) {
             )}
           </div>
           <div className="border-b border-b-gray-500 flex-grow">
-            <div className="flex flex-col">
-              <div>
-                <div>상품명: {item.option.product.title}</div>
-                <div>
-                  가격:{" "}
-                  <span className="line-through">
-                    {formatToWon(item.option.product.price)}
-                  </span>{" "}
-                  {formatToWon(item.totalPrice)}원
+            <div className="flex flex-col items-start justify-around h-full">
+              <div className="flex flex-row justify-between w-full">
+                <div className="flex gap-12">
+                  <div>
+                    <div className="font-bold text-lg">
+                      상품명: {item.option.product.title}
+                    </div>
+                    <div className="flex">
+                      가격:
+                      <span className="flex gap-2">
+                        <span className="line-through">
+                          {formatToWon(item.option.product.price)}
+                        </span>
+                        {formatToWon(dicountedPrice({ item }))}원
+                      </span>
+                    </div>
+                    <div>색상: {item.option.color}</div>
+                    <div>구매수량: {item.quantity}</div>
+                    <div>옵션수량: {item.option.quantity}</div>
+                  </div>
                 </div>
-                <div>색상: {item.option.color}</div>
-                <div>구매수량: {item.quantity}</div>
-                <div>옵션수량: {item.option.quantity}</div>{" "}
-                {/* null 체크 제거 */}
-              </div>
-              <div>
-                <button
-                  className="px-4 py-2 border border-gray-300"
-                  onClick={() => handleQuantityChange(item.id, -1)}
-                  disabled={item.quantity <= 1}
-                >
-                  -
-                </button>
-                <span className="mx-4">{item.quantity}</span>
-                <button
-                  className="px-4 py-2 border border-gray-300"
-                  onClick={() => handleQuantityChange(item.id, 1)}
-                >
-                  +
-                </button>
+                <div className="flex items-center justify-center px-10 gap-12">
+                  <div className="flex items-center">
+                    <button
+                      className="px-4 py-2 border border-gray-300"
+                      onClick={() => handleQuantityChange(item.id, -1)}
+                      disabled={item.quantity <= 1}
+                    >
+                      -
+                    </button>
+                    <span className="mx-4">{item.quantity}</span>
+                    <button
+                      className="px-4 py-2 border border-gray-300"
+                      onClick={() => handleQuantityChange(item.id, 1)}
+                    >
+                      +
+                    </button>
+                  </div>
+                  <div className="flex items-center">
+                    가격: {formatToWon(item.totalPrice)}원
+                  </div>
+                  <div>
+                    <button
+                      className="px-4 py-2  border border-gray-300 bg-black text-white"
+                      onClick={() => handleRemoveItem(item.id)}
+                    >
+                      X
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -97,7 +152,7 @@ export default function CartList({ data }: CartListProps) {
       <div className="total-price text-2xl font-semibold">
         총 가격: {formatToWon(totalPrice)}원
       </div>
-      <Purchase data={""} />
+      <Purchase data={cart} />
     </div>
   );
 }

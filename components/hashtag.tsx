@@ -8,57 +8,57 @@ export default function HashTag() {
           <li className="text-base flex-1 underline">
             <Link
               className="p-[8px] text-[#999] block text-center shadow-md bg-white rounded-[25px] font-medium"
-              href={"/유산균"}
+              href={"/발포지"}
             >
-              #유산균
+              #발포지
             </Link>
           </li>
           <li className="text-base flex-1 underline">
             <Link
               className="p-[8px] text-[#999] block text-center shadow-md bg-white rounded-[25px] font-medium"
-              href={"/멀티팩"}
+              href={"/뽁뽁이"}
             >
-              #멀티팩
+              #뽁뽁이
             </Link>
           </li>
           <li className="text-base flex-1 underline">
             <Link
               className="p-[8px] text-[#999] block text-center shadow-md bg-white rounded-[25px] font-medium"
-              href={"/오메가3"}
+              href={"/보냉봉투"}
             >
-              #오메가3
+              #보냉봉투
             </Link>
           </li>
           <li className="text-base flex-1 underline">
             <Link
               className="p-[8px] text-[#999] block text-center shadow-md bg-white rounded-[25px] font-medium"
-              href={"/관절건강"}
+              href={"/안전봉투"}
             >
-              #관절건강
+              #안전봉투
             </Link>
           </li>
           <li className="text-base flex-1 underline">
             <Link
               className="p-[8px] text-[#999] block text-center shadow-md bg-white rounded-[25px] font-medium"
-              href={"/간건강"}
+              href={"/PE폼"}
             >
-              #간건강
+              #PE폼
             </Link>
           </li>
           <li className="text-base flex-1 underline">
             <Link
               className="p-[8px] text-[#999] block text-center shadow-md bg-white rounded-[25px] font-medium"
-              href={"/눈건강"}
+              href={"/날개달린발포지"}
             >
-              #눈건강
+              #날개달린발포지
             </Link>
           </li>
           <li className="text-base flex-1 list-none underline">
             <Link
               className="p-[8px] text-[#999] block text-center shadow-md bg-white rounded-[25px] font-medium"
-              href={"/멀티비타민"}
+              href={"/전체상품"}
             >
-              #멀티비타민
+              #전체상품
             </Link>
           </li>
         </ul>
