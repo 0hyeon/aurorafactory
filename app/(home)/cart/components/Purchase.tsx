@@ -8,6 +8,8 @@ interface PurchaseProps {
 }
 
 export default function Purchase({ data }: PurchaseProps) {
+  console.log(data);
+
   const totalPrice = data.reduce((acc, item) => acc + item.totalPrice, 0);
   const productNames = data.map((item) => item.option.product.title).join(", ");
 

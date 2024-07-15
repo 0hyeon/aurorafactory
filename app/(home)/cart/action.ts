@@ -16,13 +16,17 @@ export async function getCart() {
   });
   return cartData;
 }
+// export async function getPurChase() {
+//   const session = await getSession();
+//   console.log("session: ", session);
+//   if (!session.id) return { ok: false, message: " 로그인 후 이용해주세요" };
+// }
 
 async function getProductSrc(productId: number) {
   const product = await db.product.findUnique({
     where: { id: productId },
     select: { photo: true },
   });
-  console.log("getProductSrc : ", product);
   return product?.photo ?? null;
 }
 

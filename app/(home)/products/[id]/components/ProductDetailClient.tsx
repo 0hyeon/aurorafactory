@@ -5,6 +5,8 @@ import CartButton from "./cart";
 import { formatToWon } from "@/lib/utils";
 import SelectComponent from "@/components/select-bar";
 import { User, productOption, slideImage } from "@prisma/client";
+import Purchase from "@/app/(home)/cart/components/Purchase";
+import { useRouter } from "next/navigation";
 
 interface ProductDetailClientProps {
   product: {
@@ -24,8 +26,14 @@ interface ProductDetailClientProps {
   };
   params: number;
 }
+interface CartButtonProps {
+  options: { id: number; quantity: number }[];
+  cartId: number;
+}
 
 const ProductDetailClient = ({ product, params }: any) => {
+  const router = useRouter();
+
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
   const [quantity, setQuantity] = useState<number>(1);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
@@ -94,7 +102,6 @@ const ProductDetailClient = ({ product, params }: any) => {
       return total + optionPrice * option.quantity * option.dummycount;
     }, 0);
   };
-
   return (
     <div className="flex gap-[50px]">
       <div className="w-[500px]">
@@ -182,14 +189,13 @@ const ProductDetailClient = ({ product, params }: any) => {
                 <div className="mt-4 font-extrabold text-xl">
                   총 가격: {formatToWon(getTotalPrice())}원
                 </div>
-                <div className="pt-10">
-                  {params && (
-                    <CartButton options={selectedOptions} cartId={params} />
-                  )}
-                </div>
               </div>
             </>
           )}
+          <div className="pt-10 flex *:w-1/2 gap-2">
+            {params && <CartButton options={selectedOptions} cartId={params} />}
+            <Purchase data={selectedOptions} />
+          </div>
         </div>
       </div>
     </div>

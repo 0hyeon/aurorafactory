@@ -6,6 +6,7 @@ import db from "./db";
 import { notFound, redirect } from "next/navigation";
 import { SessionContent } from "./types";
 import { getCartCount } from "@/app/(home)/components/action";
+import { revalidateTag } from "next/cache";
 
 //세션 가져오기 - 복호화 된 쿠키 반환
 export default async function getSession() {
@@ -50,5 +51,6 @@ export const logout = async () => {
   "use server";
   const session = await getSession();
   session.destroy(); // 쿠키 제거
+  revalidateTag("cart");
   redirect("/");
 };

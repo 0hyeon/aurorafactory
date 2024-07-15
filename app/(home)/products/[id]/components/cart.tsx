@@ -19,7 +19,6 @@ const CartButton = ({ options, cartId }: CartButtonProps) => {
         cartCreate({ quantity, cartId, optionId: id })
       )
     );
-    console.log("cart responses : ", responses);
     const notLoggedIn = responses.some(
       (response) => response.message === "로그인 후 이용해주세요"
     );
@@ -27,8 +26,12 @@ const CartButton = ({ options, cartId }: CartButtonProps) => {
       (response) => response.message === "이미 장바구니에 담긴 상품입니다"
     );
     const addedToCart = responses.some((response) => response.ok);
+    if (responses.length === 0) {
+      alert("옵션을 선택해주세요.");
+      return;
+    }
 
-    if (notLoggedIn) {
+    if (!notLoggedIn) {
       alert("로그인 후 이용해주세요");
       return; // Do not proceed with setting `isCartAdded`
     }

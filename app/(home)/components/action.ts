@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 
 export async function getCartCount() {
   const session = await getSession();
-  if (!session.id) return;
+  if (!session.id) return 0;
 
   const user = await db.user.findUnique({
     where: {

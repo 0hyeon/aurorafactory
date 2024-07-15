@@ -1,7 +1,9 @@
 "use server";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
+import { productOption } from "@prisma/client";
 import { revalidateTag } from "next/cache";
+import { redirect } from "next/navigation";
 
 interface IcartCreate {
   quantity: number;
@@ -9,6 +11,10 @@ interface IcartCreate {
   optionId: number;
 }
 
+interface CartButtonProps {
+  options: { id: number; quantity: number }[];
+  cartId: number;
+}
 export async function cartCreate({ quantity, cartId, optionId }: IcartCreate) {
   console.log("cart action data: ", { quantity, cartId, optionId });
   const session = await getSession();
