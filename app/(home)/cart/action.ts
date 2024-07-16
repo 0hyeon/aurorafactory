@@ -5,6 +5,16 @@ import { unstable_cache as nextCache, revalidateTag } from "next/cache";
 import { OptionSchema } from "./schema";
 import { redirect } from "next/navigation";
 
+export async function delCart({ id }: { id: number }) {
+  const session = await getSession();
+  if (!session.id) return;
+  await db.cart.delete({
+    where: { id },
+  });
+  revalidateTag("cart");
+  revalidateTag("get-cartcount");
+  return { ok: true, message: "제거완료" };
+}
 export async function getCart() {
   const session = await getSession();
   if (!session.id) return [];

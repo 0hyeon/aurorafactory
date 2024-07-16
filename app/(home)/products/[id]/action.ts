@@ -4,6 +4,7 @@ import getSession from "@/lib/session";
 import { productOption } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
+import { getCartCount } from "../../components/action";
 
 interface IcartCreate {
   quantity: number;
@@ -16,9 +17,7 @@ interface CartButtonProps {
   cartId: number;
 }
 export async function cartCreate({ quantity, cartId, optionId }: IcartCreate) {
-  console.log("cart action data: ", { quantity, cartId, optionId });
   const session = await getSession();
-  console.log("session: ", session);
   if (!session.id) return { ok: false, message: " 로그인 후 이용해주세요" };
 
   const existingCartItem = await db.cart.findFirst({
@@ -48,6 +47,7 @@ export async function cartCreate({ quantity, cartId, optionId }: IcartCreate) {
   const cart = await db.cart.create({
     data: {
       quantity,
+      orderstat: "결제대기",
       product: {
         connect: {
           id: Number(cartId),
@@ -69,5 +69,8 @@ export async function cartCreate({ quantity, cartId, optionId }: IcartCreate) {
     },
   });
   revalidateTag("cart");
+  await getCartCount();
+  //revalidateTag("get-cartcount");
+
   return { ok: true, message: "장바구니에 담았습니다.", cartId: cart.id };
 }

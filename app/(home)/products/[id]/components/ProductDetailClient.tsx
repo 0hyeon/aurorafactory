@@ -37,7 +37,7 @@ const ProductDetailClient = ({ product, params }: any) => {
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
   const [quantity, setQuantity] = useState<number>(1);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
-  console.log(selectedOptions);
+
   const handleOptionSelect = useCallback(
     (
       optionDetails: string,
@@ -193,8 +193,9 @@ const ProductDetailClient = ({ product, params }: any) => {
             </>
           )}
           <div className="pt-10 flex *:w-1/2 gap-2">
-            {params && <CartButton options={selectedOptions} cartId={params} />}
-            <Purchase data={selectedOptions} />
+            {params && <CartButton options={selectedOptions} cartId={params} text={'장바구니담기'}/>}
+            {params && <CartButton options={selectedOptions} cartId={params} text={'구매하기'}/>}
+            
           </div>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { formatToWon } from "@/lib/utils";
 import Image from "next/image";
 import { useState } from "react";
 import Purchase from "./Purchase";
+import { delCart } from "../action";
 
 interface ProductOptionWithProduct extends productOption {
   product: Product & { photo: string | null };
@@ -73,8 +74,15 @@ export default function CartList({ data }: CartListProps) {
     );
   };
 
-  const handleRemoveItem = (id: number) => {
-    setCart((prevCart) => prevCart.filter((item) => item.id !== id));
+  const handleRemoveItem = async (id: number) => {
+    if (confirm("장바구니에서 제거하시겠습니까?"))
+      window.dispatchEvent(new Event("cartUpdated"));
+    {
+      const result = await delCart({ id });
+
+      setCart((prevCart) => prevCart.filter((item) => item.id !== id));
+      alert(result?.message);
+    }
   };
 
   const totalPrice = cart.reduce((acc, item) => acc + item.totalPrice, 0);

@@ -8,22 +8,27 @@ interface PurchaseProps {
 }
 
 export default function Purchase({ data }: PurchaseProps) {
-  console.log(data);
-
-  const totalPrice = data.reduce((acc, item) => acc + item.totalPrice, 0);
-  const productNames = data.map((item) => item.option.product.title).join(", ");
-
-  const random = (length = 8) => {
-    return Math.random().toString(16).substr(2, length);
-  };
-
   function serverAuth() {
+    if (data.length === 0) {
+      alert("옵션을 선택해주세요.");
+      return;
+    }
+    const totalPrice = data.reduce((acc, item) => acc + item.totalPrice, 0);
+    const productNames =
+      data.length === 1
+        ? data[0].option.product.title
+        : `${data[0].option.product.title} 외${data.length - 1}개`;
+    const random = (length = 8) => {
+      return Math.random().toString(16).substr(2, length);
+    };
+
+    console.log("Purchase : ", data);
     if (typeof window !== "undefined") {
       const pay_obj: any = window;
       const { AUTHNICE } = pay_obj;
       AUTHNICE.requestPay({
         //NOTE :: 발급받은 클라이언트키 clientId에 따라 Server / Client 방식 분리
-        clientId: "S2_07a6c2d843654d7eb32a6fcc0759eef4",
+        clientId: "R2_8bad4063b9a942668b156d221c3489ea",
         method: "card",
         //NOTE :: 상품 구매 id 값
         orderId: random(),

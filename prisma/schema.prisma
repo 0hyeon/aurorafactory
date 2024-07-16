@@ -97,8 +97,8 @@ model Cart {
   productOption   productOption? @relation(fields: [productOptionId], references: [id], onDelete: Cascade)
   productOptionId Int
 
-  quantity Int
-
+  quantity  Int
+  orderstat String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

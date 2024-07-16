@@ -6,9 +6,10 @@ import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 interface CartButtonProps {
   options: { id: number; quantity: number }[];
   cartId: number;
+  text: string;
 }
 
-const CartButton = ({ options, cartId }: CartButtonProps) => {
+const CartButton = ({ options, cartId, text }: CartButtonProps) => {
   const [isCartAdded, setIsCartAdded] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
@@ -26,12 +27,13 @@ const CartButton = ({ options, cartId }: CartButtonProps) => {
       (response) => response.message === "이미 장바구니에 담긴 상품입니다"
     );
     const addedToCart = responses.some((response) => response.ok);
+
     if (responses.length === 0) {
       alert("옵션을 선택해주세요.");
       return;
     }
 
-    if (!notLoggedIn) {
+    if (notLoggedIn) {
       alert("로그인 후 이용해주세요");
       return; // Do not proceed with setting `isCartAdded`
     }
@@ -43,6 +45,7 @@ const CartButton = ({ options, cartId }: CartButtonProps) => {
     }
 
     if (addedToCart) {
+      window.dispatchEvent(new Event("cartUpdated"));
       const messages = responses.map((response) => response.message).join("\n");
       setPopupMessage(messages);
       setShowPopup(true);
@@ -60,15 +63,8 @@ const CartButton = ({ options, cartId }: CartButtonProps) => {
         onClick={handleAddToCart}
         className="w-full p-4 bg-white hover:bg-blue-400 hover:text-white text-blue-400 rounded-md border-gray-400 border font-semibold text-base hover:border-blue-400 duration-300"
       >
-        장바구니담기
+        {text}
       </button>
-      {isCartAdded && (
-        <Link href="/cart">
-          <button className="w-1/2 p-3 bg-blue-400 text-white rounded-md border-gray-400 border font-semibold text-base hover:border-blue-400 duration-300 mt-4">
-            구매하러가기
-          </button>
-        </Link>
-      )}
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
           <div className="bg-white p-10 rounded-md shadow-md text-center w-[450px] z-10">
@@ -87,7 +83,7 @@ const CartButton = ({ options, cartId }: CartButtonProps) => {
                 </button>
                 <Link href="/cart">
                   <button className="p-3 text-base bg-blue-400 text-white rounded min-w-20">
-                    장바구니 바로가기
+                    구매하기 바로가기
                   </button>
                 </Link>
               </div>
