@@ -1,5 +1,4 @@
 "use client";
-
 import Script from "next/script";
 import { CartWithProductOption } from "./CartList";
 
@@ -8,6 +7,10 @@ interface PurchaseProps {
 }
 
 export default function Purchase({ data }: PurchaseProps) {
+  const success = (orderId: string) => {
+    console.log("결제성공", orderId);
+  };
+
   function serverAuth() {
     if (data.length === 0) {
       alert("옵션을 선택해주세요.");
@@ -25,18 +28,21 @@ export default function Purchase({ data }: PurchaseProps) {
     if (typeof window !== "undefined") {
       const pay_obj: any = window;
       const { AUTHNICE } = pay_obj;
+      const orderId = random();
+
       AUTHNICE.requestPay({
         //NOTE :: 발급받은 클라이언트키 clientId에 따라 Server / Client 방식 분리
         clientId: "R2_8bad4063b9a942668b156d221c3489ea",
         method: "card",
         //NOTE :: 상품 구매 id 값
-        orderId: random(),
+        orderId: orderId,
         // NOTE :: 가격
         amount: Number(totalPrice),
         // NOTE :: 상품명
         goodsName: productNames,
         //NOTE :: API를 호출할 Endpoint 입력
-        returnUrl: "http://localhost:3000/paysuccess",
+        returnUrl: `http://localhost:3000/paysuccess?orderId=${orderId}`,
+
         // NOTE :: err 발생시 실행 함수
         fnError: (result: any) => {
           alert(
@@ -45,6 +51,7 @@ export default function Purchase({ data }: PurchaseProps) {
               "\n개발자 확인용 : " +
               result.errorMsg
           );
+          return;
         },
       });
     }

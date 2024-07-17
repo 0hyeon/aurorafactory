@@ -1,9 +1,13 @@
 "use client";
 
 import confetti from "canvas-confetti";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function PaySuccess() {
+  const router = useRouter();
+  console.log(router);
+
   const duration = 1 * 1000;
   const animationEnd = Date.now() + duration;
   const defaults = { startVelocity: 30, spread: 360, ticks: 200, zIndex: 0 };
