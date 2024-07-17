@@ -22,7 +22,6 @@ export default function Purchase({ data }: PurchaseProps) {
       return Math.random().toString(16).substr(2, length);
     };
 
-    console.log("Purchase : ", data);
     if (typeof window !== "undefined") {
       const pay_obj: any = window;
       const { AUTHNICE } = pay_obj;
