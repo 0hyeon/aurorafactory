@@ -4,6 +4,7 @@ import getSession from "@/lib/session";
 import { unstable_cache as nextCache, revalidateTag } from "next/cache";
 import { OptionSchema } from "./schema";
 import { redirect } from "next/navigation";
+import { getCartCount, getCachedCartCount } from "../components/action";
 
 export async function delCart({ id }: { id: number }) {
   const session = await getSession();
@@ -12,7 +13,8 @@ export async function delCart({ id }: { id: number }) {
     where: { id },
   });
   revalidateTag("cart");
-  revalidateTag("get-cartcount");
+  // await getCartCount();
+
   return { ok: true, message: "제거완료" };
 }
 export async function getCart() {

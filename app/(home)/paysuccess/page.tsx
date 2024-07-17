@@ -4,9 +4,9 @@ import confetti from "canvas-confetti";
 import { useEffect } from "react";
 
 export default function PaySuccess() {
-  const duration = 3 * 1000;
+  const duration = 1 * 1000;
   const animationEnd = Date.now() + duration;
-  const defaults = { startVelocity: 30, spread: 3600, ticks: 300, zIndex: 0 };
+  const defaults = { startVelocity: 30, spread: 360, ticks: 200, zIndex: 0 };
 
   function randomInRange(min: number, max: number) {
     return Math.random() * (max - min) + min;
@@ -14,7 +14,6 @@ export default function PaySuccess() {
 
   useEffect(() => {
     handleConfetti();
-    console.log("confetti effect");
   }, []);
   const handleConfetti = () => {
     const intervalId: NodeJS.Timeout = setInterval(() => {
@@ -24,7 +23,7 @@ export default function PaySuccess() {
         return clearInterval(intervalId);
       }
 
-      var particleCount = 300 * (timeLeft / duration);
+      var particleCount = 900 * (timeLeft / duration);
       // since particles fall down, start a bit higher than random
       confetti(
         Object.assign({}, defaults, {
@@ -49,7 +48,10 @@ export default function PaySuccess() {
 
   return (
     <div>
-      <div className="text-center text-2xl h-full">구매가 완료되었습니다.</div>
+      <div className="text-center  absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 gap-6 flex flex-col">
+        <div className="text-xl text-gray-400">구매가 완료되었습니다.</div>
+        <span className="text-base text-gray-400">감사합니다!</span>
+      </div>
     </div>
   );
 }

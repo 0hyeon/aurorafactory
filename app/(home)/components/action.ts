@@ -3,7 +3,11 @@ import db from "@/lib/db";
 import getSession from "@/lib/session";
 import { redirect } from "next/navigation";
 import { unstable_cache as nextCache, revalidateTag } from "next/cache";
+export const getCachedCartCount = nextCache(getCartCount, ["cart-count"], {
+  tags: ["cart"],
+});
 export async function getCartCount() {
+  console.log("getCartCount 실행");
   const session = await getSession();
   if (!session.id) return 0;
 
