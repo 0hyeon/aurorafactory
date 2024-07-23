@@ -7,10 +7,12 @@ interface PurchaseProps {
 }
 
 export default function Purchase({ data }: PurchaseProps) {
-  const success = (orderId: string) => {
-    console.log("결제성공", orderId);
-  };
-
+  function generateNumericUniqueId(length: number = 16) {
+    const now = new Date().getTime(); 
+    const timestamp = now.toString().slice(-length);
+    const random = Math.floor(Math.random() * Math.pow(10, length - timestamp.length)).toString().padStart(length - timestamp.length, '0');
+    return timestamp + random;
+  }
   function serverAuth() {
     if (data.length === 0) {
       alert("옵션을 선택해주세요.");
@@ -21,15 +23,11 @@ export default function Purchase({ data }: PurchaseProps) {
       data.length === 1
         ? data[0].option.product.title
         : `${data[0].option.product.title} 외${data.length - 1}개`;
-    const random = (length = 8) => {
-      return Math.random().toString(16).substr(2, length);
-    };
-
+  
     if (typeof window !== "undefined") {
       const pay_obj: any = window;
       const { AUTHNICE } = pay_obj;
-      const orderId = random();
-
+      const orderId = generateNumericUniqueId();
       AUTHNICE.requestPay({
         //NOTE :: 발급받은 클라이언트키 clientId에 따라 Server / Client 방식 분리
         clientId: "R2_8bad4063b9a942668b156d221c3489ea",
