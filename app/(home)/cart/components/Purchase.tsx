@@ -1,6 +1,8 @@
-"use client";
-import Script from "next/script";
-import { CartWithProductOption } from "./CartList";
+'use client'; // 클라이언트 사이드에서만 실행됨
+
+import Script from 'next/script';
+import { CartWithProductOption } from './CartList';
+import { updateCart } from '../action';
 
 interface PurchaseProps {
   data: CartWithProductOption[];
@@ -13,7 +15,8 @@ export default function Purchase({ data }: PurchaseProps) {
     const random = Math.floor(Math.random() * Math.pow(10, length - timestamp.length)).toString().padStart(length - timestamp.length, '0');
     return timestamp + random;
   }
-  function serverAuth() {
+
+  async function serverAuth() {
     if (data.length === 0) {
       alert("옵션을 선택해주세요.");
       return;
@@ -23,41 +26,42 @@ export default function Purchase({ data }: PurchaseProps) {
       data.length === 1
         ? data[0].option.product.title
         : `${data[0].option.product.title} 외${data.length - 1}개`;
-  
-    if (typeof window !== "undefined") {
+
+    const orderId = generateNumericUniqueId();
+    const cartIds = data.map((item) => item.id);
+    if (typeof window !== 'undefined') {
       const pay_obj: any = window;
       const { AUTHNICE } = pay_obj;
-      const orderId = generateNumericUniqueId();
       AUTHNICE.requestPay({
-        //NOTE :: 발급받은 클라이언트키 clientId에 따라 Server / Client 방식 분리
-        clientId: "R2_8bad4063b9a942668b156d221c3489ea",
-        method: "card",
-        //NOTE :: 상품 구매 id 값
+        clientId: 'R2_8bad4063b9a942668b156d221c3489ea',
+        method: 'card',
         orderId: orderId,
-        // NOTE :: 가격
         amount: Number(totalPrice),
-        // NOTE :: 상품명
         goodsName: productNames,
-        //NOTE :: API를 호출할 Endpoint 입력
-        returnUrl: `http://localhost:3000/paysuccess?orderId=${orderId}`,
-
-        // NOTE :: err 발생시 실행 함수
+        returnUrl: `http://localhost:3000/paysuccess?orderId=${orderId}&amount=${totalPrice}`,
         fnError: (result: any) => {
           alert(
-            "고객용 메시지 : " +
+            '고객용 메시지 : ' +
               result.msg +
-              "\n개발자 확인용 : " +
+              '\n개발자 확인용 : ' +
               result.errorMsg
           );
           return;
         },
       });
     }
+    const result = await updateCart({ cartIds, orderId });
+    
+    if (!result.success) {
+      alert("주문을 처리하는 중 오류가 발생했습니다. 다시 시도해주세요.");
+      console.error(result.message);
+      return;
+    }
   }
 
   return (
     <>
-      <Script src="https://pay.nicepay.co.kr/v1/js/" />
+      <Script src="https://pay.nicepay.co.kr/v1/js/" strategy="lazyOnload" />
       <div className="flex items-center justify-center">
         <button
           onClick={() => serverAuth()}

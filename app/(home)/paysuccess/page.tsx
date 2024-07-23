@@ -3,10 +3,10 @@
 import confetti from "canvas-confetti";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { NicePayVerify } from './action'; // 서버 측 함수 가져오기
 
 export default function PaySuccess() {
   const [orderId, setOrderId] = useState<string | null>(null);
+  const [amount, setAmount] = useState<number>(0);
   const router = useRouter();
 
   const duration = 1 * 1000;
@@ -18,21 +18,34 @@ export default function PaySuccess() {
   }
 
   useEffect(() => {
-    // 클라이언트 사이드에서만 실행되도록 window 객체 사용
     const query = new URLSearchParams(window.location.search);
     const id = query.get("orderId");
+    const amount = query.get("amount");
     setOrderId(id);
+    setAmount(Number(amount));
   }, []);
 
   useEffect(() => {
-    if (orderId) {
-      handlePaymentVerification(orderId);
+    if (orderId && amount > 0) {
+      handlePaymentVerification(orderId, amount);
     }
-  }, [orderId]);
+  }, [orderId, amount]);
 
-  const handlePaymentVerification = async (orderId: string) => {
+  const handlePaymentVerification = async (orderId: string, amount: number) => {
     try {
-      const result = await NicePayVerify(orderId); // 서버 측 함수 호출
+      const response = await fetch('/api/nicepay/verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ orderId, amount }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json(); // JSON으로 응답 처리
 
       if (result.status === 'paid') {
         console.log("결제 성공:", result);
@@ -56,7 +69,7 @@ export default function PaySuccess() {
         return;
       }
 
-      var particleCount = 900 * (timeLeft / duration);
+      const particleCount = 900 * (timeLeft / duration);
       confetti({
         ...defaults,
         particleCount,

@@ -6,6 +6,32 @@ import { OptionSchema } from "./schema";
 import { redirect } from "next/navigation";
 import { getCartCount, getCachedCartCount } from "../components/action";
 
+interface IupdateCart{
+  cartIds:number[]; 
+  orderId:string
+}
+export async function updateCart({ cartIds, orderId }: IupdateCart) {
+  console.log("updateCart 발동")
+  try {
+    await db.cart.updateMany({
+      where: {
+        id: {
+          in: cartIds,
+        },
+      },
+      data: {
+        orderstat: "결제완료",
+        orderId: orderId,
+      },
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating cart:", error);
+    return { success: false, message: '주문을 처리하는 중 오류가 발생했습니다. 다시 시도해주세요.' };
+  }
+}
+
 export async function delCart({ id }: { id: number }) {
   const session = await getSession();
   if (!session.id) return;
