@@ -6,7 +6,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { opacity } from "./anim";
 import Image from "next/image";
 import Nav from "./nav";
-import { getCartCount, getCachedCartCount } from "./action";
+import { getCachedCartCount } from "./action";
+import { cookies } from "next/headers";
 
 export default function Header() {
   const [isActive, setIsActive] = useState(false);
@@ -29,7 +30,7 @@ export default function Header() {
   }, []);
 
   const fetchCartCount = async () => {
-    const count = await getCachedCartCount();
+    const count = await getCachedCartCount('8');
     setCartCount(count);
   };
   return (

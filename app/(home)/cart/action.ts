@@ -1,10 +1,11 @@
 "use server";
 import db from "@/lib/db";
-import getSession from "@/lib/session";
 import { unstable_cache as nextCache, revalidateTag } from "next/cache";
 import { OptionSchema } from "./schema";
 import { redirect } from "next/navigation";
 import { getCartCount, getCachedCartCount } from "../components/action";
+import { getSession } from "@/lib/session";
+import { cookies } from "next/headers";
 
 interface IupdateCart{
   cartIds:number[]; 
@@ -44,6 +45,7 @@ export async function delCart({ id }: { id: number }) {
   return { ok: true, message: "제거완료" };
 }
 export async function getCart() {
+
   const session = await getSession();
   if (!session.id) return [];
 

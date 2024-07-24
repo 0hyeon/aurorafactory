@@ -1,7 +1,9 @@
+'use server'
 import Profile from "@/components/profile/page";
 import Header from "./components/header";
 import Link from "next/link";
-import getSession from "@/lib/session";
+import { cookies } from "next/headers";
+import { getSession } from "@/lib/session";
 
 export default async function TabLayout({
   children,

@@ -1,10 +1,11 @@
 "use server";
 import db from "@/lib/db";
-import getSession from "@/lib/session";
+import  { getSession } from "@/lib/session";
 import { productOption } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { getCartCount } from "../../components/action";
+import { cookies } from "next/headers";
 
 interface IcartCreate {
   quantity: number;
@@ -19,6 +20,7 @@ interface CartButtonProps {
 
 
 export async function cartCreate({ quantity, cartId, optionId }: IcartCreate) {
+  
   const session = await getSession();
   if (!session.id) return { ok: false, message: " 로그인 후 이용해주세요" };
 

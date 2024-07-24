@@ -1,28 +1,27 @@
-"use server";
+// components/action.ts
 import db from "@/lib/db";
-import getSession from "@/lib/session";
-import { redirect } from "next/navigation";
-import { unstable_cache as nextCache, revalidateTag } from "next/cache";
-export const getCachedCartCount = nextCache(getCartCount, ["cart-count"], {
-  tags: ["cart"],
-});
-export async function getCartCount() {
-  console.log("getCartCount 실행");
-  const session = await getSession();
-  if (!session.id) return 0;
+import { unstable_cache as nextCache } from "next/cache";
+
+// Function to fetch cart count based on session ID
+async function fetchCartCount(sessionId:number) {
+  console.log("fetchCartCount 실행");
+
+  if (!sessionId) return 0;
 
   const user = await db.user.findUnique({
-    where: {
-      id: session.id,
-    },
+    where: { id: Number(sessionId) },
     include: {
       _count: {
-        select: {
-          Cart: true,
-        },
+        select: { Cart: true },
       },
     },
   });
-  if (!user) return 0;
-  return user?._count.Cart;
+
+  return user ? user._count.Cart : 0;
 }
+
+// Create a cached function that accepts session ID
+export const getCachedCartCount = nextCache(
+  async (sessionId: string) => fetchCartCount(8),
+  ["cart-count"]
+);

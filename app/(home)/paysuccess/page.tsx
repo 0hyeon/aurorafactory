@@ -20,20 +20,20 @@ export default function PaySuccess() {
   useEffect(() => {
     const query = new URLSearchParams(window.location.search);
     const id = query.get("orderId");
-    const amount = query.get("amount");
+    const amt = query.get("amount");
     setOrderId(id);
-    setAmount(Number(amount));
+    setAmount(Number(amt));
   }, []);
 
   useEffect(() => {
-    if (orderId && amount > 0) {
+    if (orderId) {
       handlePaymentVerification(orderId, amount);
     }
-  }, [orderId, amount]);
+  }, [orderId]);
 
   const handlePaymentVerification = async (orderId: string, amount: number) => {
     try {
-      const response = await fetch('/api/nicepay/verify', {
+      const response = await fetch('/api/nicepay/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -41,22 +41,22 @@ export default function PaySuccess() {
         body: JSON.stringify({ orderId, amount }),
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      // if (!response.ok) {
+      //   const errorText = await response.text();
+      //   throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+      // }
 
-      const result = await response.json(); // JSON으로 응답 처리
-
+      const result = await response.json();
       if (result.status === 'paid') {
         console.log("결제 성공:", result);
         handleConfetti();
       } else {
-        console.error("결제 실패:", result.message);
-        router.push('/'); // 결제 실패 시 홈으로 리다이렉트
+        console.error("결제 실패:", result);
+        // router.push('/');
       }
     } catch (error) {
       console.error("서버 요청 오류:", error);
-      router.push('/'); // 오류 발생 시 홈으로 리다이렉트
+      // router.push('/');
     }
   };
 
@@ -69,7 +69,7 @@ export default function PaySuccess() {
         return;
       }
 
-      const particleCount = 900 * (timeLeft / duration);
+      var particleCount = 900 * (timeLeft / duration);
       confetti({
         ...defaults,
         particleCount,

@@ -1,20 +1,17 @@
-"use server";
+'use server'
+import { getIronSession } from 'iron-session';
+import { cookies } from 'next/headers';
+import db from './db';
+import { redirect } from 'next/navigation';
+import { SessionContent } from './types';
+import { revalidateTag } from 'next/cache';
 
-import { getIronSession } from "iron-session";
-import { cookies } from "next/headers";
-import db from "./db";
-import { notFound, redirect } from "next/navigation";
-import { SessionContent } from "./types";
-import { revalidateTag } from "next/cache";
-
-//세션 가져오기 - 복호화 된 쿠키 반환
-export default async function getSession() {
-  return getIronSession<SessionContent>(cookies(), {
-    cookieName: "delicious-aurorafac",
+// 세션을 가져오는 함수
+export async function getSession() {
+  const cookieStore = cookies(); // Use cookies() here
+  return await getIronSession<SessionContent>(cookieStore, {
+    cookieName: 'delicious-aurorafac',
     password: process.env.COOKIE_PASSWORD!,
-    // cookieOptions: {
-    //   secure: process.env.NODE_ENV === "production",
-    // },
   });
 }
 
@@ -30,6 +27,7 @@ export const getUserProfile = async () => {
   return user ? user : "";
 };
 
+// 세션 ID 가져오기
 export const getSessionId = async () => {
   const session = await getSession();
   return session.id;
@@ -47,10 +45,10 @@ export const saveLoginSession = async (user: SessionContent) => {
 
 // 로그아웃 - 쿠키에서 사용자 정보 제거
 export const logout = async () => {
-  "use server";
   const session = await getSession();
-  session.destroy(); // 쿠키 제거
-  revalidateTag("cart");
-  //revalidateTag("get-cartcount");
-  redirect("/");
+  if (session) {
+    session.destroy(); // 세션 제거
+    revalidateTag("cart");
+  }
+  return redirect("/");
 };
