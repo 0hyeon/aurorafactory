@@ -33,7 +33,7 @@ export default function Purchase({ data }: PurchaseProps) {
       const pay_obj: any = window;
       const { AUTHNICE } = pay_obj;
       AUTHNICE.requestPay({
-        clientId: 'R2_8bad4063b9a942668b156d221c3489ea',
+        clientId: 'S2_07a6c2d843654d7eb32a6fcc0759eef4',
         method: 'card',
         orderId: orderId,
         amount: Number(totalPrice),

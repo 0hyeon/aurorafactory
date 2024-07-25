@@ -22,6 +22,6 @@ async function fetchCartCount(sessionId:number) {
 
 // Create a cached function that accepts session ID
 export const getCachedCartCount = nextCache(
-  async (sessionId: string) => fetchCartCount(8),
+  async (sessionId: number) => fetchCartCount(sessionId),
   ["cart-count"]
 );

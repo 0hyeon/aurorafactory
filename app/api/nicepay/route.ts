@@ -3,10 +3,10 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function POST(request: NextRequest) {
   const { orderId, amount } = await request.json();
   console.log("orderId, amount : ", orderId, amount);
-  const clientKey = 'R2_8bad4063b9a942668b156d221c3489ea';
-  const secretKey = '731f20c8498345b1ba7db90194076451';
+  const clientKey = 'S2_07a6c2d843654d7eb32a6fcc0759eef4';
+  const secretKey = '09899b0eb73a44d69be3c159a1109416';
 
-  const authHeader = 'Basic ' + Buffer.from(`${clientKey}:${secretKey}`).toString('base64');
+  const authHeader = 'Basic '+Buffer.from(`${clientKey}:${secretKey}`).toString('base64');
 
   console.log("authHeader:", authHeader); // 디버깅을 위해 인증 헤더를 로그로 출력
 
@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': authHeader,
+        'Authorization': 'UjJfOGJhZDQwNjNiOWE5NDI2NjhiMTU2ZDIyMWMzNDg5ZWE6NzMxZjIwYzg0OTgzNDViMWJhN2RiOTAxOTQwNzY0NTE=',
       },
       body: JSON.stringify({ amount }),
     });

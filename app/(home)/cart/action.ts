@@ -3,7 +3,7 @@ import db from "@/lib/db";
 import { unstable_cache as nextCache, revalidateTag } from "next/cache";
 import { OptionSchema } from "./schema";
 import { redirect } from "next/navigation";
-import { getCartCount, getCachedCartCount } from "../components/action";
+import { getCachedCartCount } from "../components/action";
 import { getSession } from "@/lib/session";
 import { cookies } from "next/headers";
 
@@ -34,7 +34,8 @@ export async function updateCart({ cartIds, orderId }: IupdateCart) {
 }
 
 export async function delCart({ id }: { id: number }) {
-  const session = await getSession();
+  const cookieStore = cookies();
+  const session = await getSession(cookieStore);
   if (!session.id) return;
   await db.cart.delete({
     where: { id },
@@ -44,9 +45,9 @@ export async function delCart({ id }: { id: number }) {
 
   return { ok: true, message: "제거완료" };
 }
-export async function getCart() {
+export async function getCart(session:any) {
 
-  const session = await getSession();
+  
   if (!session.id) return [];
 
   const cartData = await db.cart.findMany({
@@ -54,6 +55,7 @@ export async function getCart() {
       userId: session.id,
     },
   });
+  console.log("cartData : ",cartData);
   return cartData;
 }
 // export async function getPurChase() {

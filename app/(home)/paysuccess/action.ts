@@ -7,8 +7,8 @@ export async function NicePayVerify(orderId: string, amount: number) {
     return NextResponse.json({ message: 'Invalid orderId' }, { status: 400 });
   }
 
-  const clientKey = 'R2_8bad4063b9a942668b156d221c3489ea';
-  const secretKey = '731f20c8498345b1ba7db90194076451';
+  const clientKey = 'S2_07a6c2d843654d7eb32a6fcc0759eef4';
+  const secretKey = '09899b0eb73a44d69be3c159a1109416';
 
   const authHeader = 'Basic ' + Buffer.from(`${clientKey}:${secretKey}`).toString('base64');
   console.log("authHeader : ", authHeader);

@@ -13,26 +13,26 @@ export default function Header() {
   const [isActive, setIsActive] = useState(false);
   const [cartCount, setCartCount] = useState<any>(0);
 
-  useEffect(() => {
-    fetchCartCount(); // 컴포넌트 마운트 시 초기 데이터 로드
+  // useEffect(() => {
+  //   fetchCartCount(); // 컴포넌트 마운트 시 초기 데이터 로드
 
-    const handleCartUpdated = () => {
-      fetchCartCount(); // 이벤트 발생 시 데이터 다시 로드
-    };
+  //   const handleCartUpdated = () => {
+  //     fetchCartCount(); // 이벤트 발생 시 데이터 다시 로드
+  //   };
 
-    // 이벤트 리스너 등록
-    window.addEventListener("cartUpdated", handleCartUpdated);
+  //   // 이벤트 리스너 등록
+  //   window.addEventListener("cartUpdated", handleCartUpdated);
 
-    // 언마운트 시 이벤트 리스너 제거
-    return () => {
-      window.removeEventListener("cartUpdated", handleCartUpdated);
-    };
-  }, []);
+  //   // 언마운트 시 이벤트 리스너 제거
+  //   return () => {
+  //     window.removeEventListener("cartUpdated", handleCartUpdated);
+  //   };
+  // }, []);
 
-  const fetchCartCount = async () => {
-    const count = await getCachedCartCount('8');
-    setCartCount(count);
-  };
+  // const fetchCartCount = async () => {
+  //   const count = await getCachedCartCount(8);
+  //   setCartCount(count);
+  // };
   return (
     <div className="max-w-[1100px] my-0 mx-auto relative">
       <div className="flex items-center justify-between">

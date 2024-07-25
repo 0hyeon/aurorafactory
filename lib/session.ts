@@ -7,17 +7,16 @@ import { SessionContent } from './types';
 import { revalidateTag } from 'next/cache';
 
 // 세션을 가져오는 함수
-export async function getSession() {
-  const cookieStore = cookies(); // Use cookies() here
+export async function getSession(cookieStore:any) {
   return await getIronSession<SessionContent>(cookieStore, {
     cookieName: 'delicious-aurorafac',
     password: process.env.COOKIE_PASSWORD!,
   });
 }
 
-// 사용자 정보(id) 가져오기
-export const getUserProfile = async () => {
-  const session = await getSession();
+// // 사용자 정보(id) 가져오기
+export const getUserProfile = async (session:any) => {
+  // const session = await getSession();
   const user = session.id
     ? await db.user.findUnique({
         where: { id: session.id },
@@ -27,28 +26,28 @@ export const getUserProfile = async () => {
   return user ? user : "";
 };
 
-// 세션 ID 가져오기
-export const getSessionId = async () => {
-  const session = await getSession();
-  return session.id;
-};
+// // 세션 ID 가져오기
+// export const getSessionId = async () => {
+//   const session = await getSession();
+//   return session.id;
+// };
 
-// 로그인 - 사용자 정보를 암호화 후 쿠키에 저장
-export const saveLoginSession = async (user: SessionContent) => {
-  const session = await getSession();
-  session.id = user.user_id ?? user.id;
-  await session.save(); // 정보 암호화 후 쿠키에 저장
-  // SMS 로그인이라면, 인증토큰 삭제
-  user.user_id && (await db.sMSToken.delete({ where: { id: user.id } }));
-  redirect("/");
-};
+// // 로그인 - 사용자 정보를 암호화 후 쿠키에 저장
+// export const saveLoginSession = async (user: SessionContent) => {
+//   const session = await getSession();
+//   session.id = user.user_id ?? user.id;
+//   await session.save(); // 정보 암호화 후 쿠키에 저장
+//   // SMS 로그인이라면, 인증토큰 삭제
+//   user.user_id && (await db.sMSToken.delete({ where: { id: user.id } }));
+//   redirect("/");
+// };
 
-// 로그아웃 - 쿠키에서 사용자 정보 제거
-export const logout = async () => {
-  const session = await getSession();
-  if (session) {
-    session.destroy(); // 세션 제거
-    revalidateTag("cart");
-  }
-  return redirect("/");
-};
+// // 로그아웃 - 쿠키에서 사용자 정보 제거
+// export const logout = async () => {
+//   const session = await getSession();
+//   if (session) {
+//     session.destroy(); // 세션 제거
+//     revalidateTag("cart");
+//   }
+//   return redirect("/");
+// };

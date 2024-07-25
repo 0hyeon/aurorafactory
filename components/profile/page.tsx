@@ -4,9 +4,11 @@ import { getUserProfile } from "@/lib/session";
 import { Suspense } from "react";
 import { Loading } from "./components";
 import LogoutButton from "./components/LogoutButton";
+import { cookies } from "next/headers";
 
 const Profile = async () => {
-  const user = await getUserProfile();
+  const cookieStore = cookies();
+  const user = await getUserProfile(cookieStore);
 
   return (
     <div className="flex gap-5 items-center justify-center">

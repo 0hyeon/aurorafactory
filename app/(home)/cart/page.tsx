@@ -4,6 +4,7 @@ import { getCachedCart, getCachedProductSrc } from "./action";
 import CartList from "./components/CartList";
 import db from "@/lib/db";
 import { Cart, Product, productOption } from "@prisma/client";
+import { cookies } from "next/headers";
 
 interface ProductOptionWithProduct extends productOption {
   product: Product & { photo: string | null };
@@ -19,7 +20,8 @@ interface CartWithProductOption {
 }
 
 export default async function CartPage() {
-  const cartData: Cart[] = await getCachedCart();
+  const cookieStore = cookies(); // Use cookies() here
+  const cartData: Cart[] = await getCachedCart(cookieStore);
 
   // 모든 장바구니 항목에 대한 제품 옵션을 가져옵니다.
   const cartItems = await Promise.all(

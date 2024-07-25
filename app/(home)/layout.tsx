@@ -10,7 +10,8 @@ export default async function TabLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getSession();
+  const cookieStore = cookies();
+  const session = await getSession(cookieStore);
   console.log("session : ", session);
   return (
     <div>
