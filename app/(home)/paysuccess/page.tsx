@@ -3,6 +3,7 @@
 import confetti from "canvas-confetti";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { NicePayVerify } from "./action";
 
 export default function PaySuccess() {
   const [orderId, setOrderId] = useState<string | null>(null);
@@ -27,38 +28,39 @@ export default function PaySuccess() {
 
   useEffect(() => {
     if (orderId) {
-      handlePaymentVerification(orderId, amount);
+      // handlePaymentVerification(orderId, amount);
+      NicePayVerify(orderId, amount)
     }
   }, [orderId]);
 
-  const handlePaymentVerification = async (orderId: string, amount: number) => {
-    try {
-      const response = await fetch('/api/nicepay/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ orderId, amount }),
-      });
+  // const handlePaymentVerification = async (orderId: string, amount: number) => {
+  //   try {
+  //     const response = await fetch('/api/nicepay/', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ orderId, amount }),
+  //     });
 
-      // if (!response.ok) {
-      //   const errorText = await response.text();
-      //   throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
-      // }
+  //     // if (!response.ok) {
+  //     //   const errorText = await response.text();
+  //     //   throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+  //     // }
 
-      const result = await response.json();
-      if (result.status === 'paid') {
-        console.log("결제 성공:", result);
-        handleConfetti();
-      } else {
-        console.error("결제 실패:", result);
-        // router.push('/');
-      }
-    } catch (error) {
-      console.error("서버 요청 오류:", error);
-      // router.push('/');
-    }
-  };
+  //     const result = await response.json();
+  //     if (result.status === 'paid') {
+  //       console.log("결제 성공:", result);
+  //       handleConfetti();
+  //     } else {
+  //       console.error("결제 실패:", result);
+  //       // router.push('/');
+  //     }
+  //   } catch (error) {
+  //     console.error("서버 요청 오류:", error);
+  //     // router.push('/');
+  //   }
+  // };
 
   const handleConfetti = () => {
     const intervalId = setInterval(() => {

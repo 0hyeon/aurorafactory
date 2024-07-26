@@ -39,6 +39,7 @@ export default function Purchase({ data }: PurchaseProps) {
         amount: Number(totalPrice),
         goodsName: productNames,
         returnUrl: `http://localhost:3000/paysuccess?orderId=${orderId}&amount=${totalPrice}`,
+        // returnUrl: `http://localhost:3000/paysuccess`,
         fnError: (result: any) => {
           alert(
             '고객용 메시지 : ' +

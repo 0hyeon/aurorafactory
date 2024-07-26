@@ -11,13 +11,13 @@ export async function POST(request: NextRequest) {
   console.log("authHeader:", authHeader); // 디버깅을 위해 인증 헤더를 로그로 출력
 
   try {
-    const response = await fetch(`https://api.nicepay.co.kr/v1/payments/${orderId}`, {
+    const response = await fetch(`https://sandbox-api.nicepay.co.kr/v1/payments/${orderId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'UjJfOGJhZDQwNjNiOWE5NDI2NjhiMTU2ZDIyMWMzNDg5ZWE6NzMxZjIwYzg0OTgzNDViMWJhN2RiOTAxOTQwNzY0NTE=',
+        'Authorization': authHeader,
       },
-      body: JSON.stringify({ amount }),
+      body: JSON.stringify({ amount: String(amount) }),
     });
 
     const responseBody = await response.json(); // 응답 본문을 한 번만 읽음

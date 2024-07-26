@@ -1,10 +1,8 @@
 'use server';
 
-import { NextResponse } from 'next/server';
-
 export async function NicePayVerify(orderId: string, amount: number) {
   if (!orderId || typeof orderId !== 'string') {
-    return NextResponse.json({ message: 'Invalid orderId' }, { status: 400 });
+    return { status: 400, message: 'Invalid orderId' };
   }
 
   const clientKey = 'S2_07a6c2d843654d7eb32a6fcc0759eef4';
@@ -22,20 +20,20 @@ export async function NicePayVerify(orderId: string, amount: number) {
       },
       body: JSON.stringify({ amount }), // 요청 본문
     });
-    console.log("pay_action response : ", response);
-
     if (!response.ok) {
-      return NextResponse.json({ message: 'API request failed' }, { status: response.status });
+      return { status: response.status, message: 'API request failed' };
     }
 
     const data = await response.json();
+    console.log(data)
+
     if (data.resultCode === '0000' && data.status === 'paid') {
-      return NextResponse.json({ status: 'paid', ...data });
+      return { status: 'paid', ...data };
     } else {
-      return NextResponse.json({ status: 'failed', message: data.resultMsg });
+      return { status: 'failed', message: data.resultMsg };
     }
   } catch (error) {
     console.log("nicepay verify error : ", error);
-    return NextResponse.json({ status: 'error', message: 'Server error', error: error });
+    return { status: 'error', message: 'Server error', error: error };
   }
 }

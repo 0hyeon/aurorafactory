@@ -1,5 +1,4 @@
 "use client";
-// import styles from "./style.module.scss";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -8,17 +7,18 @@ import Image from "next/image";
 import Nav from "./nav";
 import { getCachedCartCount } from "./action";
 
-export default function Header({cookies}:any) {
+export default function Header({ cookies }: any) {
   const [isActive, setIsActive] = useState(false);
   const [cartCount, setCartCount] = useState<any>(0);
-  console.log("cookies : ",cookies)
+  console.log("cookies : ", cookies);
+
   // fetchCartCount 함수 정의
   const fetchCartCount = async () => {
     try {
       const count = await getCachedCartCount(cookies); // cookies를 getCachedCartCount에 전달
       setCartCount(count);
     } catch (error) {
-      console.error('Error fetching cart count:', error);
+      console.error("Error fetching cart count:", error);
       setCartCount(0); // 에러 발생 시 기본값 설정
     }
   };
@@ -63,10 +63,6 @@ export default function Header({cookies}:any) {
           animate={!isActive ? "open" : "closed"}
           className="w-[270px] flex flex-col justify-center items-end"
         >
-          {/* <div className={""}>
-            <Search />
-          </div> */}
-
           <Link href={"/cart"}>
             <div className="flex gap-[10px]">
               <svg

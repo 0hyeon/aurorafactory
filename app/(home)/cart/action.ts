@@ -46,8 +46,7 @@ export async function delCart({ id }: { id: number }) {
   return { ok: true, message: "제거완료" };
 }
 export async function getCart(session:any) {
-
-  
+  console.log("getCart session : ",session)
   if (!session.id) return [];
 
   const cartData = await db.cart.findMany({
@@ -72,9 +71,11 @@ async function getProductSrc(productId: number) {
   return product?.photo ?? null;
 }
 
-export const getCachedCart = nextCache(getCart, ["cart"], {
-  tags: ["cart"],
-});
+export const getCachedCart = nextCache(async (cookie: any) => {
+  const cart = await getCart(cookie);
+  return cart;
+}, ["cart"]);
+
 export const getCachedProductSrc = nextCache(getProductSrc, ["product-src"], {
   tags: ["product-src"],
 });
