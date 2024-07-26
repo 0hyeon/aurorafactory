@@ -13,7 +13,6 @@ import { IslideData } from "@/types/type";
 import { Product } from "@prisma/client";
 
 export default function BestItem({ data }: any) {
-  console.log("BestItem : ", data);
   const [swiperIndex, setSwiperIndex] = useState(0); //페이지네이션
   const [swiper, setSwiper] = useState<SwiperClass>(); //슬라이드
   const handlePrev = () => {

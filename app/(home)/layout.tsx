@@ -12,7 +12,6 @@ export default async function TabLayout({
 }) {
   const cookieStore = cookies();
   const session = await getSession(cookieStore);
-  console.log("session : ", session);
   return (
     <div>
       <div className="h-auto pt-4 gap-4 flex items-center justify-end text-[12px] max-w-[1100px] mx-auto my-0">
@@ -29,7 +28,7 @@ export default async function TabLayout({
           </>
         )}
       </div>
-      <Header />
+      <Header cookies={8} />
       <div className="w-full max-w-[1100px] mx-auto">
         <div className="pt-[60px] pb-[60px]">{children}</div>
       </div>

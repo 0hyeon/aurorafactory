@@ -7,7 +7,8 @@ import { getSession } from "@/lib/session";
 import { cookies } from "next/headers";
 
 async function getIsOwner(userId: number) {
-  const session = await getSession();
+  const cookie = cookies()
+  const session = await getSession(cookie);
   if (session.id) {
     return session.id === userId;
   }
