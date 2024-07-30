@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState } from "react";
 import Purchase from "./Purchase";
 import { delCart } from "../action";
+import { revalidateTag } from "next/cache";
 
 interface ProductOptionWithProduct extends productOption {
   product: Product & { photo: string | null };

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { cartCreate } from "../action";
 import Link from "next/link";
 import { ShoppingCartIcon } from "@heroicons/react/24/outline";
+import { revalidateTag } from "next/cache";
 interface CartButtonProps {
   options: { id: number; quantity: number }[];
   cartId: number;
@@ -46,6 +47,7 @@ const CartButton = ({ options, cartId, text }: CartButtonProps) => {
 
     if (addedToCart) {
       window.dispatchEvent(new Event("cartUpdated"));
+      revalidateTag("cart");
       const messages = responses.map((response) => response.message).join("\n");
       setPopupMessage(messages);
       setShowPopup(true);
