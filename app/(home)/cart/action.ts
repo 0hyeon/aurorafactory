@@ -12,7 +12,6 @@ interface IupdateCart {
   orderId: string;
 }
 export async function updateCart({ cartIds, orderId }: IupdateCart) {
-  console.log("updateCart 발동");
   try {
     await db.cart.updateMany({
       where: {
@@ -37,19 +36,19 @@ export async function updateCart({ cartIds, orderId }: IupdateCart) {
 }
 
 export async function delCart({ id }: { id: number }) {
+  revalidateTag("cart");
+  revalidateTag("cart-count");
   const cookieStore = cookies();
   const session = await getSession(cookieStore);
   if (!session.id) return;
   await db.cart.delete({
     where: { id },
   });
-  revalidateTag("cart");
-  // await getCartCount();
 
   return { ok: true, message: "제거완료" };
 }
 export async function getCart(session: any) {
-  console.log("getCart session : ", session);
+  console.log("getCart", session);
   if (!session.id) return [];
 
   const cartData = await db.cart.findMany({
@@ -57,7 +56,7 @@ export async function getCart(session: any) {
       userId: session.id,
     },
   });
-  console.log("cartData : ", cartData);
+
   return cartData;
 }
 // export async function getPurChase() {

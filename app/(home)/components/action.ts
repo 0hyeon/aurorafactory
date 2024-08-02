@@ -1,4 +1,4 @@
-'use server'
+"use server";
 import db from "@/lib/db";
 import { unstable_cache as nextCache, revalidateTag } from "next/cache";
 
@@ -16,17 +16,21 @@ async function fetchCartCount(cookie: any) {
       },
     },
   });
-  
+
   return user ? user._count.Cart : 0;
 }
 
 // Create a cached function that accepts session ID
-export const getCachedCartCount = nextCache(async (cookie: any) => {
-  const count = await fetchCartCount(cookie);
-  return count;
-}, ["cart-count"]);
+export const getCachedCartCount = nextCache(
+  async (cookie: any) => {
+    const count = await fetchCartCount(cookie);
+    return count;
+  },
+  ["cart-count", "cart"]
+);
 
 // 별도의 revalidateTag 함수 호출
 export async function revalidateCartCount() {
   revalidateTag("cart-count");
+  revalidateTag("cart");
 }

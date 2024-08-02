@@ -71,7 +71,7 @@ export async function cartCreate({ quantity, cartId, optionId }: IcartCreate) {
     },
   });
   revalidateTag("cart");
-  // await getCartCount();
+  revalidateTag("cart-count");
 
   return { ok: true, message: "장바구니에 담았습니다.", cartId: cart.id };
 }

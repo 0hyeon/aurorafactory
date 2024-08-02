@@ -46,8 +46,8 @@ const CartButton = ({ options, cartId, text }: CartButtonProps) => {
     }
 
     if (addedToCart) {
-      window.dispatchEvent(new Event("cartUpdated"));
-      revalidateTag("cart");
+      // window.dispatchEvent(new Event("cartUpdated"));
+
       const messages = responses.map((response) => response.message).join("\n");
       setPopupMessage(messages);
       setShowPopup(true);
