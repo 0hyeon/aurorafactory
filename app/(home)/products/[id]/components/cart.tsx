@@ -16,6 +16,8 @@ const CartButton = ({ options, cartId, text }: CartButtonProps) => {
   const [popupMessage, setPopupMessage] = useState("");
 
   const handleAddToCart = async () => {
+    window.dispatchEvent(new Event("cartUpdated"));
+
     const responses = await Promise.all(
       options.map(({ id, quantity }) =>
         cartCreate({ quantity, cartId, optionId: id })
@@ -46,8 +48,6 @@ const CartButton = ({ options, cartId, text }: CartButtonProps) => {
     }
 
     if (addedToCart) {
-      // window.dispatchEvent(new Event("cartUpdated"));
-
       const messages = responses.map((response) => response.message).join("\n");
       setPopupMessage(messages);
       setShowPopup(true);

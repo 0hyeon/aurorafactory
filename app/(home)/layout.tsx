@@ -1,27 +1,57 @@
-"use server";
 import Profile from "@/components/profile/page";
 import Header from "./components/header";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { getSession, getUserProfile } from "@/lib/session";
-import LogoutButton from "@/components/profile/components/LogoutButton";
+import db from "@/lib/db";
+import { notFound, redirect } from "next/navigation";
+import { Suspense } from "react";
 
 export default async function TabLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const cookieStore = cookies();
-  const session = await getSession(cookieStore);
+  const session = await getSession();
   const user = await getUserProfile(session);
+  async function getUser() {
+    const session = await getSession();
+    if (session.id) {
+      const user = await db.user.findUnique({
+        where: {
+          id: session.id,
+        },
+      });
+      if (user) {
+        return user;
+      }
+    }
+    notFound();
+  }
 
+  async function Username() {
+    const user = await getUser();
+    return <h1>어서오세요! {user?.username}님</h1>;
+  }
+  const logOut = async () => {
+    "use server";
+    const session = await getSession();
+    await session.destroy();
+    redirect("/");
+  };
   return (
     <div>
       <div className="h-auto pt-4 gap-4 flex items-center justify-end text-[12px] max-w-[1100px] mx-auto my-0">
         {session.id ? (
           <>
-            <Profile user={user} />
-            |<LogoutButton />
+            <Suspense fallback={"Hello!"}>
+              {/* @ts-expect-error Async Server Component */}
+              <Username />
+            </Suspense>
+            <form action={logOut}>
+              <button>로그아웃</button>
+            </form>
+            {/* <Profile user={user} /> */}
           </>
         ) : (
           <>

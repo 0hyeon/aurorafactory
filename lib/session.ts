@@ -1,4 +1,3 @@
-"use server";
 import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
 import db from "./db";
@@ -7,8 +6,8 @@ import { SessionContent } from "./types";
 import { revalidateTag } from "next/cache";
 
 // 세션을 가져오는 함수
-export async function getSession(cookieStore: any) {
-  return await getIronSession<SessionContent>(cookieStore, {
+export async function getSession() {
+  return await getIronSession<SessionContent>(cookies(), {
     cookieName: "delicious-aurorafac",
     password: process.env.COOKIE_PASSWORD!,
   });
@@ -41,17 +40,4 @@ export const saveLoginSession = async (session: any, user: SessionContent) => {
   // SMS 로그인이라면, 인증토큰 삭제
   user.user_id && (await db.sMSToken.delete({ where: { id: user.id } }));
   redirect("/");
-};
-
-// 로그아웃 - 쿠키에서 사용자 정보 제거
-export const logout = async () => {
-  console.log("logout");
-  const cookieStore = cookies();
-  const session = await getSession(cookieStore);
-
-  if (session) {
-    session.destroy(); // 세션 제거
-    revalidateTag("cart");
-  }
-  return redirect("/");
 };

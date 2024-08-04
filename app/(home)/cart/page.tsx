@@ -21,10 +21,9 @@ interface CartWithProductOption {
 }
 
 export default async function CartPage() {
-  const cookieStore = cookies(); // Use cookies() here
-  const session = await getSession(cookieStore);
+  const session = await getSession();
   const cartData: Cart[] = await getCachedCart(session);
-  console.log("cartData : ",cartData)
+  console.log("cartData : ", cartData);
 
   // 모든 장바구니 항목에 대한 제품 옵션을 가져옵니다.
   const cartItems = await Promise.all(

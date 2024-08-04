@@ -18,8 +18,9 @@ interface CartButtonProps {
 }
 
 export async function cartCreate({ quantity, cartId, optionId }: IcartCreate) {
-  const cookieStore = cookies();
-  const session = await getSession(cookieStore);
+  revalidateTag("cart");
+  revalidateTag("cart-count");
+  const session = await getSession();
   if (!session.id) return { ok: false, message: " 로그인 후 이용해주세요" };
 
   const existingCartItem = await db.cart.findFirst({
@@ -70,8 +71,6 @@ export async function cartCreate({ quantity, cartId, optionId }: IcartCreate) {
       id: true,
     },
   });
-  revalidateTag("cart");
-  revalidateTag("cart-count");
 
   return { ok: true, message: "장바구니에 담았습니다.", cartId: cart.id };
 }

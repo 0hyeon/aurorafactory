@@ -4,11 +4,9 @@ import { unstable_cache as nextCache, revalidateTag } from "next/cache";
 import { Product } from "@prisma/client";
 import ProductDetailClient from "./components/ProductDetailClient";
 import { getSession } from "@/lib/session";
-import { cookies } from "next/headers";
 
 async function getIsOwner(userId: number) {
-  const cookie = cookies()
-  const session = await getSession(cookie);
+  const session = await getSession();
   if (session.id) {
     return session.id === userId;
   }
