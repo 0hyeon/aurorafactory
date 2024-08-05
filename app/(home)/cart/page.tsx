@@ -6,6 +6,8 @@ import db from "@/lib/db";
 import { Cart, Product, productOption } from "@prisma/client";
 import { cookies } from "next/headers";
 import { getSession } from "@/lib/session";
+import { revalidateTag } from "next/cache";
+import { revalidateCartCount } from "../components/action";
 
 interface ProductOptionWithProduct extends productOption {
   product: Product & { photo: string | null };
@@ -22,7 +24,8 @@ interface CartWithProductOption {
 
 export default async function CartPage() {
   const session = await getSession();
-  const cartData: Cart[] = await getCachedCart(session);
+  const cartData: Cart[] = await getCachedCart();
+  revalidateCartCount();
   console.log("cartData : ", cartData);
 
   // 모든 장바구니 항목에 대한 제품 옵션을 가져옵니다.

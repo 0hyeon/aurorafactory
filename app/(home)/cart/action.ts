@@ -1,11 +1,9 @@
 "use server";
 import db from "@/lib/db";
 import { unstable_cache as nextCache, revalidateTag } from "next/cache";
-import { OptionSchema } from "./schema";
-import { redirect } from "next/navigation";
-import { getCachedCartCount } from "../components/action";
 import { getSession } from "@/lib/session";
-import { cookies } from "next/headers";
+import { getCachedCartCount, revalidateCartCount } from "../components/action";
+import { Cart } from "@prisma/client";
 
 interface IupdateCart {
   cartIds: number[];
@@ -37,9 +35,13 @@ export async function updateCart({ cartIds, orderId }: IupdateCart) {
 
 export async function delCart({ id }: { id: number }) {
   revalidateTag("cart");
-  revalidateTag("cart-count");
-  const cookieStore = cookies();
-  const session = await getSession(cookieStore);
+  // revalidateTag("cart-count");
+  revalidateCartCount();
+  getCachedCartCount();
+
+  const session = await getSession();
+  const cartData: Cart[] = await getCachedCart();
+
   if (!session.id) return;
   await db.cart.delete({
     where: { id },
@@ -47,7 +49,8 @@ export async function delCart({ id }: { id: number }) {
 
   return { ok: true, message: "제거완료" };
 }
-export async function getCart(session: any) {
+export async function getCart() {
+  const session = await getSession();
   console.log("getCart", session);
   if (!session.id) return [];
 
@@ -73,14 +76,9 @@ async function getProductSrc(productId: number) {
   return product?.photo ?? null;
 }
 
-export const getCachedCart = nextCache(
-  async (cookie: any) => {
-    const cart = await getCart(cookie);
-    return cart;
-  },
-  ["cart"]
-);
-
+export const getCachedCart = nextCache(getCart, ["product-src"], {
+  tags: ["cart"],
+});
 export const getCachedProductSrc = nextCache(getProductSrc, ["product-src"], {
   tags: ["product-src"],
 });

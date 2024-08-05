@@ -6,6 +6,7 @@ import { useState } from "react";
 import Purchase from "./Purchase";
 import { delCart } from "../action";
 import { revalidateTag } from "next/cache";
+import { getCachedCartCount } from "../../components/action";
 
 interface ProductOptionWithProduct extends productOption {
   product: Product & { photo: string | null };
@@ -84,6 +85,7 @@ export default function CartList({ data }: CartListProps) {
       setCart((prevCart) => prevCart.filter((item) => item.id !== id));
       alert(result?.message);
     }
+    getCachedCartCount();
     window.dispatchEvent(new Event("cartUpdated"));
   };
 
