@@ -1,5 +1,6 @@
 import { Username } from "@/app/(home)/components/username";
 import { getSession } from "@/lib/session";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { Loading } from "./components";
@@ -7,7 +8,8 @@ import { Loading } from "./components";
 export default async function Profile({ user }: any) {
   const logOut = async () => {
     "use server";
-    const session = await getSession();
+    const cookieStore = cookies();
+    const session = await getSession(cookieStore);
     await session.destroy();
     redirect("/");
   };

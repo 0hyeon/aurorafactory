@@ -23,7 +23,8 @@ interface CartWithProductOption {
 }
 
 export default async function CartPage() {
-  const session = await getSession();
+  const cookieStore = cookies();
+  const session = await getSession(cookieStore);
   const cartData: Cart[] = await getCachedCart();
   revalidateCartCount();
   console.log("cartData : ", cartData);

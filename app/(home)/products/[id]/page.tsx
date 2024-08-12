@@ -1,12 +1,16 @@
+"use server";
 import db from "@/lib/db";
 import { notFound } from "next/navigation";
 import { unstable_cache as nextCache, revalidateTag } from "next/cache";
 import { Product } from "@prisma/client";
 import ProductDetailClient from "./components/ProductDetailClient";
 import { getSession } from "@/lib/session";
+import { cookies } from "next/headers";
 
 async function getIsOwner(userId: number) {
-  const session = await getSession();
+  const cookieStore = cookies();
+  const session = await getSession(cookieStore);
+
   if (session.id) {
     return session.id === userId;
   }

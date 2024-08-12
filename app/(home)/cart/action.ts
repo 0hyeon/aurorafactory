@@ -4,11 +4,13 @@ import { unstable_cache as nextCache, revalidateTag } from "next/cache";
 import { getSession } from "@/lib/session";
 import { getCachedCartCount, revalidateCartCount } from "../components/action";
 import { Cart } from "@prisma/client";
+import { cookies } from "next/headers";
 
 interface IupdateCart {
   cartIds: number[];
   orderId: string;
 }
+const cookieStore = cookies();
 export async function updateCart({ cartIds, orderId }: IupdateCart) {
   try {
     await db.cart.updateMany({
@@ -34,10 +36,10 @@ export async function updateCart({ cartIds, orderId }: IupdateCart) {
 }
 
 export async function delCart({ id }: { id: number }) {
-  revalidateTag("cart");
-  // revalidateTag("cart-count");
+  // revalidateTag("cart");
   revalidateCartCount();
-  const session = await getSession();
+
+  const session = await getSession(cookieStore);
   getCachedCartCount(session.id);
   const cartData: Cart[] = await getCachedCart();
 
@@ -49,7 +51,7 @@ export async function delCart({ id }: { id: number }) {
   return { ok: true, message: "제거완료" };
 }
 export async function getCart() {
-  const session = await getSession();
+  const session = await getSession(cookieStore);
   console.log("getCart", session);
   if (!session.id) return [];
 

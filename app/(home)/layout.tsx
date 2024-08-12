@@ -6,16 +6,33 @@ import { getSession, getUserProfile } from "@/lib/session";
 import db from "@/lib/db";
 import { notFound, redirect } from "next/navigation";
 import { Suspense } from "react";
+import { getCachedLikeStatus } from "../(admin)/action";
 
 export default async function TabLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getSession();
+  const cookieStore = cookies();
+  const logOut = async () => {
+    "use server";
+    const session = await getSession(cookieStore);
+    await session.destroy();
+    redirect("/");
+  };
+
+  const session = await getSession(cookieStore);
+
+  // 만약 세션이 없으면 로그인 페이지로 리디렉션
+  if (!session?.id) {
+    redirect("/login");
+  }
+
+  const cartcount = await getCachedLikeStatus(session.id!);
   const user = await getUserProfile(session);
+
   async function getUser() {
-    const session = await getSession();
+    const session = await getSession(cookieStore);
     if (session.id) {
       const user = await db.user.findUnique({
         where: {
@@ -33,12 +50,7 @@ export default async function TabLayout({
     const user = await getUser();
     return <h1>어서오세요! {user?.username}님</h1>;
   }
-  const logOut = async () => {
-    "use server";
-    const session = await getSession();
-    await session.destroy();
-    redirect("/");
-  };
+
   return (
     <div>
       <div className="h-auto pt-4 gap-4 flex items-center justify-end text-[12px] max-w-[1100px] mx-auto my-0">
@@ -48,10 +60,9 @@ export default async function TabLayout({
               {/* @ts-expect-error Async Server Component */}
               <Username />
             </Suspense>
-            <form action={logOut}>
-              <button>로그아웃</button>
+            <form action={logOut} method="post">
+              <button type="submit">로그아웃</button>
             </form>
-            {/* <Profile user={user} /> */}
           </>
         ) : (
           <>
@@ -64,7 +75,7 @@ export default async function TabLayout({
           </>
         )}
       </div>
-      <Header cookies={session.id} />
+      <Header cartcount={cartcount || 0} />
       <div className="w-full max-w-[1100px] mx-auto">
         <div className="pt-[60px] pb-[60px]">{children}</div>
       </div>

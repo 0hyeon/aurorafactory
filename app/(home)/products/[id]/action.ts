@@ -5,10 +5,8 @@ import { productOption } from "@prisma/client";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import {
-  getCachedCartCount,
-  revalidateCartCount,
-} from "../../components/action";
+import { getCachedLikeStatus } from "@/app/(admin)/action";
+import { revalidateCartCount } from "../../components/action";
 
 interface IcartCreate {
   quantity: number;
@@ -22,9 +20,15 @@ interface CartButtonProps {
 }
 
 export async function cartCreate({ quantity, cartId, optionId }: IcartCreate) {
-  const session = await getSession();
-  getCachedCartCount(session.id);
   revalidateCartCount();
+
+  const cookieStore = cookies();
+  const session = await getSession(cookieStore);
+  if (session.id) {
+    console.log("getCachedLikeStatus : ", session.id);
+    await getCachedLikeStatus(session.id);
+  }
+
   if (!session.id) return { ok: false, message: " 로그인 후 이용해주세요" };
 
   const existingCartItem = await db.cart.findFirst({
