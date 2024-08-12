@@ -24,9 +24,9 @@ export default async function TabLayout({
   const session = await getSession(cookieStore);
 
   // 만약 세션이 없으면 로그인 페이지로 리디렉션
-  if (!session?.id) {
-    redirect("/login");
-  }
+  // if (!session?.id) {
+  //   redirect("/login");
+  // }
 
   const cartcount = await getCachedLikeStatus(session.id!);
   const user = await getUserProfile(session);
@@ -57,7 +57,6 @@ export default async function TabLayout({
         {session.id ? (
           <>
             <Suspense fallback={"Hello!"}>
-              {/* @ts-expect-error Async Server Component */}
               <Username />
             </Suspense>
             <form action={logOut} method="post">
