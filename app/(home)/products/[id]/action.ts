@@ -22,9 +22,9 @@ interface CartButtonProps {
 }
 
 export async function cartCreate({ quantity, cartId, optionId }: IcartCreate) {
-  getCachedCartCount();
-  revalidateCartCount();
   const session = await getSession();
+  getCachedCartCount(session.id);
+  revalidateCartCount();
   if (!session.id) return { ok: false, message: " 로그인 후 이용해주세요" };
 
   const existingCartItem = await db.cart.findFirst({

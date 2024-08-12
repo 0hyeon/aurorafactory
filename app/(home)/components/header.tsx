@@ -15,7 +15,7 @@ export default function Header({ cookies }: any) {
   // fetchCartCount 함수 정의
   const fetchCartCount = async () => {
     try {
-      const count = await getCachedCartCount(); // cookies를 getCachedCartCount에 전달
+      const count = await getCachedCartCount(cookies.id); // cookies를 getCachedCartCount에 전달
       setCartCount(count);
     } catch (error) {
       console.error("Error fetching cart count:", error);

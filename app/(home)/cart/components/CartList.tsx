@@ -85,7 +85,8 @@ export default function CartList({ data }: CartListProps) {
       setCart((prevCart) => prevCart.filter((item) => item.id !== id));
       alert(result?.message);
     }
-    getCachedCartCount();
+
+    // getCachedCartCount();
     window.dispatchEvent(new Event("cartUpdated"));
   };
 

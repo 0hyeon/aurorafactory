@@ -37,9 +37,8 @@ export async function delCart({ id }: { id: number }) {
   revalidateTag("cart");
   // revalidateTag("cart-count");
   revalidateCartCount();
-  getCachedCartCount();
-
   const session = await getSession();
+  getCachedCartCount(session.id);
   const cartData: Cart[] = await getCachedCart();
 
   if (!session.id) return;
