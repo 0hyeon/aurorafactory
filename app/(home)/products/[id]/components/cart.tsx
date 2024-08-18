@@ -79,7 +79,7 @@ const CartButton = ({ options, cartId, text }: CartButtonProps) => {
         className={`w-full p-4 bg-white hover:bg-blue-400 hover:text-white text-blue-400 rounded-md border-gray-400 border font-semibold text-base hover:border-blue-400 duration-300 ${
           isCartAdded ? "opacity-50 cursor-not-allowed" : ""
         }`}
-        disabled={isCartAdded} // 클릭 후 버튼을 비활성화
+        // disabled={isCartAdded} // 클릭 후 버튼을 비활성화
       >
         {text}
       </button>

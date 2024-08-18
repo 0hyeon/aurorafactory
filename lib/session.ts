@@ -7,7 +7,6 @@ import { revalidateTag } from "next/cache";
 
 // 세션을 가져오는 함수
 export async function getSession(session: any) {
-  console.log("getSession : ", session);
   return await getIronSession<SessionContent>(session, {
     cookieName: "delicious-aurorafac",
     password: process.env.COOKIE_PASSWORD!,

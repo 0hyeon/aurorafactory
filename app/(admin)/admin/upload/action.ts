@@ -2,6 +2,7 @@
 import { productSchema } from "./schema";
 
 import db from "@/lib/db";
+import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function uploadProduct(formData: FormData) {
@@ -55,6 +56,7 @@ export async function uploadProduct(formData: FormData) {
         id: true,
       },
     });
+    revalidateTag("products");
     redirect(`/products/${product.id}`);
     //redirect("/products")
     // }

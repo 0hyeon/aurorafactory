@@ -109,7 +109,7 @@ export default function CartList({ data }: CartListProps) {
                 )}
               </div>
               <div className="border-b border-b-gray-500 flex-grow">
-                <div className="flex flex-col items-start justify-around h-full">
+                <div className="flex flex-col items-start justify-around h-full pl-3">
                   <div className="flex flex-row justify-between w-full">
                     <div className="flex gap-12">
                       <div>
