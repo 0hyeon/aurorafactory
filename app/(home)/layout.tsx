@@ -7,6 +7,7 @@ import db from "@/lib/db";
 import { notFound, redirect } from "next/navigation";
 import { Suspense } from "react";
 import { getCachedLikeStatus } from "../(admin)/action";
+import { logOut } from "./action";
 
 export default async function TabLayout({
   children,
@@ -14,13 +15,6 @@ export default async function TabLayout({
   children: React.ReactNode;
 }) {
   const cookieStore = cookies();
-  const logOut = async () => {
-    "use server";
-    const session = await getSession(cookieStore);
-    await session.destroy();
-    redirect("/");
-  };
-
   const session = await getSession(cookieStore);
 
   // 만약 세션이 없으면 로그인 페이지로 리디렉션
