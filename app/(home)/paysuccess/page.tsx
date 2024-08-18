@@ -3,12 +3,16 @@
 import confetti from "canvas-confetti";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { NicePayVerify } from "./action";
 
 export default function PaySuccess() {
   const [orderId, setOrderId] = useState<string | null>(null);
   const [isPid, setPid] = useState<string | null>(null);
   const [amount, setAmount] = useState<number>(0);
+  const [result, setResult] = useState<{
+    status: string;
+    message?: string;
+  } | null>(null);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   const duration = 1 * 1000;
@@ -18,6 +22,7 @@ export default function PaySuccess() {
   function randomInRange(min: number, max: number) {
     return Math.random() * (max - min) + min;
   }
+
   const handleConfetti = () => {
     const intervalId = setInterval(() => {
       let timeLeft = animationEnd - Date.now();
@@ -27,7 +32,7 @@ export default function PaySuccess() {
         return;
       }
 
-      var particleCount = 100 * (timeLeft / duration);
+      const particleCount = 100 * (timeLeft / duration);
       confetti({
         ...defaults,
         particleCount,
@@ -45,6 +50,7 @@ export default function PaySuccess() {
       });
     }, 250);
   };
+
   useEffect(() => {
     const query = new URLSearchParams(window.location.search);
     const id = query.get("orderId");
@@ -59,8 +65,6 @@ export default function PaySuccess() {
   useEffect(() => {
     if (orderId) {
       handlePaymentVerification(orderId, amount, isPid);
-      NicePayVerify(orderId, amount);
-      handleConfetti();
     }
   }, [orderId, amount, isPid]);
 
@@ -78,29 +82,44 @@ export default function PaySuccess() {
         body: JSON.stringify({ orderId, amount, isPid }),
       });
 
-      // if (!response.ok) {
-      //   const errorText = await response.text();
-      //   throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
-      // }
-
       const result = await response.json();
-      console.log("result : ", result);
+      setResult(result);
+      setLoading(false);
+
       if (result.status === "paid") {
-        console.log("결제 성공:", result);
+        handleConfetti();
       } else {
         console.error("결제 실패:", result);
-        // router.push('/');
       }
     } catch (error) {
       console.error("서버 요청 오류:", error);
-      // router.push('/');
+      setResult({
+        status: "error",
+        message: "결제 확인 중 오류가 발생했습니다.",
+      });
+      setLoading(false);
     }
   };
 
+  if (loading) {
+    // 로딩 상태일 때 아무것도 렌더링하지 않거나 로딩 표시
+    return <div>로딩 중...</div>;
+  }
+
   return (
     <div className="text-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 gap-6 flex flex-col">
-      <div className="text-xl text-gray-400">구매가 완료되었습니다.</div>
-      <span className="text-base text-gray-400">감사합니다!</span>
+      {result?.status === "paid" ? (
+        <>
+          <div className="text-xl text-gray-400">구매가 완료되었습니다.</div>
+          <span className="text-base text-gray-400">감사합니다!</span>
+        </>
+      ) : result?.message ? (
+        <div className="text-xl text-gray-400">{result.message}</div>
+      ) : (
+        <div className="text-xl text-gray-400">
+          결제 확인 중 오류가 발생했습니다.
+        </div>
+      )}
     </div>
   );
 }
