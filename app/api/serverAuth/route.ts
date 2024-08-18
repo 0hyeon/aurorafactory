@@ -33,9 +33,12 @@ export async function POST(request: Request) {
     // 결제 승인을 위한 추가 작업 수행 가능
     // 예를 들어 승인 API를 호출하여 결제를 완료합니다.
 
-    return NextResponse.json({
-      message: "결제 인증이 성공적으로 처리되었습니다.",
-    });
+    const redirectUrl = `http://localhost:3000/paysuccess?orderId=${orderId}&amount=${amount}&tid=${tid}`;
+    return NextResponse.redirect(redirectUrl);
+
+    // return NextResponse.json({
+    //   message: "결제 인증이 성공적으로 처리되었습니다.",
+    // });
   } else {
     console.log("인증 실패:", authResultMsg);
     return NextResponse.json(

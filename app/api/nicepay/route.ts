@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-  const { orderId, amount, tid } = await request.json();
-  console.log("orderId, amount : ", orderId, amount, tid);
+  const { orderId, amount, isPid } = await request.json();
+  console.log("orderId, amount : ", orderId, amount, isPid);
   const clientKey = "S2_07a6c2d843654d7eb32a6fcc0759eef4";
   const secretKey = "09899b0eb73a44d69be3c159a1109416";
 
@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const response = await fetch(
-      `https://sandbox-api.nicepay.co.kr/v1/payments/${tid}`,
+      `https://sandbox-api.nicepay.co.kr/v1/payments/${isPid}`,
       {
         method: "POST",
         headers: {
