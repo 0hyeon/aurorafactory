@@ -29,7 +29,6 @@ export async function uploadProduct(formData: FormData) {
       photoUrls = data.photos.split(",");
     }
 
-    console.log(data);
     const product = await db.product.create({
       data: {
         title: result.data.title,

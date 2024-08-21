@@ -90,6 +90,6 @@ export default async function ProductDetail({
     "use server";
     revalidateTag("product-title");
   };
-
+  revalidateTag("products");
   return <ProductDetailClient product={product} params={id} />;
 }

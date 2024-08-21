@@ -52,12 +52,14 @@ export async function delCart({ id }: { id: number }) {
 }
 export async function getCart() {
   const session = await getSession(cookieStore);
-  console.log("getCart", session);
   if (!session.id) return [];
 
   const cartData = await db.cart.findMany({
     where: {
       userId: session.id,
+      orderstat: {
+        not: "결제완료",
+      },
     },
   });
 

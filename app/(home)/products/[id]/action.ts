@@ -36,6 +36,9 @@ export async function cartCreate({ quantity, cartId, optionId }: IcartCreate) {
       productId: Number(cartId),
       productOptionId: Number(optionId),
       userId: session.id,
+      orderstat: {
+        not: "결제완료",
+      },
     },
   });
 
