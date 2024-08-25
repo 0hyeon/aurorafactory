@@ -16,7 +16,6 @@ export async function fetchCartCount(id: number) {
     },
   });
 
-  console.log("Filtered Cart Count (excluding '결제완료'): ", cartCount);
   return cartCount;
 }
 

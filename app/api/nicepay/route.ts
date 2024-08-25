@@ -2,14 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   const { orderId, amount, isPid } = await request.json();
-  console.log("orderId, amount : ", orderId, amount, isPid);
+  // console.log("orderId, amount : ", orderId, amount, isPid);
   const clientKey = "S2_07a6c2d843654d7eb32a6fcc0759eef4";
   const secretKey = "09899b0eb73a44d69be3c159a1109416";
 
   const authHeader =
     "Basic " + Buffer.from(`${clientKey}:${secretKey}`).toString("base64");
 
-  console.log("authHeader:", authHeader); // 디버깅을 위해 인증 헤더를 로그로 출력
+  // console.log("authHeader:", authHeader); // 디버깅을 위해 인증 헤더를 로그로 출력
 
   try {
     const response = await fetch(
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     );
 
     const responseBody = await response.json(); // 응답 본문을 한 번만 읽음
-    console.log("Response body: ", responseBody);
+    // console.log("Response body: ", responseBody);
 
     if (!response.ok) {
       console.error("API request failed:", responseBody);

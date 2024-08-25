@@ -29,6 +29,24 @@ export default function SocialLogin() {
           </span>
           <span>Continue with SMS</span>
         </Link>
+        <Link
+          className="primary-btn flex h-10 items-center justify-center gap-3"
+          href="/sms"
+        >
+          <span>
+            <ChatBubbleOvalLeftEllipsisIcon className="h-6 w-6" />
+          </span>
+          <span>로그인id찾기</span>
+        </Link>
+        <Link
+          className="primary-btn flex h-10 items-center justify-center gap-3"
+          href="/sms"
+        >
+          <span>
+            <ChatBubbleOvalLeftEllipsisIcon className="h-6 w-6" />
+          </span>
+          <span>비밀번호찾기</span>
+        </Link>
       </div>
     </>
   );
