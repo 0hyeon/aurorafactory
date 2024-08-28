@@ -125,6 +125,78 @@ export async function authAligoCtgSearch() {
     };
   }
 }
+interface IsendAlimtalk {
+  apikey: string;
+  userid: string;
+  senderkey: string;
+  tpl_code: string;
+  sender: string;
+  senddate?: string; // 선택적 필드 (optional)
+  receiver: string;
+  recvname?: string;
+  subject: string;
+  message: string;
+  button?: object; // JSON 형식으로 받을 것이므로 object 타입
+  failover?: "Y" | "N"; // Y 또는 N만 가능
+  fsubject?: string;
+  fmessage?: string;
+  testMode?: "Y" | "N"; // Y 또는 N만 가능, 기본값이 'N'이라 선택적 필드로 정의
+}
+
+export async function sendAlimtalk() {
+  const url = "https://kakaoapi.aligo.in/akv10/alimtalk/send/";
+  let company = "라즈베리베리";
+  let user_name = "이정은";
+  let user_id = "djdjdjk2006";
+  let msg = `안녕하세요. ${user_name}님!
+${company}
+
+${company}에 회원가입 해주셔서
+진심으로 감사드립니다~`;
+  const sendData = {
+    apikey: process.env.KAKAO_API_KEY ?? "",
+    userid: process.env.ALIGO_USER_ID ?? "",
+    senderkey: process.env.SENDER_KEY ?? "",
+    tpl_code: "TM_2223",
+    sender: process.env.ADMIN_PHONE_NUMBER ?? "",
+    receiver_1: process.env.ADMIN_PHONE_NUMBER ?? "",
+    subject: "회원가입완료 안내",
+    message_1: msg,
+    testMode: "N",
+  };
+
+  const params = new URLSearchParams();
+
+  Object.entries(sendData).forEach(([key, value]) => {
+    if (typeof value === "string") {
+      params.append(key, value);
+    }
+  });
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+      },
+      body: params,
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      // 요청이 성공적으로 전송되었을 경우
+      console.log("알림톡 전송 성공:", result);
+      return result;
+    } else {
+      // 서버에서 200 OK를 반환했지만 코드가 실패를 나타낼 경우
+      console.error("알림톡 전송 실패:", result);
+      throw new Error(result.message || "알림톡 전송 중 오류 발생");
+    }
+  } catch (error) {
+    console.error("API 요청 오류:", error);
+    throw error;
+  }
+}
 export async function authAligoRegisterChannel() {
   const basicSendUrl = "https://kakaoapi.aligo.in/profile/list/";
 
