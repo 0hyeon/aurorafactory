@@ -22,7 +22,7 @@ export default async function Profile({ user = "난다고래" }: any) {
       <Suspense fallback={<Loading />}>
         <Username user={user} />
       </Suspense>
-      <form action={logOut} method="post">
+      <form action={logOut}>
         <button type="submit">Log out</button>
       </form>
     </div>

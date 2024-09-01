@@ -36,7 +36,6 @@ const LogIn = () => {
       </form>
       <div className="w-full h-px bg-neutral-500" />
       <SocialLogin />
-      <div className="w-full h-px bg-neutral-500" />
       <Button text="뒤로가기" onClick={() => router.back()}></Button>
     </div>
   );

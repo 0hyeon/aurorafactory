@@ -53,7 +53,7 @@ export default async function TabLayout({
             <Suspense fallback={"Hello!"}>
               <Username />
             </Suspense>
-            <form action={logOut} method="post">
+            <form action={logOut} >
               <button type="submit">로그아웃</button>
             </form>
           </>
