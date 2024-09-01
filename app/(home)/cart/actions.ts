@@ -2,7 +2,7 @@
 import db from "@/lib/db";
 import { unstable_cache as nextCache, revalidateTag } from "next/cache";
 import { getSession } from "@/lib/session";
-import { getCachedCartCount, revalidateCartCount } from "../components/action";
+import { getCachedCartCount, revalidateCartCount } from "../components/actions";
 import { Cart } from "@prisma/client";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";

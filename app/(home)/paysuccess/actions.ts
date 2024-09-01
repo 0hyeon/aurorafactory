@@ -1,3 +1,5 @@
+import { ALIGO_SEND_API, COMPANY, SIGN_UP_TEMPLATES } from "@/lib/constants";
+
 interface ChannelAuthResponse {
   result: string;
   code: string;
@@ -143,11 +145,13 @@ interface IsendAlimtalk {
   testMode?: "Y" | "N"; // Y 또는 N만 가능, 기본값이 'N'이라 선택적 필드로 정의
 }
 
-export async function sendAlimtalk() {
-  const url = "https://kakaoapi.aligo.in/akv10/alimtalk/send/";
-  let company = "라즈베리베리";
-  let user_name = "이정은";
-  let user_id = "djdjdjk2006";
+export async function sendAlimtalk({
+  user_name,
+}: {
+  user_name: FormDataEntryValue | null;
+}) {
+  const url = ALIGO_SEND_API;
+  let company = COMPANY;
   let msg = `안녕하세요. ${user_name}님!
 ${company}
 
@@ -157,8 +161,8 @@ ${company}에 회원가입 해주셔서
     apikey: process.env.KAKAO_API_KEY ?? "",
     userid: process.env.ALIGO_USER_ID ?? "",
     senderkey: process.env.SENDER_KEY ?? "",
-    tpl_code: "TM_2223",
-    sender: process.env.ADMIN_PHONE_NUMBER ?? "",
+    tpl_code: SIGN_UP_TEMPLATES,
+    sender: "010-4109-6590" ?? "",
     receiver_1: process.env.ADMIN_PHONE_NUMBER ?? "",
     subject: "회원가입완료 안내",
     message_1: msg,

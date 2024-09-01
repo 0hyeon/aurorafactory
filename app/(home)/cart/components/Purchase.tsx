@@ -2,7 +2,7 @@
 
 import Script from "next/script";
 import { CartWithProductOption } from "./CartList";
-import { updateCart } from "../action";
+import { updateCart } from "../actions";
 
 interface PurchaseProps {
   data: CartWithProductOption[];

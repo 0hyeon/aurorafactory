@@ -7,7 +7,6 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 
 export const signIn = async (data: any) => {
-  console.log("signIn Data : ", data);
   // 비밀번호 암호화
   const hashedPassword = await bcrypt.hash(data.password, 12);
 

@@ -1,7 +1,7 @@
 // serverComponent.tsx
 "use server";
 
-import { getCachedProduct } from "./action";
+import { getCachedProduct } from "./actions";
 import AddOptionDetailpage from "./components/AddOptionDetailpage";
 
 export default async function OptionDetailPage({

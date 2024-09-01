@@ -6,7 +6,7 @@ import {
   authAligoRegisterChannel,
   authAligoToken,
   sendAlimtalk,
-} from "./action";
+} from "./actions";
 import PaySuccess from "./component/PaySuccess ";
 
 export const metadata: Metadata = {
@@ -19,8 +19,9 @@ export default async function PaymentSuccessPage() {
   //const tokenResponse = await authAligoToken();
   //const tokenResponseCtg = await authAligoCtgSearch();
   // const check = await authAligoRegisterChannel();
-  const sendMessage = await sendAlimtalk();
-  console.log("sendMessage : ", sendMessage);
+
+  //const sendMessage = await sendAlimtalk();
+
   //console.log("check : ", check);
   // 필요한 경우 tokenResponse를 PaySuccess에 prop으로 전달할 수 있습니다.
 

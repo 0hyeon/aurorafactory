@@ -1,13 +1,13 @@
 "use server";
 import React from "react";
-import { getCachedCart, getCachedProductSrc } from "./action";
+import { getCachedCart, getCachedProductSrc } from "./actions";
 import CartList from "./components/CartList";
 import db from "@/lib/db";
 import { Cart, Product, productOption } from "@prisma/client";
 import { cookies } from "next/headers";
 import { getSession } from "@/lib/session";
 import { revalidateTag } from "next/cache";
-import { revalidateCartCount } from "../components/action";
+import { revalidateCartCount } from "../components/actions";
 
 interface ProductOptionWithProduct extends productOption {
   product: Product & { photo: string | null };

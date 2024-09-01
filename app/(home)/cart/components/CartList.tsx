@@ -4,9 +4,9 @@ import { formatToWon } from "@/lib/utils";
 import Image from "next/image";
 import { useState } from "react";
 import Purchase from "./Purchase";
-import { delCart } from "../action";
+import { delCart } from "../actions";
 import { revalidateTag } from "next/cache";
-import { getCachedCartCount } from "../../components/action";
+import { getCachedCartCount } from "../../components/actions";
 
 interface ProductOptionWithProduct extends productOption {
   product: Product & { photo: string | null };

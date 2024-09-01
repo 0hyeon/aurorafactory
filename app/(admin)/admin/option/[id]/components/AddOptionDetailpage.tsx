@@ -5,7 +5,7 @@ import Input from "@/components/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { OptionType, OptionSchema } from "../schema";
-import { uploadProductOption } from "../action";
+import { uploadProductOption } from "../actions";
 import Image from "next/image";
 
 interface IProduct {

@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ProductType, productSchema } from "./schema";
-import { getUploadUrl, uploadProduct } from "./action";
+import { getUploadUrl, uploadProduct } from "./actions";
 import Image from "next/image";
 import Select from "@/components/Selcect";
 import { CATEGORIES } from "@/lib/constants";

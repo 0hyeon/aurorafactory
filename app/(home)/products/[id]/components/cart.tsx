@@ -1,13 +1,13 @@
 "use client";
 import React, { useState } from "react";
-import { cartCreate } from "../action";
+import { cartCreate } from "../actions";
 import Link from "next/link";
 import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 import { revalidateTag } from "next/cache";
 import {
   fetchCartCount,
   revalidateCartCount,
-} from "@/app/(home)/components/action";
+} from "@/app/(home)/components/actions";
 
 interface CartButtonProps {
   options: { id: number; quantity: number }[];

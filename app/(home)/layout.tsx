@@ -6,8 +6,8 @@ import { getSession, getUserProfile } from "@/lib/session";
 import db from "@/lib/db";
 import { notFound, redirect } from "next/navigation";
 import { Suspense } from "react";
-import { getCachedLikeStatus } from "../(admin)/action";
-import { logOut } from "./action";
+import { getCachedLikeStatus } from "../(admin)/actions";
+import { logOut } from "./actions";
 
 export default async function TabLayout({
   children,
@@ -53,7 +53,7 @@ export default async function TabLayout({
             <Suspense fallback={"Hello!"}>
               <Username />
             </Suspense>
-            <form action={logOut} >
+            <form action={logOut}>
               <button type="submit">로그아웃</button>
             </form>
           </>
