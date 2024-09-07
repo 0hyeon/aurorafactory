@@ -11,6 +11,8 @@ export enum INVALID {
   EMAIL = "잘못된 이메일 형식입니다.",
   STRING = "문자여야 합니다.",
   INPUT = "입력해주세요.",
+  NAME_SHORT = "최소 두글자 이상 입력해주세요.",
+  NAME_LONG = "너무길어요 (최대12자)",
 }
 
 export const CONTENT_PER_PAGE = 1;
