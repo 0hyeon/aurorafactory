@@ -67,8 +67,9 @@ export const phoneSchema = z
     "Wrong phone format"
   );
 
-export const tokenSchema = z.coerce
+export const signTokenSchema = z.coerce.number().min(100000).max(999999);
+export const loginTokenSchema = z.coerce
   .number()
   .min(100000)
   .max(999999)
-  .refine(tokenExists, "This token does not exist.");
+  .refine(tokenExists, "토큰이 존재하지 않습니다.");

@@ -11,7 +11,7 @@ import { ActionState, FormState } from "./types";
 export const initialState: any = {
   token: false,
 };
-export const initFormValue: any = {
+export const initFormValue: FormState = {
   username: "",
   email: "",
   phone: "",

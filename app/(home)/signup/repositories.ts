@@ -40,5 +40,6 @@ export async function tokenExists(token: number) {
       id: true,
     },
   });
+  console.log("tokenExists : ", exists);
   return Boolean(exists);
 }

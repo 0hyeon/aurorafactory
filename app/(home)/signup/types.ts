@@ -5,8 +5,15 @@ export type ActionState = {
     fieldErrors: any;
   };
 };
-
-export type FormState = {
+// types.ts
+export interface FormState {
+  username: string;
+  email: string;
   phone: string;
-  token: string;
-};
+  password: string;
+  confirm_password: string;
+  address: string;
+  postaddress: string;
+  detailaddress: string;
+  token?: string;
+}
