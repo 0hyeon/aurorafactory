@@ -73,3 +73,17 @@ export const loginTokenSchema = z.coerce
   .min(100000)
   .max(999999)
   .refine(tokenExists, "토큰이 존재하지 않습니다.");
+
+export type FlattenedError = z.typeToFlattenedError<
+  {
+    username: string;
+    email: string;
+    phone: string;
+    password: string;
+    confirm_password: string;
+    address: string;
+    postaddress: string;
+    detailaddress: string;
+  },
+  string
+>;

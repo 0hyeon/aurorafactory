@@ -1,17 +1,13 @@
 "use server";
 
 import { sendAlimtalk } from "../paysuccess/actions";
-import { loginFormSchema, signTokenSchema } from "./schema";
+import { FlattenedError, loginFormSchema, signTokenSchema } from "./schema";
 import { signIn } from "./services";
 import crypto from "crypto";
 import db from "@/lib/db";
 import { redirect } from "next/navigation";
+import { ActionResult } from "./page";
 
-interface ActionState {
-  token: boolean;
-  tokenSentAt: any;
-  tokenNumber: any;
-}
 // export async function smsLogin(prevState: ActionState, formData: FormData) {
 //   const phone = formData.get("phone");
 //   const token = formData.get("token");
@@ -93,54 +89,47 @@ interface ActionState {
 // }
 
 export const createAccount = async (
-  prevState: ActionState,
+  prevState: ActionResult,
   formData: FormData
-) => {
-  console.log("formData : ", formData);
-  console.log("prevState : ", prevState);
-
-  // 유저가 입력한 데이터
+): Promise<ActionResult> => {
   const data = {
-    username: formData.get("username"),
-    email: formData.get("email"),
-    phone: formData.get("phone"),
-    password: formData.get("password"),
-    confirm_password: formData.get("confirm_password"),
-    address: formData.get("address"),
-    postaddress: formData.get("postaddress"),
-    detailaddress: formData.get("detailaddress"),
+    username: formData.get("username") as string,
+    email: formData.get("email") as string,
+    phone: formData.get("phone") as string,
+    password: formData.get("password") as string,
+    confirm_password: formData.get("confirm_password") as string,
+    address: formData.get("address") as string,
+    postaddress: formData.get("postaddress") as string,
+    detailaddress: formData.get("detailaddress") as string,
   };
 
-  // 토큰 발송 시간 설정
-  const TOKEN_EXPIRATION_TIME = 3 * 60 * 1000; // 3분 (밀리초)
+  const TOKEN_EXPIRATION_TIME = 3 * 60 * 1000;
 
-  const resultData = await loginFormSchema.spa(data); // 유효성검사 + 중복 db 찾기
+  const resultData = await loginFormSchema.spa(data);
   if (!prevState.token) {
-    // 회원가입 영역
-    if (!resultData.success) return resultData.error.flatten();
+    if (!resultData.success) {
+      const errors: FlattenedError = resultData.error.flatten();
 
-    // 토큰 생성
+      return {
+        token: false,
+        error: {
+          message: errors.formErrors.join(", ") || "Unknown error occurred",
+        },
+      };
+    }
     const tokenNumber = await getTokenSignUp();
 
-    // 인증 토큰 발송 (핸드폰 번호와 함께)
     await sendAlimtalk({ user_name: tokenNumber });
-
-    // 토큰 발송 시간 기록
-    const tokenSentAt = Date.now();
-
-    // 토큰과 발송 시간을 prevState에 저장
     return {
       token: true,
-      tokenNumber, // 생성한 토큰 저장
-      tokenSentAt, // 토큰 발송 시간 저장
+      tokenNumber,
+      tokenSentAt: Date.now(),
     };
   } else {
-    // 인증 토큰 입력 받는 부분
     const token = formData.get("token");
 
-    // 발송 후 3분이 초과되었는지 체크
     const currentTime = Date.now();
-    const timeElapsed = currentTime - prevState.tokenSentAt;
+    const timeElapsed = currentTime - (prevState.tokenSentAt ?? 0);
 
     if (timeElapsed > TOKEN_EXPIRATION_TIME) {
       return {
@@ -149,21 +138,23 @@ export const createAccount = async (
       };
     }
 
-    // 토큰 유효성 검사
     const result = await signTokenSchema.spa(Number(token));
-    if (!result.success) return result.error.flatten();
+    if (!result.success) {
+      const errors = result.error.flatten(); // 타입 자동 추론
 
-    console.log("token : ", token);
-    console.log("result.data : ", result.data);
+      return {
+        error: {
+          // formErrors 또는 fieldErrors에서 에러 메시지 추출
+          message: errors.formErrors.join(", ") || "Unknown error occurred",
+        },
+      };
+    }
 
-    // 저장된 토큰과 입력한 토큰 비교
     if (prevState.tokenNumber === String(result.data)) {
-      // 인증 성공 시 회원 정보 저장
       await signIn(resultData.data);
       await sendAlimtalk({ user_name: formData.get("username") });
       return redirect("/login");
     } else {
-      // 토큰 불일치
       return {
         token: false,
         error: { message: "인증번호가 일치하지 않습니다." },

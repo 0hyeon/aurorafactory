@@ -8,11 +8,53 @@ import { useFormState } from "react-dom";
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants";
 import Script from "next/script";
 import { createAccount } from "./actions";
-import { FormState } from "./types";
-import { initFormValue } from "./constants";
+
+interface FormState {
+  username: string;
+  email: string;
+  phone: string;
+  password: string;
+  confirm_password: string;
+  address: string;
+  postaddress: string;
+  detailaddress: string;
+  token: string;
+}
+
+export interface ActionResult {
+  token?: boolean;
+  tokenNumber?: string;
+  tokenSentAt?: number;
+  error?: {
+    message: string;
+  };
+  fieldErrors?: {
+    username?: string[];
+    phone?: string[];
+    email?: string[];
+    password?: string[];
+    confirm_password?: string[];
+    // 필요한 필드 추가
+  };
+}
+
+const initialState: ActionResult = {
+  token: false,
+};
+const initFormValue: FormState = {
+  username: "",
+  email: "",
+  phone: "",
+  password: "",
+  confirm_password: "",
+  address: "",
+  postaddress: "",
+  detailaddress: "",
+  token: "",
+};
 
 export default function LogIn() {
-  const [state, dispatch] = useFormState(createAccount, initFormValue);
+  const [state, setState] = useState<ActionResult>(initialState);
   const [form, setForm] = useState<FormState>(initFormValue);
   const [addressData, setAddressData] = useState({
     address: "",
@@ -26,29 +68,27 @@ export default function LogIn() {
       const TOKEN_EXPIRATION_TIME = 3 * 60 * 1000; // 3분 (밀리초)
       const calculateTimeRemaining = () => {
         const currentTime = Date.now();
-        const timeElapsed = currentTime - state.tokenSentAt;
+        const timeElapsed = currentTime - state.tokenSentAt!;
         const timeLeft = TOKEN_EXPIRATION_TIME - timeElapsed;
-        if (timeLeft <= 0) {
-          setTimeRemaining(0);
-        } else {
-          setTimeRemaining(timeLeft);
-        }
+        setTimeRemaining(timeLeft > 0 ? timeLeft : 0);
       };
 
-      calculateTimeRemaining(); // 초기 값 설정
-      const interval = setInterval(() => {
-        calculateTimeRemaining();
-      }, 1000);
+      calculateTimeRemaining();
+      const interval = setInterval(calculateTimeRemaining, 1000);
 
-      return () => clearInterval(interval); // 컴포넌트 언마운트 시 타이머 클리어
+      return () => clearInterval(interval);
     }
-  }, [state?.token, state.tokenSentAt]);
+  }, [state?.token, state?.tokenSentAt]);
 
-  const onSubmitHandler = (event: React.FormEvent) => {
+  const onSubmitHandler = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    // FormState를 FormData로 변환
     const formData = new FormData();
+    Object.entries(form).forEach(([key, value]) => {
+      if (value) formData.append(key, value);
+    });
+
+    // FormState를 FormData로 변환
     formData.append("username", form.username);
     formData.append("phone", form.phone);
     formData.append("email", form.email);
@@ -59,15 +99,23 @@ export default function LogIn() {
     formData.append("detailaddress", addressData.detailaddress);
 
     if (form.token) {
-      formData.append("token", form.token); // token이 있는 경우
+      formData.append("token", form.token);
     }
 
-    dispatch(formData); // FormData 전달
+    try {
+      const result = await createAccount(state, formData);
+      setState(result); // 결과에 따라 상태 업데이트
 
-    // 인증번호 입력 상태가 아니라면 폼 초기화
-    if (!state?.token) {
-      setForm(initFormValue); // 폼 초기화
+      if (!result.token) {
+        setForm(initFormValue); // 토큰이 없으면 폼 초기화
+      }
+    } catch (error) {
+      console.error("계정 생성 중 오류 발생:", error);
     }
+  };
+
+  const onRequestTokenHandler = () => {
+    console.log("Request token with phone number:", form.phone);
   };
 
   const formatTimeRemaining = (milliseconds: number) => {
@@ -79,7 +127,7 @@ export default function LogIn() {
   return (
     <div className="flex flex-col gap-10 py-8 px-6 max-w-[600px] mx-auto mt-20 border-[1px] border-black rounded-md">
       <Script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js" />
-      <div className="flex flex-col gap-2 *:font-medium">
+      <div className="flex flex-col gap-2 font-medium">
         <h1 className="text-2xl">안녕하세요!</h1>
         <h2 className="text-xl">
           {state?.token
@@ -101,8 +149,11 @@ export default function LogIn() {
                   required
                   min={100000}
                   max={999999}
-                  errors={state?.fieldErrors?.token}
+                  errors={state?.error?.message ? [state.error.message] : []}
                 />
+                <div className="w-1/6 mx-auto">
+                  <Button type="submit" text="인증하기" />
+                </div>
               </>
             ) : (
               <>
@@ -116,7 +167,7 @@ export default function LogIn() {
                   }
                   minLength={3}
                   maxLength={10}
-                  errors={state?.fieldErrors?.username}
+                  errors={state?.error?.message ? [state.error.message] : []}
                 />
                 <Input
                   name="phone"
@@ -124,8 +175,15 @@ export default function LogIn() {
                   placeholder="핸드폰번호 (인증번호 전송예정)"
                   required
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  errors={state?.fieldErrors?.phone}
+                  errors={state?.error?.message ? [state.error.message] : []}
                 />
+                {/* <div className="w-1/6 mx-auto">
+                  <Button
+                    type="button"
+                    text="인증하기"
+                    onClick={onRequestTokenHandler}
+                  />
+                </div> */}
                 <div className="w-0 h-px my-2" />
                 <Input
                   name="email"
@@ -133,7 +191,7 @@ export default function LogIn() {
                   placeholder="이메일"
                   required
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  errors={state?.fieldErrors?.email}
+                  errors={state?.error?.message ? [state.error.message] : []}
                 />
                 <Input
                   name="password"
@@ -144,7 +202,7 @@ export default function LogIn() {
                     setForm({ ...form, password: e.target.value })
                   }
                   minLength={PASSWORD_MIN_LENGTH}
-                  errors={state?.fieldErrors?.password}
+                  errors={state?.error?.message ? [state.error.message] : []}
                 />
                 <Input
                   name="confirm_password"
@@ -155,7 +213,7 @@ export default function LogIn() {
                     setForm({ ...form, confirm_password: e.target.value })
                   }
                   minLength={PASSWORD_MIN_LENGTH}
-                  errors={state?.fieldErrors?.confirm_password}
+                  errors={state?.error?.message ? [state.error.message] : []}
                 />
                 <div className="w-full gap-4 flex flex-col">
                   <AddressSearch
@@ -164,18 +222,14 @@ export default function LogIn() {
                     state={state}
                   />
                 </div>
+                <div className="w-1/6 mx-auto">
+                  <Button type="submit" text="회원가입" />
+                </div>
               </>
             )}
           </div>
         </div>
-        <div className="w-1/6 mx-auto">
-          <Button
-            type="submit"
-            text={`${state?.token ? "인증하기" : "회원가입"}`}
-          />
-        </div>
       </form>
-      {/* <SocialLogin /> */}
     </div>
   );
 }
