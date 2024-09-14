@@ -25,20 +25,19 @@ export interface ActionResult {
   token?: boolean;
   tokenNumber?: string;
   tokenSentAt?: number;
-  error?: {
-    message: string;
-  };
+  error?: any;
   fieldErrors?: {
     username?: string[];
     phone?: string[];
     email?: string[];
     password?: string[];
     confirm_password?: string[];
+    token?: string[];
     // 필요한 필드 추가
   };
 }
 
-const initialState: ActionResult = {
+const initialState: any = {
   token: false,
 };
 const initFormValue: FormState = {
@@ -54,7 +53,7 @@ const initFormValue: FormState = {
 };
 
 export default function LogIn() {
-  const [state, setState] = useState<ActionResult>(initialState);
+  const [state, setState] = useState<any>(initialState);
   const [form, setForm] = useState<FormState>(initFormValue);
   const [addressData, setAddressData] = useState({
     address: "",
@@ -62,9 +61,11 @@ export default function LogIn() {
     detailaddress: "",
   });
   const [timeRemaining, setTimeRemaining] = useState<number>(0);
-
+  const handleNavigate = () => {
+    window.location.href = "/signup";
+  };
   useEffect(() => {
-    if (state?.token && state.tokenSentAt) {
+    if ((state?.token && state.tokenSentAt) || timeRemaining > 0) {
       const TOKEN_EXPIRATION_TIME = 3 * 60 * 1000; // 3분 (밀리초)
       const calculateTimeRemaining = () => {
         const currentTime = Date.now();
@@ -78,7 +79,7 @@ export default function LogIn() {
 
       return () => clearInterval(interval);
     }
-  }, [state?.token, state?.tokenSentAt]);
+  }, [state?.token, state?.tokenSentAt]); // timeRemaining를 의존성에서 제거
 
   const onSubmitHandler = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -88,7 +89,6 @@ export default function LogIn() {
       if (value) formData.append(key, value);
     });
 
-    // FormState를 FormData로 변환
     formData.append("username", form.username);
     formData.append("phone", form.phone);
     formData.append("email", form.email);
@@ -104,15 +104,37 @@ export default function LogIn() {
 
     try {
       const result = await createAccount(state, formData);
-      setState(result); // 결과에 따라 상태 업데이트
 
-      if (!result.token) {
-        setForm(initFormValue); // 토큰이 없으면 폼 초기화
+      setState((prevState: any) => ({
+        ...prevState,
+        ...result,
+        tokenSentAt: result.tokenSentAt || prevState.tokenSentAt, // 인증번호가 틀렸을 경우 tokenSentAt 갱신 방지
+      }));
+
+      if (result.token) {
+        console.log("result.token : ", result.token);
       }
     } catch (error) {
       console.error("계정 생성 중 오류 발생:", error);
     }
   };
+
+  useEffect(() => {
+    if ((state?.token && state.tokenSentAt) || timeRemaining > 0) {
+      const TOKEN_EXPIRATION_TIME = 3 * 60 * 1000; // 3분 (밀리초)
+      const calculateTimeRemaining = () => {
+        const currentTime = Date.now();
+        const timeElapsed = currentTime - state.tokenSentAt!;
+        const timeLeft = TOKEN_EXPIRATION_TIME - timeElapsed;
+        setTimeRemaining(timeLeft > 0 ? timeLeft : 0);
+      };
+
+      calculateTimeRemaining();
+      const interval = setInterval(calculateTimeRemaining, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [state?.token, state?.tokenSentAt]); // timeRemaining을 의존성에서 제거하여 리랜더링 방지
 
   const onRequestTokenHandler = () => {
     console.log("Request token with phone number:", form.phone);
@@ -149,10 +171,11 @@ export default function LogIn() {
                   required
                   min={100000}
                   max={999999}
-                  errors={state?.error?.message ? [state.error.message] : []}
+                  errors={state?.error?.fieldErrors?.token}
                 />
-                <div className="w-1/6 mx-auto">
+                <div className="mx-auto flex gap-3">
                   <Button type="submit" text="인증하기" />
+                  <Button text="뒤로가기" onClick={() => handleNavigate} />
                 </div>
               </>
             ) : (
@@ -167,7 +190,7 @@ export default function LogIn() {
                   }
                   minLength={3}
                   maxLength={10}
-                  errors={state?.error?.message ? [state.error.message] : []}
+                  errors={state?.error?.fieldErrors?.username}
                 />
                 <Input
                   name="phone"
@@ -175,15 +198,8 @@ export default function LogIn() {
                   placeholder="핸드폰번호 (인증번호 전송예정)"
                   required
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  errors={state?.error?.message ? [state.error.message] : []}
+                  errors={state?.error?.fieldErrors?.phone}
                 />
-                {/* <div className="w-1/6 mx-auto">
-                  <Button
-                    type="button"
-                    text="인증하기"
-                    onClick={onRequestTokenHandler}
-                  />
-                </div> */}
                 <div className="w-0 h-px my-2" />
                 <Input
                   name="email"
@@ -191,7 +207,7 @@ export default function LogIn() {
                   placeholder="이메일"
                   required
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  errors={state?.error?.message ? [state.error.message] : []}
+                  errors={state?.error?.fieldErrors?.email}
                 />
                 <Input
                   name="password"
@@ -202,7 +218,7 @@ export default function LogIn() {
                     setForm({ ...form, password: e.target.value })
                   }
                   minLength={PASSWORD_MIN_LENGTH}
-                  errors={state?.error?.message ? [state.error.message] : []}
+                  errors={state?.error?.fieldErrors?.password}
                 />
                 <Input
                   name="confirm_password"
@@ -213,7 +229,7 @@ export default function LogIn() {
                     setForm({ ...form, confirm_password: e.target.value })
                   }
                   minLength={PASSWORD_MIN_LENGTH}
-                  errors={state?.error?.message ? [state.error.message] : []}
+                  errors={state?.error?.fieldErrors?.confirm_password}
                 />
                 <div className="w-full gap-4 flex flex-col">
                   <AddressSearch

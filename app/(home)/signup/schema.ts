@@ -67,23 +67,28 @@ export const phoneSchema = z
     "Wrong phone format"
   );
 
-export const signTokenSchema = z.coerce.number().min(100000).max(999999);
+export const signTokenSchema = z.object({
+  token: z.coerce
+    .number({
+      invalid_type_error: "인증번호는 숫자여야 합니다.",
+    })
+    .min(100000, "인증번호는 6자리 숫자여야 합니다.")
+    .max(999999, "인증번호는 6자리 숫자여야 합니다."),
+});
 export const loginTokenSchema = z.coerce
   .number()
   .min(100000)
   .max(999999)
   .refine(tokenExists, "토큰이 존재하지 않습니다.");
 
-export type FlattenedError = z.typeToFlattenedError<
-  {
-    username: string;
-    email: string;
-    phone: string;
-    password: string;
-    confirm_password: string;
-    address: string;
-    postaddress: string;
-    detailaddress: string;
-  },
-  string
->;
+// export type FlattenedError = z.typeToFlattenedError<{
+//   username?: string;
+//   email?: string;
+//   phone?: string;
+//   password?: string;
+//   confirm_password?: string;
+//   address?: string;
+//   postaddress?: string;
+//   detailaddress?: string;
+//   tonken?: string;
+// }>;

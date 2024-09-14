@@ -5,7 +5,11 @@ export const createUser = async (data: any, hashedPassword: string) => {
     data: {
       username: data.username,
       email: data.email,
+      phone: data.phone,
       password: hashedPassword,
+      address: data.address,
+      postaddress: data.postaddress,
+      detailaddress: data.detailaddress,
     },
     select: { id: true },
   });

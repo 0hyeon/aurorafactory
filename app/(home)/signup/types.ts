@@ -1,8 +1,8 @@
 export type ActionState = {
   token: boolean;
   error?: {
-    formErrors: string[];
-    fieldErrors: any;
+    formErrors?: string[];
+    fieldErrors?: string[];
   };
 };
 // types.ts
