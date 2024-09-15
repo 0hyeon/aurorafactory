@@ -35,7 +35,7 @@ export const createAccount = async (
     const tokenNumber = await getTokenSignUp();
 
     //await sendAlimtalk({ user_name: tokenNumber });
-    console.log(tokenNumber);
+
     return {
       token: true,
       tokenNumber,
@@ -61,11 +61,15 @@ export const createAccount = async (
       };
     }
 
-    if (prevState.tokenNumber === String(result.data)) {
+    if (prevState.tokenNumber === String(result.data.token)) {
       await signIn(resultData.data);
       //await sendAlimtalk({ user_name: formData.get("username") });
       return redirect("/login");
     } else {
+      console.log("prevState.tokenNumber : ", prevState.tokenNumber);
+      console.log("result.data.token : ", String(result.data.token));
+      console.log("prevState.tokenNumber : ", typeof prevState.tokenNumber);
+      console.log("result.data.token : ", typeof String(result.data.token));
       return {
         token: true,
         error: { fieldErrors: { token: ["인증번호가 일치하지 않습니다."] } },

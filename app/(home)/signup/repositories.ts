@@ -22,13 +22,12 @@ export const getUserIdWithEmail = async (email: string) => {
     where: { email },
     select: { id: true },
   });
-
   return result;
 };
 
-export const getUserIdWithUsername = async (username: string) => {
+export const getUserIdWithPhone = async (phone: string) => {
   const result = await db.user.findFirst({
-    where: { username },
+    where: { phone },
     select: { id: true },
   });
 

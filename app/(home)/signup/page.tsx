@@ -86,6 +86,7 @@ export default function LogIn() {
 
   useEffect(() => {
     if ((state?.token && state.tokenSentAt) || timeRemaining > 0) {
+      console.log("token use : ", state);
       const TOKEN_EXPIRATION_TIME = 3 * 60 * 1000; // 3분 (밀리초)
       const calculateTimeRemaining = () => {
         const currentTime = Date.now();
@@ -134,7 +135,7 @@ export default function LogIn() {
                   max={999999}
                   errors={state?.error?.fieldErrors?.token}
                 />
-                <div className="mx-auto flex gap-3">
+                <div className="flex gap-3">
                   <Button type="submit" text="인증하기" />
                   <Button text="뒤로가기" onClick={handleNavigate} />
                 </div>
