@@ -118,7 +118,7 @@ export default function LogIn() {
             : "가입을 위해 아래 양식을 채워주세요!"}
         </h2>
       </div>
-      <form onSubmit={onSubmitHandler} className="flex flex-col gap-16">
+      <form onSubmit={onSubmitHandler} className="flex flex-col">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="w-full flex flex-col gap-4">
             {state?.token ? (
@@ -141,57 +141,66 @@ export default function LogIn() {
               </>
             ) : (
               <>
-                <Input
-                  required
-                  type="text"
-                  placeholder="이름"
-                  name="username"
-                  onChange={(e) =>
-                    setForm({ ...form, username: e.target.value })
-                  }
-                  minLength={3}
-                  maxLength={10}
-                  errors={state?.error?.fieldErrors?.username}
-                />
-                <Input
-                  name="phone"
-                  type="text"
-                  placeholder="핸드폰번호 (인증번호 전송예정)"
-                  required
-                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  errors={state?.error?.fieldErrors?.phone}
-                />
+                <div className="gap-4 flex flex-col">
+                  <Input
+                    required
+                    type="text"
+                    placeholder="이름"
+                    name="username"
+                    onChange={(e) =>
+                      setForm({ ...form, username: e.target.value })
+                    }
+                    minLength={3}
+                    maxLength={10}
+                    errors={state?.error?.fieldErrors?.username}
+                  />
+                  <Input
+                    name="phone"
+                    type="text"
+                    placeholder="핸드폰번호 (인증번호 전송예정)"
+                    required
+                    onChange={(e) =>
+                      setForm({ ...form, phone: e.target.value })
+                    }
+                    errors={state?.error?.fieldErrors?.phone}
+                  />
+                </div>
                 <div className="w-0 h-px my-2" />
-                <Input
-                  name="email"
-                  type="email"
-                  placeholder="이메일"
-                  required
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  errors={state?.error?.fieldErrors?.email}
-                />
-                <Input
-                  name="password"
-                  type="password"
-                  placeholder="비밀번호"
-                  required
-                  onChange={(e) =>
-                    setForm({ ...form, password: e.target.value })
-                  }
-                  minLength={PASSWORD_MIN_LENGTH}
-                  errors={state?.error?.fieldErrors?.password}
-                />
-                <Input
-                  name="confirm_password"
-                  type="password"
-                  placeholder="비밀번호 확인"
-                  required
-                  onChange={(e) =>
-                    setForm({ ...form, confirm_password: e.target.value })
-                  }
-                  minLength={PASSWORD_MIN_LENGTH}
-                  errors={state?.error?.fieldErrors?.confirm_password}
-                />
+                <div className="gap-4 flex flex-col">
+                  <Input
+                    name="email"
+                    type="email"
+                    placeholder="이메일"
+                    required
+                    onChange={(e) =>
+                      setForm({ ...form, email: e.target.value })
+                    }
+                    errors={state?.error?.fieldErrors?.email}
+                  />
+                  <Input
+                    name="password"
+                    type="password"
+                    placeholder="비밀번호"
+                    required
+                    onChange={(e) =>
+                      setForm({ ...form, password: e.target.value })
+                    }
+                    minLength={PASSWORD_MIN_LENGTH}
+                    errors={state?.error?.fieldErrors?.password}
+                  />
+                  <Input
+                    name="confirm_password"
+                    type="password"
+                    placeholder="비밀번호 확인"
+                    required
+                    onChange={(e) =>
+                      setForm({ ...form, confirm_password: e.target.value })
+                    }
+                    minLength={PASSWORD_MIN_LENGTH}
+                    errors={state?.error?.fieldErrors?.confirm_password}
+                  />
+                </div>
+                <div className="w-full h-px bg-neutral-500 my-4" />
                 <div className="w-full gap-4 flex flex-col">
                   <AddressSearch
                     addressData={addressData}
@@ -199,9 +208,8 @@ export default function LogIn() {
                     state={state}
                   />
                 </div>
-                <div className="w-1/6 mx-auto">
-                  <Button type="submit" text="회원가입" />
-                </div>
+                <div className="w-full h-px bg-neutral-500 my-4" />
+                <Button type="submit" text="회원가입" />
               </>
             )}
           </div>
@@ -210,3 +218,4 @@ export default function LogIn() {
     </div>
   );
 }
+11;

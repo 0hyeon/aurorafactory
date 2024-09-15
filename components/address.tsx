@@ -1,5 +1,6 @@
 import React from "react";
 import Input from "@/components/input";
+import Button from "./button";
 
 export default function Addr({ addressData, setAddressData, state }: any) {
   const onClickAddr = () => {
@@ -17,9 +18,7 @@ export default function Addr({ addressData, setAddressData, state }: any) {
 
   return (
     <>
-      <button type="button" className="h-10 text-left" onClick={onClickAddr}>
-        주소검색
-      </button>
+      <Button text="주소검색" onClick={onClickAddr} />
       <Input
         id="address"
         placeholder="도로명주소"
