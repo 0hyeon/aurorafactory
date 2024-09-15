@@ -8,3 +8,11 @@ export const getUserWithEmail = async (email: string) => {
   console.log(result);
   return result;
 };
+export const getUserWithPhone = async (phone: string) => {
+  const result = await db.user.findUnique({
+    where: { phone },
+    select: { id: true, password: true },
+  });
+  console.log("getUserWithPhone : ", result);
+  return result;
+};

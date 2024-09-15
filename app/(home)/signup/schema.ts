@@ -65,7 +65,7 @@ export const phoneSchema = z
   .trim()
   .refine(
     (phone) => validator.isMobilePhone(phone, "ko-KR"),
-    "Wrong phone format"
+    "올바른 핸드폰 번호 타입이 아닙니다."
   );
 
 export const signTokenSchema = z.object({

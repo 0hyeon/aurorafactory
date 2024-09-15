@@ -31,14 +31,14 @@ export default function SocialLogin() {
         <div className="flex justify-center items-center divide-x divide-slate-200 *:p-4">
           <Link
             className="primary-btn flex h-10 items-center justify-center gap-3 border-gray-300"
-            href="/sms"
+            href="/lostuser/id"
           >
             <span>로그인id찾기</span>
           </Link>
 
           <Link
             className="primary-btn flex h-10 items-center justify-center gap-3"
-            href="/sms"
+            href="/lostuser/pw"
           >
             <span>비밀번호찾기</span>
           </Link>
