@@ -1,16 +1,6 @@
 import { ActionState, FormState } from "./types";
+export const TOKEN_EXPIRATION_TIME = 3 * 60 * 1000; // 3분 (밀리초)
 
-// export const initialState: ActionState = {
-//   token: false,
-// };
-
-// export const initFormValue: FormState = {
-//   phone: "",
-//   token: "",
-// };
-export const initialState: any = {
-  token: false,
-};
 export const initFormValue: FormState = {
   username: "",
   email: "",
@@ -21,4 +11,8 @@ export const initFormValue: FormState = {
   postaddress: "",
   detailaddress: "",
   token: "",
+};
+
+export const initialState = {
+  token: false,
 };

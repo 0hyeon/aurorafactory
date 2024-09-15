@@ -8,52 +8,15 @@ import { useFormState } from "react-dom";
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants";
 import Script from "next/script";
 import { createAccount } from "./actions";
-
-interface FormState {
-  username: string;
-  email: string;
-  phone: string;
-  password: string;
-  confirm_password: string;
-  address: string;
-  postaddress: string;
-  detailaddress: string;
-  token: string;
-}
-
-export interface ActionResult {
-  token?: boolean;
-  tokenNumber?: string;
-  tokenSentAt?: number;
-  error?: any;
-  fieldErrors?: {
-    username?: string[];
-    phone?: string[];
-    email?: string[];
-    password?: string[];
-    confirm_password?: string[];
-    token?: string[];
-    // 필요한 필드 추가
-  };
-}
-
-const initialState: any = {
-  token: false,
-};
-const initFormValue: FormState = {
-  username: "",
-  email: "",
-  phone: "",
-  password: "",
-  confirm_password: "",
-  address: "",
-  postaddress: "",
-  detailaddress: "",
-  token: "",
-};
+import {
+  TOKEN_EXPIRATION_TIME,
+  initFormValue,
+  initialState,
+} from "./constants";
+import { FormState, Istate } from "./types";
 
 export default function LogIn() {
-  const [state, setState] = useState<any>(initialState);
+  const [state, setState] = useState<Istate>(initialState);
   const [form, setForm] = useState<FormState>(initFormValue);
   const [addressData, setAddressData] = useState({
     address: "",
@@ -62,14 +25,13 @@ export default function LogIn() {
   });
   const [timeRemaining, setTimeRemaining] = useState<number>(0);
   const handleNavigate = () => {
-    setState((prevState: any) => ({
+    setState((prevState: Istate) => ({
       ...prevState,
       token: false,
     }));
   };
   useEffect(() => {
     if ((state?.token && state.tokenSentAt) || timeRemaining > 0) {
-      const TOKEN_EXPIRATION_TIME = 3 * 60 * 1000; // 3분 (밀리초)
       const calculateTimeRemaining = () => {
         const currentTime = Date.now();
         const timeElapsed = currentTime - state.tokenSentAt!;
@@ -108,7 +70,7 @@ export default function LogIn() {
     try {
       const result = await createAccount(state, formData);
 
-      setState((prevState: any) => ({
+      setState((prevState: Istate) => ({
         ...prevState,
         ...result,
         tokenSentAt: result.tokenSentAt || prevState.tokenSentAt, // 인증번호가 틀렸을 경우 tokenSentAt 갱신 방지

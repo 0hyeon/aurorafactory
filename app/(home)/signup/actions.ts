@@ -6,7 +6,6 @@ import { signIn } from "./services";
 import crypto from "crypto";
 import db from "@/lib/db";
 import { redirect } from "next/navigation";
-import { ActionResult } from "./page";
 
 export const createAccount = async (
   prevState: any,
