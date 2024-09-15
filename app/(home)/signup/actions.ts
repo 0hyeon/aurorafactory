@@ -56,7 +56,6 @@ export const createAccount = async (
 
     const result = await signTokenSchema.spa({ token: Number(token) });
     if (!result.success) {
-      console.log("4");
       return {
         token: true,
         error: result.error?.flatten(),
@@ -68,7 +67,6 @@ export const createAccount = async (
       //await sendAlimtalk({ user_name: formData.get("username") });
       return redirect("/login");
     } else {
-      console.log("5");
       return {
         token: true,
         error: { fieldErrors: { token: ["인증번호가 일치하지 않습니다."] } },

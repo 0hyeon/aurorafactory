@@ -62,7 +62,10 @@ export default function LogIn() {
   });
   const [timeRemaining, setTimeRemaining] = useState<number>(0);
   const handleNavigate = () => {
-    window.location.href = "/signup";
+    setState((prevState: any) => ({
+      ...prevState,
+      token: false,
+    }));
   };
   useEffect(() => {
     if ((state?.token && state.tokenSentAt) || timeRemaining > 0) {
@@ -136,10 +139,6 @@ export default function LogIn() {
     }
   }, [state?.token, state?.tokenSentAt]); // timeRemaining을 의존성에서 제거하여 리랜더링 방지
 
-  const onRequestTokenHandler = () => {
-    console.log("Request token with phone number:", form.phone);
-  };
-
   const formatTimeRemaining = (milliseconds: number) => {
     const minutes = Math.floor(milliseconds / 60000);
     const seconds = Math.floor((milliseconds % 60000) / 1000);
@@ -175,7 +174,7 @@ export default function LogIn() {
                 />
                 <div className="mx-auto flex gap-3">
                   <Button type="submit" text="인증하기" />
-                  <Button text="뒤로가기" onClick={() => handleNavigate} />
+                  <Button text="뒤로가기" onClick={handleNavigate} />
                 </div>
               </>
             ) : (
