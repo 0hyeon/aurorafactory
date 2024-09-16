@@ -33,7 +33,6 @@ export const getUserIdWithPhone = async (phone: string) => {
   });
   return result;
 };
-
 export async function tokenExists(token: number) {
   const exists = await db.sMSToken.findUnique({
     where: {

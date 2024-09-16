@@ -21,6 +21,7 @@ export interface Istate {
   token: boolean;
   tokenSentAt?: number;
   resultId?: any;
+  passWordSet?: boolean;
   error?: {
     fieldErrors: {
       username: string[];

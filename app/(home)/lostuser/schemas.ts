@@ -8,6 +8,7 @@ import {
 import { getUserWithEmail } from "./repositories";
 import validator from "validator";
 import { getUserIdWithEmail, getUserIdWithPhone } from "../signup/repositories";
+import db from "@/lib/db";
 export const userFormSchema = z.object({
   username: z
     .string({
@@ -58,13 +59,51 @@ export const productSchema = z.object({
 
 export type ProductType = z.infer<typeof productSchema>;
 
+export const passwordFindSchema = z
+  .object({
+    email: z.string().email(INVALID.EMAIL).trim().toLowerCase(),
+    phone: z
+      .string()
+      .trim()
+      .refine(
+        (phone) => validator.isMobilePhone(phone, "ko-KR"),
+        "올바른 핸드폰 번호 타입이 아닙니다."
+      ),
+  })
+  .superRefine(async (data, ctx) => await isExistUser(data, ctx, "email"))
+  .superRefine(async (data, ctx) => await isExistUser(data, ctx, "phone"))
+  .superRefine(async (data, ctx) => {
+    const user = await db.user.findUnique({
+      where: {
+        email: data.email,
+        phone: data.phone,
+      },
+      select: {
+        id: true,
+      },
+    });
+    console.log("user : ", user);
+    if (!user) {
+      ctx.addIssue({
+        code: "custom",
+        message: "이메일과 핸드폰이 각각 다른 계정입니다. ",
+        path: ["email", "phone"],
+        fatal: true,
+      });
+      return z.NEVER;
+    }
+  });
+
 export const phoneSchema = z
-  .string()
-  .trim()
-  .refine(
-    (phone) => validator.isMobilePhone(phone, "ko-KR"),
-    "올바른 핸드폰 번호 타입이 아닙니다."
-  )
+  .object({
+    phone: z
+      .string()
+      .trim()
+      .refine(
+        (phone) => validator.isMobilePhone(phone, "ko-KR"),
+        "올바른 핸드폰 번호 타입이 아닙니다."
+      ),
+  })
   .superRefine(async (data, ctx) => await isExistUser(data, ctx, "phone"));
 
 const isExistUser = async (
@@ -75,13 +114,13 @@ const isExistUser = async (
   const user =
     flag === "email"
       ? await getUserIdWithEmail(data.email)
-      : await getUserIdWithPhone(data);
+      : await getUserIdWithPhone(data.phone);
   if (user == null) {
     ctx.addIssue({
       code: "custom",
       message:
         flag === "email"
-          ? "해당 이메일로 가입된 회원이 이미 존재합니다."
+          ? "해당 이메일로 가입된 회원이 없습니다."
           : "해당 번호로 가입된 회원이 없습니다.",
       path: [flag === "email" ? "email" : "phone"],
       fatal: true, // 이슈 발생 시 다음 유효성 검사 실행 안 함
