@@ -30,7 +30,7 @@ const LostUserID = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if ((state?.token && state.tokenSentAt) || timeRemaining > 0) {
+    if (state?.token && !state?.resultId && timeRemaining > 0) {
       const calculateTimeRemaining = () => {
         const currentTime = Date.now();
         const timeElapsed = currentTime - state.tokenSentAt!;
@@ -38,12 +38,14 @@ const LostUserID = () => {
         setTimeRemaining(timeLeft > 0 ? timeLeft : 0);
       };
 
-      calculateTimeRemaining();
       const interval = setInterval(calculateTimeRemaining, 1000);
 
       return () => clearInterval(interval);
+    } else if (state?.token && state?.resultId) {
+      // token과 resultId가 모두 존재하면 타이머를 정지
+      setTimeRemaining(0); // 타이머를 0으로 설정
     }
-  }, [state?.token, state?.tokenSentAt]); // timeRemaining를 의존성에서 제거
+  }, [state?.token, state?.tokenSentAt, state?.resultId]); // resultId 추가
 
   const formatTimeRemaining = (milliseconds: number) => {
     const minutes = Math.floor(milliseconds / 60000);
@@ -80,13 +82,18 @@ const LostUserID = () => {
       console.error("계정 생성 중 오류 발생:", error);
     }
   };
+  console.log("state : ", state);
   return (
     <div className="flex flex-col gap-10 py-8 px-6 max-w-[600px] mx-auto border-[1px] border-black rounded-md">
       <div className="flex flex-col gap-2 *:font-medium">
         <h1 className="text-2xl">안녕하세요!</h1>
         <h2 className="text-xl">
           {state?.token
-            ? `인증번호를 입력해주세요. (${formatTimeRemaining(timeRemaining)})`
+            ? state.resultId
+              ? `해당번호로 가입된 이메일입니다. `
+              : `인증번호를 입력해주세요. (${formatTimeRemaining(
+                  timeRemaining
+                )})`
             : "인증번호 받으실 핸드폰 번호를 입력하세요."}
         </h2>
       </div>
@@ -94,22 +101,33 @@ const LostUserID = () => {
         <div className="flex flex-col md:flex-row gap-4">
           <div className="w-full flex flex-col gap-4">
             {state?.token ? (
-              <>
+              state?.resultId ? (
                 <Input
-                  name="token"
+                  name="email"
                   type="text"
-                  value={form.token}
-                  onChange={(e) => setForm({ ...form, token: e.target.value })}
-                  placeholder="인증번호를 입력해주세요. (6자리)"
-                  required
-                  min={100000}
-                  max={999999}
-                  errors={state?.error?.fieldErrors?.token}
+                  value={state.resultId.email}
+                  readOnly={true}
                 />
-                <div className="flex gap-3">
-                  <Button type="submit" text="인증하기" />
-                </div>
-              </>
+              ) : (
+                <>
+                  <Input
+                    name="token"
+                    type="text"
+                    value={form.token}
+                    onChange={(e) =>
+                      setForm({ ...form, token: e.target.value })
+                    }
+                    placeholder="인증번호를 입력해주세요. (6자리)"
+                    required
+                    min={100000}
+                    max={999999}
+                    errors={state?.error?.fieldErrors?.token}
+                  />
+                  <div className="flex gap-3">
+                    <Button type="submit" text="인증번호발송" />
+                  </div>
+                </>
+              )
             ) : (
               <>
                 <div className="gap-4 flex flex-col">
@@ -124,7 +142,9 @@ const LostUserID = () => {
                     errors={state?.error?.fieldErrors?.phone}
                   />
                 </div>
-                <Button type="submit" text="인증번호발송" />
+                <div className="flex gap-3">
+                  <Button type="submit" text="인증번호발송" />
+                </div>
               </>
             )}
           </div>

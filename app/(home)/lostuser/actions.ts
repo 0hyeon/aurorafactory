@@ -84,6 +84,7 @@ export const lostUserIdAction = async (
       //토근틀릴시
       return {
         token: true,
+
         error: result.error?.flatten(),
       };
     }
@@ -91,7 +92,7 @@ export const lostUserIdAction = async (
     if (prevState.tokenNumber === String(result.data.token)) {
       const resultId = await getUserWithPhone(data.phone);
       //await sendAlimtalk({ user_name: formData.get("username") });
-      return { resultId };
+      return { token: true, resultId };
     } else {
       return {
         token: true,

@@ -20,6 +20,7 @@ export interface FormState {
 export interface Istate {
   token: boolean;
   tokenSentAt?: number;
+  resultId?: any;
   error?: {
     fieldErrors: {
       username: string[];
