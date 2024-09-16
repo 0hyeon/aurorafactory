@@ -7,6 +7,7 @@ import {
 } from "@/lib/constants";
 import { getUserWithEmail } from "./repositories";
 import validator from "validator";
+import { getUserIdWithEmail, getUserIdWithPhone } from "../signup/repositories";
 export const userFormSchema = z.object({
   username: z
     .string({
@@ -56,3 +57,34 @@ export const productSchema = z.object({
 });
 
 export type ProductType = z.infer<typeof productSchema>;
+
+export const phoneSchema = z
+  .string()
+  .trim()
+  .refine(
+    (phone) => validator.isMobilePhone(phone, "ko-KR"),
+    "올바른 핸드폰 번호 타입이 아닙니다."
+  )
+  .superRefine(async (data, ctx) => await isExistUser(data, ctx, "phone"));
+
+const isExistUser = async (
+  data: any,
+  ctx: z.RefinementCtx,
+  flag: "email" | "phone"
+) => {
+  const user =
+    flag === "email"
+      ? await getUserIdWithEmail(data.email)
+      : await getUserIdWithPhone(data);
+  if (user == null) {
+    ctx.addIssue({
+      code: "custom",
+      message:
+        flag === "email"
+          ? "해당 이메일로 가입된 회원이 이미 존재합니다."
+          : "해당 번호로 가입된 회원이 없습니다.",
+      path: [flag === "email" ? "email" : "phone"],
+      fatal: true, // 이슈 발생 시 다음 유효성 검사 실행 안 함
+    });
+  }
+};

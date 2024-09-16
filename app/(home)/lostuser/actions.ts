@@ -1,21 +1,14 @@
 "use server";
 
-import { userFormSchema } from "./schemas";
+import { phoneSchema, userFormSchema } from "./schemas";
 import { getUserWithEmail, getUserWithPhone } from "./repositories";
 import { getSession, saveLoginSession } from "@/lib/session";
 import { cookies } from "next/headers";
 import db from "@/lib/db";
-import { phoneSchema, signTokenSchema } from "../signup/schema";
+import { signTokenSchema } from "../signup/schema";
 import twilio from "twilio";
 import crypto from "crypto";
-export const getUserIdWithPhone = async (phone: string) => {
-  const result = await db.user.findFirst({
-    where: { phone },
-    select: { id: true },
-  });
-
-  return { token: true };
-};
+import { sendTwilioMesage } from "./services";
 
 export const lostUserIdAction = async (
   prevState: any,
@@ -28,37 +21,49 @@ export const lostUserIdAction = async (
 
   const TOKEN_EXPIRATION_TIME = 3 * 60 * 1000;
 
-  function formatPhoneNumberToE164(phone: string) {
-    if (phone.startsWith("010")) {
-      return "+82" + phone.slice(1);
-    } else {
-      throw new Error("Invalid phone number format. It should start with 010.");
-    }
-  }
-
   const resultData = await phoneSchema.spa(data.phone);
-  console.log("resultData : ", resultData);
   if (!prevState.token) {
-    //번호입력시
+    // 번호입력시
+
+    console.log("resultData : ", resultData); //resultData :  { success: true, data: '0104109659' }
     if (!resultData.success) {
-      //실패시
+      // 실패시
       return {
         token: resultData.success,
         error: resultData.error.flatten(),
       };
     }
+    // resultData.data가 현재 등록된건지 확인
+
+    // 기존 토큰삭제
+    await db.sMSToken.deleteMany({
+      where: {
+        user: {
+          phone: data.phone,
+        },
+      },
+    });
+    //create token
     const tokenNumber = await getTokenSignUp();
 
-    //await sendAlimtalk({ user_name: tokenNumber });
-    const client = twilio(
-      process.env.TWILIO_ACCOUNT_SID,
-      process.env.TWILIO_AUTH_TOKEN
-    );
-    client.messages.create({
-      body: `인증번호를 입력해주세요.  ${tokenNumber}`,
-      from: process.env.TWILIO_PHONE_NUMBER!,
-      to: formatPhoneNumberToE164(data.phone),
+    // 토큰 connect
+    await db.sMSToken.create({
+      data: {
+        token: tokenNumber,
+        //user가없더라도 sMSToken에서 user생성
+        user: {
+          connect: {
+            phone: data.phone,
+          },
+        },
+      },
     });
+
+    // 문자발송 aligo
+    //await sendAlimtalk({ user_name: tokenNumber });
+
+    // 문자발송 twilio
+    await sendTwilioMesage({ tokenNumber, phone: data.phone });
 
     return {
       token: true,
@@ -90,6 +95,23 @@ export const lostUserIdAction = async (
     }
     //일치시
     if (prevState.tokenNumber === String(result.data.token)) {
+      //토큰서치
+      const token = await db.sMSToken.findUnique({
+        where: {
+          token: result.data.token.toString(),
+        },
+        select: {
+          id: true,
+          userId: true,
+        },
+      });
+      //토큰삭제
+      await db.sMSToken.delete({
+        where: {
+          id: token!.id,
+        },
+      });
+
       const resultId = await getUserWithPhone(data.phone);
       //await sendAlimtalk({ user_name: formData.get("username") });
       return { token: true, resultId };

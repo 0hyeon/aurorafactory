@@ -33,5 +33,6 @@ export interface Istate {
       detailaddress: string[];
       token: string[];
     };
+    formErrors?: any;
   };
 }

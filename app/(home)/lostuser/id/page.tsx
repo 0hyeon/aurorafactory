@@ -30,14 +30,17 @@ const LostUserID = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (state?.token && !state?.resultId && timeRemaining > 0) {
+    if (state?.token && !state?.resultId) {
       const calculateTimeRemaining = () => {
-        const currentTime = Date.now();
-        const timeElapsed = currentTime - state.tokenSentAt!;
-        const timeLeft = TOKEN_EXPIRATION_TIME - timeElapsed;
-        setTimeRemaining(timeLeft > 0 ? timeLeft : 0);
+        if (state.tokenSentAt) {
+          const currentTime = Date.now();
+          const timeElapsed = currentTime - state.tokenSentAt;
+          const timeLeft = TOKEN_EXPIRATION_TIME - timeElapsed;
+          setTimeRemaining(timeLeft > 0 ? timeLeft : 0);
+        }
       };
 
+      calculateTimeRemaining(); // 타이머가 시작될 때 바로 계산 실행
       const interval = setInterval(calculateTimeRemaining, 1000);
 
       return () => clearInterval(interval);
@@ -45,7 +48,7 @@ const LostUserID = () => {
       // token과 resultId가 모두 존재하면 타이머를 정지
       setTimeRemaining(0); // 타이머를 0으로 설정
     }
-  }, [state?.token, state?.tokenSentAt, state?.resultId]); // resultId 추가
+  }, [state?.token, state?.tokenSentAt, state?.resultId]);
 
   const formatTimeRemaining = (milliseconds: number) => {
     const minutes = Math.floor(milliseconds / 60000);
@@ -74,15 +77,10 @@ const LostUserID = () => {
         ...result,
         tokenSentAt: result.tokenSentAt || prevState.tokenSentAt, // 인증번호가 틀렸을 경우 tokenSentAt 갱신 방지
       }));
-
-      if (result.token) {
-        console.log("result.token : ", result.token);
-      }
     } catch (error) {
       console.error("계정 생성 중 오류 발생:", error);
     }
   };
-  console.log("state : ", state);
   return (
     <div className="flex flex-col gap-10 py-8 px-6 max-w-[600px] mx-auto border-[1px] border-black rounded-md">
       <div className="flex flex-col gap-2 *:font-medium">
@@ -139,7 +137,11 @@ const LostUserID = () => {
                     onChange={(e) =>
                       setForm({ ...form, phone: e.target.value })
                     }
-                    errors={state?.error?.fieldErrors?.phone}
+                    errors={
+                      state?.error?.formErrors.length !== 0
+                        ? state?.error?.formErrors
+                        : state?.error?.fieldErrors.phone
+                    }
                   />
                 </div>
                 <div className="flex gap-3">
