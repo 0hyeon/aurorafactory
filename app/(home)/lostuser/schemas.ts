@@ -9,6 +9,7 @@ import { getUserWithEmail } from "./repositories";
 import validator from "validator";
 import { getUserIdWithEmail, getUserIdWithPhone } from "../signup/repositories";
 import db from "@/lib/db";
+import { isValidPw } from "../signup/utils";
 export const userFormSchema = z.object({
   username: z
     .string({
@@ -127,3 +128,23 @@ const isExistUser = async (
     });
   }
 };
+export const psswordSetSchema = z
+  .object({
+    password: z
+      .string()
+      .trim()
+      .min(PASSWORD_MIN_LENGTH, INVALID.TOO_SHORT)
+      .regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
+    confirm_password: z
+      .string()
+      .min(PASSWORD_MIN_LENGTH, INVALID.TOO_SHORT)
+      .trim(),
+  })
+  .refine(
+    ({ password, confirm_password }) =>
+      isValidPw({ password, confirm_password }),
+    {
+      message: "입력된 비밀번호가 서로 다릅니다.",
+      path: ["confirm_password"],
+    }
+  );

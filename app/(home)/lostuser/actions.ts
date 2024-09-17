@@ -1,7 +1,12 @@
 "use server";
 
-import { passwordFindSchema, phoneSchema, userFormSchema } from "./schemas";
-import { getUserWithEmail, getUserWithPhone } from "./repositories";
+import {
+  passwordFindSchema,
+  phoneSchema,
+  psswordSetSchema,
+  userFormSchema,
+} from "./schemas";
+import { getUserWithEmail, getUserWithPhone, updateUser } from "./repositories";
 import { getSession, saveLoginSession } from "@/lib/session";
 import { cookies } from "next/headers";
 import db from "@/lib/db";
@@ -9,7 +14,8 @@ import { signTokenSchema } from "../signup/schema";
 import twilio from "twilio";
 import crypto from "crypto";
 import { sendTwilioMesage } from "./services";
-
+import bcrypt from "bcrypt";
+import { redirect } from "next/navigation";
 export const lostUserPwAction = async (
   prevState: any,
   formData: FormData
@@ -17,12 +23,30 @@ export const lostUserPwAction = async (
   const data = {
     email: formData.get("email") as string,
     phone: formData.get("phone") as string,
+    password: formData.get("password") as string,
+    confirm_password: formData.get("confirm_password") as string,
   };
 
   const TOKEN_EXPIRATION_TIME = 3 * 60 * 1000;
 
   const resultData = await passwordFindSchema.spa(data);
-  if (!prevState.token) {
+
+  if (prevState.token && prevState.passWordSet) {
+    // 비밀번호 유효성검사
+    const result = await psswordSetSchema.spa(data);
+    console.log("result2 : ", result);
+    if (!result.success) {
+      //토근틀릴시
+      return {
+        token: true,
+        error: result.error?.flatten(),
+      };
+    } else {
+      const hashedPassword = await bcrypt.hash(data.password, 12);
+      await updateUser({ data, hashedPassword });
+      redirect("/");
+    }
+  } else if (!prevState.token) {
     // 번호입력시
 
     console.log("pw resultData : ", resultData);
@@ -63,14 +87,14 @@ export const lostUserPwAction = async (
     //await sendAlimtalk({ user_name: tokenNumber });
 
     // 문자발송 twilio
-    // await sendTwilioMesage({ tokenNumber, phone: data.phone });
+    await sendTwilioMesage({ tokenNumber, phone: data.phone });
 
     return {
       token: true,
       tokenNumber,
       tokenSentAt: Date.now(),
     };
-  } else {
+  } else if (prevState.token) {
     //토큰입력시
     const token = formData.get("token");
 

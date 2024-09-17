@@ -16,3 +16,20 @@ export const getUserWithPhone = async (phone: string) => {
   console.log("getUserWithPhone : ", result);
   return result;
 };
+export const updateUser = async ({
+  data,
+  hashedPassword,
+}: {
+  data: any;
+  hashedPassword: string;
+}) => {
+  const result = await db.user.update({
+    where: { email: data.email, phone: data.phone },
+    data: {
+      password: hashedPassword,
+    },
+    select: { id: true },
+  });
+
+  return result;
+};

@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import { lostUserPwAction } from "../actions";
 import { TOKEN_EXPIRATION_TIME } from "../../signup/constants";
 import { FormState, Istate } from "../../signup/types";
+import { PASSWORD_MIN_LENGTH } from "@/lib/constants";
 const initFormValue: FormState = {
   username: "",
   email: "",
@@ -46,6 +47,7 @@ const LostUserPW = () => {
     } else if (state?.token && state?.passWordSet) {
       // token과 passWordSet가 모두 존재하면 타이머를 정지
       setTimeRemaining(0); // 타이머를 0으로 설정
+      console.log("state : ", state);
     }
   }, [state?.token, state?.tokenSentAt, state?.passWordSet]);
 
@@ -64,6 +66,9 @@ const LostUserPW = () => {
 
     formData.append("phone", form.phone);
     formData.append("email", form.email);
+
+    formData.append("password", form.password);
+    formData.append("confirm_password", form.confirm_password);
 
     if (form.token) {
       formData.append("token", form.token);
@@ -87,8 +92,8 @@ const LostUserPW = () => {
         <h1 className="text-2xl">안녕하세요!</h1>
         <h2 className="text-xl">
           {state?.token
-            ? state.resultId
-              ? `변경하실 새로운 비밀번호를 입력해주세요. `
+            ? state.passWordSet
+              ? `새로운 비밀번호를 입력하세요. `
               : `인증번호를 입력해주세요. (${formatTimeRemaining(
                   timeRemaining
                 )})`
@@ -99,13 +104,34 @@ const LostUserPW = () => {
         <div className="flex flex-col md:flex-row gap-4">
           <div className="w-full flex flex-col gap-4">
             {state?.token ? (
-              state?.resultId ? (
-                <Input
-                  name="email"
-                  type="text"
-                  value={state.resultId.email}
-                  readOnly={true}
-                />
+              state?.passWordSet ? (
+                <>
+                  <Input
+                    name="password"
+                    type="password"
+                    placeholder="새로운 비밀번호"
+                    required
+                    onChange={(e) =>
+                      setForm({ ...form, password: e.target.value })
+                    }
+                    minLength={PASSWORD_MIN_LENGTH}
+                    errors={state?.error?.fieldErrors?.password}
+                  />
+                  <Input
+                    name="confirm_password"
+                    type="password"
+                    placeholder="비밀번호 확인"
+                    required
+                    onChange={(e) =>
+                      setForm({ ...form, confirm_password: e.target.value })
+                    }
+                    minLength={PASSWORD_MIN_LENGTH}
+                    errors={state?.error?.fieldErrors?.confirm_password}
+                  />
+                  <div className="flex gap-3">
+                    <Button type="submit" text="저장" />
+                  </div>
+                </>
               ) : (
                 <>
                   <Input
