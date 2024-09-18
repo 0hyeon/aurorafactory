@@ -6,7 +6,7 @@ import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { getCachedLikeStatus } from "@/app/(admin)/actions";
-import { revalidateCartCount } from "../../components/actions";
+import { revalidateCartCount } from "../../cart/actions";
 
 interface IcartCreate {
   quantity: number;

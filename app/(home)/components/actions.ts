@@ -31,7 +31,3 @@ export const getCachedCartCount = nextCache(
 );
 
 // 별도의 revalidateTag 함수 호출
-export async function revalidateCartCount() {
-  revalidateTag("cart-count");
-  revalidateTag("cart");
-}

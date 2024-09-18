@@ -2,45 +2,52 @@
 import db from "@/lib/db";
 import { unstable_cache as nextCache, revalidateTag } from "next/cache";
 import { getSession } from "@/lib/session";
-import { getCachedCartCount, revalidateCartCount } from "../components/actions";
 import { Cart } from "@prisma/client";
 import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
 
 // Define types for clarity
-
 interface IupdateCart {
   cartIds: number[];
   orderId: string;
 }
-const cookieStore = cookies();
+
+export async function getSessionFromCookies() {
+  const cookieStore = cookies();
+  return await getSession(cookieStore);
+}
+
+// Define the function to get cart data
+async function fetchCartData(userId: string): Promise<Cart[]> {
+  return await db.cart.findMany({
+    where: {
+      userId: Number(userId),
+      orderstat: { not: "결제완료" },
+    },
+  });
+}
+
+// Define the cache functions with proper typing
+export const getCachedCart = nextCache(
+  async (userId: string) => {
+    return await fetchCartData(userId);
+  },
+  ["cart-data"],
+  {
+    tags: ["cart"],
+  }
+);
+
 export async function updateCart({ cartIds, orderId }: IupdateCart) {
-  //결제완료후 업데이트
   try {
     await db.cart.updateMany({
       where: {
-        id: {
-          in: cartIds,
-        },
+        id: { in: cartIds },
       },
       data: {
         orderstat: "결제완료",
         orderId: orderId,
       },
     });
-
-    // // 알림톡 토큰 요청
-    // const tokenResponse = await authAligoToken();
-    // console.log("tokenResponse.result : ", tokenResponse.result);
-    // if (tokenResponse.result === "fail") {
-    //   console.error("알림톡 토큰 요청 실패:", tokenResponse.message);
-    //   return {
-    //     success: false,
-    //     message: "알림톡 토큰 요청 중 오류가 발생했습니다.",
-    //   };
-    // }
-
-    // //TODO: 메시지전송
 
     return { success: true };
   } catch (error) {
@@ -53,44 +60,29 @@ export async function updateCart({ cartIds, orderId }: IupdateCart) {
 }
 
 export async function delCart({ id }: { id: number }) {
-  // revalidateTag("cart");
   revalidateCartCount();
 
-  const session = await getSession(cookieStore);
-  getCachedCartCount(session.id);
-  const cartData: Cart[] = await getCachedCart();
+  const session = await getSessionFromCookies();
+  if (!session.id) return { ok: false, message: "로그인 필요" };
 
-  if (!session.id) return;
-  await db.cart.delete({
-    where: { id },
-  });
+  await db.cart.delete({ where: { id } });
+
+  // Ensure the cart is reloaded after deletion
+  await getCachedCart(String(session.id));
 
   return { ok: true, message: "제거완료" };
 }
+
 export async function getCart() {
-  const session = await getSession(cookieStore);
+  const session = await getSessionFromCookies();
   if (!session.id) return [];
 
-  const cartData = await db.cart.findMany({
-    where: {
-      userId: session.id,
-      orderstat: {
-        not: "결제완료",
-      },
-    },
-  });
-
-  return cartData;
+  return await fetchCartData(String(session.id));
 }
-// export async function getPurChase() {
-//   const session = await getSession();
-//   console.log("session: ", session);
-//   if (!session.id) return { ok: false, message: " 로그인 후 이용해주세요" };
-// }
 
 export async function postMessage() {}
 
-async function getProductSrc(productId: number) {
+async function getProductSrc(productId: number): Promise<string | null> {
   const product = await db.product.findUnique({
     where: { id: productId },
     select: { photo: true },
@@ -98,9 +90,11 @@ async function getProductSrc(productId: number) {
   return product?.photo ?? null;
 }
 
-export const getCachedCart = nextCache(getCart, ["product-src"], {
-  tags: ["cart"],
-});
 export const getCachedProductSrc = nextCache(getProductSrc, ["product-src"], {
   tags: ["product-src"],
 });
+
+export async function revalidateCartCount() {
+  revalidateTag("cart-count");
+  revalidateTag("cart");
+}

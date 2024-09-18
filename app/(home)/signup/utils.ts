@@ -8,7 +8,7 @@
 )
 */
 
-export const hasSlang = /^(?!.*(병신|씨발|새끼)).*$/u;
+export const hasSlang = /^(?!.*(병신|씨발|새끼)).*$/;
 
 export const isValidPw = ({
   password,

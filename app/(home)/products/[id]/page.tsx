@@ -70,6 +70,11 @@ export async function getProducts() {
   return product;
 }
 
+export async function generateStaticParams() {
+  const products = await getProducts(); // 모든 제품을 가져옴
+  return products.map((product) => ({ id: String(product.id) })); // 각 제품의 ID로 페이지 생성
+}
+
 export default async function ProductDetail({
   params,
 }: {

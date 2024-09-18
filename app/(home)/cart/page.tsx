@@ -1,13 +1,14 @@
 "use server";
 import React from "react";
-import { getCachedCart, getCachedProductSrc } from "./actions";
+import {
+  getCachedCart,
+  getCachedProductSrc,
+  getSessionFromCookies,
+  revalidateCartCount,
+} from "./actions";
 import CartList from "./components/CartList";
 import db from "@/lib/db";
 import { Cart, Product, productOption } from "@prisma/client";
-import { cookies } from "next/headers";
-import { getSession } from "@/lib/session";
-import { revalidateTag } from "next/cache";
-import { revalidateCartCount } from "../components/actions";
 
 interface ProductOptionWithProduct extends productOption {
   product: Product & { photo: string | null };
@@ -23,9 +24,8 @@ interface CartWithProductOption {
 }
 
 export default async function CartPage() {
-  const cookieStore = cookies();
-  const session = await getSession(cookieStore);
-  const cartData: Cart[] = await getCachedCart();
+  const session = await getSessionFromCookies();
+  const cartData: Cart[] = await getCachedCart(String(session.id));
   revalidateCartCount();
   console.log("cartData : ", cartData);
 
