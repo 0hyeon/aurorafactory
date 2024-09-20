@@ -91,7 +91,7 @@ export default function CartList({ data }: CartListProps) {
   const totalPrice = cart.reduce((acc, item) => acc + item.totalPrice, 0);
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8 max-w-[1100px] mx-auto">
       {data.length !== 0 ? (
         <>
           {cart.map((item) => (

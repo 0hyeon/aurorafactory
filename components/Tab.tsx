@@ -69,7 +69,7 @@ const Tabs = () => {
       {method === "드시모네" || method === "또박케어LAB" ? (
         <Best data={slideData.filter((el) => el.category === method)} />
       ) : (
-        <BestItem data={isData} />
+        <BestItem data={isData} title={"라미봉투"} />
       )}
     </>
   );

@@ -48,7 +48,7 @@ export default function BestItem({
       <div className="cursor-pointer">
         <Swiper
           loop={true} // 슬라이드 루프
-          spaceBetween={150} // 슬라이스 사이 간격
+          spaceBetween={50} // 슬라이스 사이 간격
           slidesPerView={4} // 보여질 슬라이스 수
           navigation={true} // prev, next button
           autoplay={{
@@ -76,7 +76,7 @@ export default function BestItem({
                         fill
                       />
                     </div>
-                    <div className="">
+                    <div className="pt-3">
                       <div>{slide.title}</div>
                       <div className="flex pt-[10px] items-center">
                         <div className="text-lg text-[#999] line-through pr-[10px]">
