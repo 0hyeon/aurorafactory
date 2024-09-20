@@ -81,10 +81,10 @@ export default function Header({ cartcount }: any) {
             </motion.p>
           </div>
         </div>
-        <div>드시모네</div>
-        <div>오투부스터</div>
-        <div>또박케어LAB</div>
-        <div>또박배송</div>
+        <div>라미봉투</div>
+        <div>은박봉투</div>
+        <div>에어캡봉투</div>
+        <div>발포시트지</div>
         <div>이벤트/혜택</div>
         <div>커뮤니티</div>
         <div>고객센터</div>

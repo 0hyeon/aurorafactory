@@ -12,6 +12,12 @@ export async function getSession(session: any) {
     password: process.env.COOKIE_PASSWORD!,
   });
 }
+export default function getSessionCarrot() {
+  return getIronSession<SessionContent>(cookies(), {
+    cookieName: "delicious-aurorafac",
+    password: process.env.COOKIE_PASSWORD!,
+  });
+}
 
 // // 사용자 정보(id) 가져오기
 export const getUserProfile = async (session: any) => {

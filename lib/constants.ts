@@ -19,7 +19,19 @@ export const CONTENT_PER_PAGE = 1;
 export const MB = 1048576;
 export const PLZ_ADD_PHOTO = "사진을 추가해주세요.";
 
-export const CATEGORIES = ["발포지", "에어캡봉투", "뽁뽁이"];
+export const CATEGORIES = [
+  "발포지",
+  "에어캡봉투",
+  "은박봉투",
+  "과일박스",
+  "에어셀.공기주입",
+  "과일비닐봉투",
+  "일반봉투",
+  "야채비닐봉투",
+  "발포시트지",
+  "라미시트지",
+  "아이스팩",
+];
 export const ALIGO_SEND_API = "https://kakaoapi.aligo.in/akv10/alimtalk/send/";
 export const COMPANY = "오로라팩(주)";
 export const SIGN_UP_TEMPLATES = "TM_2223";

@@ -7,7 +7,7 @@ export interface IslideData {
   reviews: number;
   category: string;
 }
-export type TabValue = "드시모네" | "또박케어LAB";
+export type TabValue = "드시모네" | "또박케어LAB" | "라미봉투";
 
 export type PhotoPreviewType = string[];
 

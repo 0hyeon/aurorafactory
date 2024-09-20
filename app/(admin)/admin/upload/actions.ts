@@ -2,6 +2,7 @@
 import { productSchema } from "./schema";
 
 import db from "@/lib/db";
+import getSessionCarrot, { getSession } from "@/lib/session";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -28,6 +29,8 @@ export async function uploadProduct(formData: FormData) {
     if (typeof data.photos === "string") {
       photoUrls = data.photos.split(",");
     }
+    const session = await getSessionCarrot();
+    console.log("getSessionCarrot : ", session.id);
 
     const product = await db.product.create({
       data: {
@@ -39,7 +42,7 @@ export async function uploadProduct(formData: FormData) {
         discount: result.data.discount,
         user: {
           connect: {
-            id: 1,
+            id: session.id,
           },
         },
         slideimages: {

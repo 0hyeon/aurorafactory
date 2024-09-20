@@ -78,17 +78,11 @@ export default function Slide() {
       </Swiper>
       <div className="relative w-full max-w-[1000px] mx-0 my-auto font-normal">
         <div
-          className="absolute z-[1] flex right-0 bottom-4 left-[inherit] text-white bg-[rgba(0, 0, 0, 0.5)]
-    rounded-[100px]
-    w-[110px]
-    width: 110px;
-    py-2
-    text-base
-    justify-around items-center
-    "
+          style={{ background: "rgba(0,0,0,.5)" }}
+          className="absolute z-[1] flex right-0 bottom-4 left-[inherit] text-white rounded-[100px] w-[110px] width: 110px; py-2 text-base justify-around items-center"
         >
           <div
-            className="w-34 h-34 cursor-pointer mt-0 bg-no-repeat bg-center bg-cover"
+            className="w-8 h-8 cursor-pointer mt-0 bg-no-repeat bg-center bg-cover"
             style={{ backgroundImage: "url('/images/left.png')" }}
             onClick={handlePrev}
           ></div>
@@ -98,7 +92,7 @@ export default function Slide() {
             <span>{slideData.length}</span>
           </div>
           <div
-            className="w-34 h-34 cursor-pointer mt-0 bg-no-repeat bg-center bg-cover"
+            className="w-8 h-8 cursor-pointer mt-0 bg-no-repeat bg-center bg-cover"
             style={{ backgroundImage: "url('/images/right.png')" }}
             onClick={handleNext}
           ></div>

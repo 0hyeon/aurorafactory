@@ -22,12 +22,13 @@ export default async function Home() {
           <HashTag />
           <Tabs />
           {/* <Youtube /> */}
-          <Best data={slideData} />
+          {/* <Best data={slideData} /> */}
+
           <BestItem data={items} />
-          <SlideSmall />
+          {/* <SlideSmall /> */}
         </div>
       </main>
-      <div className="w-full mx-auto my-0 border-t-[1px] border-b-[1px] border-t-[#efefef] border-b-[#efefef] bg-[#f9fafb]">
+      <div className="mt-24 w-full mx-auto my-0 border-t-[1px] border-b-[1px] border-t-[#efefef] border-b-[#efefef] bg-[#f9fafb]">
         <Footer />
       </div>
     </>
