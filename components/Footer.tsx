@@ -3,7 +3,7 @@ const Footer = () => {
   return (
     <>
       <div className="max-w-5xl mx-auto py-5 felx flex-col gap-5">
-        <ul className="flex p-0 m-0">
+        <ul className="flex p-0 m-0 mb-6">
           <li className="list-none border-none pl-0 ml-0">회사소개</li>
           <li className="list-none border-l border-black ml-4 pl-4">
             개인정보처리방침
@@ -13,9 +13,6 @@ const Footer = () => {
           </li>
           <li className="list-none border-l border-black ml-4 pl-4">
             선결제이용약관
-          </li>
-          <li className="list-none border-l border-black ml-4 pl-4">
-            또박케어 앱 소개
           </li>
         </ul>
         <div className="flex">
@@ -33,7 +30,9 @@ const Footer = () => {
                 010-2603-1599
               </li>
               <li>[ENG, CHN] 이메일 : djdjdjk@hanmail.com</li>
-              <li>Copyright AuroraFactory co., Ltd. All right reserved.</li>
+              <li className="mt-6 font-bold">
+                Copyright AuroraFactory co., Ltd. All right reserved.
+              </li>
             </ul>
           </div>
           <div></div>

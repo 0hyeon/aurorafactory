@@ -15,17 +15,32 @@ export default async function Home() {
   const items = await getCachedProducts();
   return (
     <>
-      <main className={""}>
+      <main>
         <Slide />
         <div className="max-w-[1000px] mx-auto my-0">
           <SlideSmall />
-          <Best data={slideData} />
+          {/* <Best data={slideData} /> */}
+          <BestItem data={items} subtitle="all" title="전체상품" />
           <HashTag />
           <Tabs />
 
           {/* <Best data={slideData} /> */}
 
-          <BestItem data={items} />
+          <BestItem
+            data={items.filter((el) => el.category === "에어캡봉투")}
+            subtitle="완충효과 100%"
+            title="에어캡봉투"
+          />
+          <BestItem
+            data={items.filter((el) => el.category === "은박봉투")}
+            subtitle="온도유지"
+            title="은박봉투"
+          />
+          <BestItem
+            data={items.filter((el) => el.category === "발포지")}
+            subtitle="가성비ㆍ탁월한"
+            title="발포봉투"
+          />
           <Youtube url="https://youtu.be/EwqRj6SHNxg?si=Ixqv5SGzytn63ByB" />
           {/* <SlideSmall /> */}
         </div>

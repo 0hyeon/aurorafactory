@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: { template: "%s | 오로라팩", default: "오로라팩" },
-  description: "오로라팩 발포지 은박지 pe폼",
+  description: "오로라팩 발포봉투 발포지 은박봉투 은박지 pe폼 라미봉투",
 };
 
 export default function RootLayout({

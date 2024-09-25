@@ -11,12 +11,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { IslideData } from "@/types/type";
 import { Product } from "@prisma/client";
-
-export default function BestItem({
-  data,
-  title = "인기상품",
-  subtitle = "제품보호를위한",
-}: any) {
+import { ArrowRightIcon } from "@heroicons/react/24/solid";
+interface IBestItem {
+  data: any;
+  title: string;
+  subtitle: string;
+}
+export default function BestItem({ data, title, subtitle }: IBestItem) {
   const [swiperIndex, setSwiperIndex] = useState(0); //페이지네이션
   const [swiper, setSwiper] = useState<SwiperClass>(); //슬라이드
   const handlePrev = () => {
@@ -41,14 +42,21 @@ export default function BestItem({
   };
   return (
     <div>
-      <div className="flex gap-5 pt-[100px] pb-[18px] items-end">
-        <h3 className="text-black text-3xl font-bold">{title}</h3>
-        <h1 className=" text-[#999] text-sm font-medium">{subtitle}</h1>
+      <div className="flex pt-[100px] pb-[18px] items-end justify-between">
+        <div className="flex gap-3 justify-between items-end">
+          <h3 className="cursor-pointer text-black text-3xl font-bold">
+            {title}
+          </h3>
+          <h1 className=" text-[#999] text-lg font-medium">{subtitle}</h1>
+        </div>
+        <div className="cursor-pointer text-gray-700 pr-4">
+          <ArrowRightIcon className="h-8" />
+        </div>
       </div>
       <div className="cursor-pointer">
         <Swiper
           loop={true} // 슬라이드 루프
-          spaceBetween={50} // 슬라이스 사이 간격
+          spaceBetween={90} // 슬라이스 사이 간격
           slidesPerView={4} // 보여질 슬라이스 수
           navigation={true} // prev, next button
           autoplay={{

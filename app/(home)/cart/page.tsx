@@ -27,7 +27,6 @@ export default async function CartPage() {
   const session = await getSessionFromCookies();
   const cartData: Cart[] = await getCachedCart(String(session.id));
   revalidateCartCount();
-  console.log("cartData : ", cartData);
 
   // 모든 장바구니 항목에 대한 제품 옵션을 가져옵니다.
   const cartItems = await Promise.all(

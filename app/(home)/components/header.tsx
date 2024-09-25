@@ -81,13 +81,27 @@ export default function Header({ cartcount }: any) {
             </motion.p>
           </div>
         </div>
-        <div>라미봉투</div>
-        <div>은박봉투</div>
-        <div>에어캡봉투</div>
-        <div>발포시트지</div>
-        <div>이벤트/혜택</div>
-        <div>커뮤니티</div>
-        <div>고객센터</div>
+        <div>
+          <Link href={"/productlist/lame"}>라미봉투</Link>
+        </div>
+        <div>
+          <Link href={"/productlist/eunbak"}>은박봉투</Link>
+        </div>
+        <div>
+          <Link href={"/productlist/aircap"}>에어캡봉투</Link>
+        </div>
+        <div className="cursor-pointer" onClick={() => alert("준비중입니다.")}>
+          발포시트지
+        </div>
+        <div className="cursor-pointer" onClick={() => alert("준비중입니다.")}>
+          이벤트/혜택
+        </div>
+        <div className="cursor-pointer" onClick={() => alert("준비중입니다.")}>
+          커뮤니티
+        </div>
+        <div className="cursor-pointer" onClick={() => alert("준비중입니다.")}>
+          고객센터
+        </div>
       </div>
       <AnimatePresence mode="wait">{isActive && <Nav />}</AnimatePresence>
     </div>

@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import Link from "next/link";
 export default function HashTag() {
@@ -8,15 +9,15 @@ export default function HashTag() {
           <li className="text-base flex-1 underline">
             <Link
               className="p-[8px] text-[#999] block text-center shadow-md bg-white rounded-[25px] font-medium"
-              href={"/발포지"}
+              href={"/productlist/lame"}
             >
-              #발포지
+              #라미봉투
             </Link>
           </li>
           <li className="text-base flex-1 underline">
             <Link
               className="p-[8px] text-[#999] block text-center shadow-md bg-white rounded-[25px] font-medium"
-              href={"/뽁뽁이"}
+              href={"/productlist/aircap"}
             >
               #뽁뽁이
             </Link>
@@ -24,39 +25,37 @@ export default function HashTag() {
           <li className="text-base flex-1 underline">
             <Link
               className="p-[8px] text-[#999] block text-center shadow-md bg-white rounded-[25px] font-medium"
-              href={"/보냉봉투"}
+              href={"/productlist/eunbak"}
             >
               #보냉봉투
             </Link>
           </li>
-          <li className="text-base flex-1 underline">
-            <Link
+          <li
+            onClick={() => alert("준비중입니다.")}
+            className="text-base flex-1 underline p-[8px] text-[#999] block text-center shadow-md bg-white rounded-[25px] font-medium cursor-pointer"
+          >
+            {/* <Link
               className="p-[8px] text-[#999] block text-center shadow-md bg-white rounded-[25px] font-medium"
-              href={"/안전봉투"}
-            >
-              #안전봉투
-            </Link>
+              href={"/productlist/anjeon"}
+            > */}
+            #안전봉투
+            {/* </Link> */}
           </li>
-          <li className="text-base flex-1 underline">
-            <Link
+          <li
+            onClick={() => alert("준비중입니다.")}
+            className="text-base flex-1 underline p-[8px] text-[#999] block text-center shadow-md bg-white rounded-[25px] font-medium cursor-pointer"
+          >
+            {/* <Link
               className="p-[8px] text-[#999] block text-center shadow-md bg-white rounded-[25px] font-medium"
-              href={"/PE폼"}
-            >
-              #PE폼
-            </Link>
-          </li>
-          <li className="text-base flex-1 underline">
-            <Link
-              className="p-[8px] text-[#999] block text-center shadow-md bg-white rounded-[25px] font-medium"
-              href={"/날개달린발포지"}
-            >
-              #날개달린발포지
-            </Link>
+              href={"/productlist/peform"}
+            > */}
+            #PE폼
+            {/* </Link> */}
           </li>
           <li className="text-base flex-1 list-none underline">
             <Link
               className="p-[8px] text-[#999] block text-center shadow-md bg-white rounded-[25px] font-medium"
-              href={"/전체상품"}
+              href={"/productlist/all"}
             >
               #전체상품
             </Link>

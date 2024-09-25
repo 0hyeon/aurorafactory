@@ -28,18 +28,13 @@ export default function Slide() {
   const slideData = [
     {
       id: 1,
-      text: "테스트 테스트",
-      src: "/images/main_banner1.jpg",
+      text: "오로라팩",
+      src: "/images/main_banner1.png",
     },
     {
       id: 2,
-      text: "테스트 테스트",
-      src: "/images/main_banner2.jpg",
-    },
-    {
-      id: 3,
-      text: "테스트 테스트",
-      src: "/images/main_banner3.jpg",
+      text: "오로라팩",
+      src: "/images/main_banner1.png",
     },
   ];
   return (

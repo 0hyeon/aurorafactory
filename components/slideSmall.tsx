@@ -15,18 +15,13 @@ export default function SlideSmall() {
   const slideData = [
     {
       id: 1,
-      text: "테스트 테스트",
-      src: "/images/202312291320514_middle_banner_1.jpg",
+      text: "오로라팩",
+      src: "/images/middle_banner_1.png",
     },
     {
       id: 2,
-      text: "테스트 테스트",
-      src: "/images/202401161039141_middle_banner_1.jpg",
-    },
-    {
-      id: 3,
-      text: "테스트 테스트",
-      src: "/images/202401251637378_middle_banner_1.jpg",
+      text: "오로라팩",
+      src: "/images/middle_banner_1.png",
     },
   ];
   return (
