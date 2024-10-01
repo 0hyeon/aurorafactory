@@ -7,15 +7,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { OptionType, OptionSchema } from "../schema";
 import { uploadProductOption } from "../actions";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { Cart, Product, User, productOption } from "@prisma/client";
+import { NullableProduct } from "@/types/type";
 
-interface IProduct {
-  [key: string]: any;
-}
 export default function AddOptionDetailpage({
   product,
   params,
 }: {
-  product: any; // product 타입을 명확히 지정
+  product: NullableProduct; // product 타입을 명확히 지정
   params: { id: string };
 }) {
   const {
@@ -44,7 +44,15 @@ export default function AddOptionDetailpage({
       window.location.reload();
     }
   });
+  const router = useRouter();
 
+  const toModifyBtn = (n: number | undefined) => {
+    if (n !== undefined) {
+      router.push(`/admin/edit/${n}`);
+    } else {
+      alert("수정할수없는 상품입니다.");
+    }
+  };
   const onValid = async (e: any) => {
     e.preventDefault();
     await onSubmit();
@@ -52,6 +60,7 @@ export default function AddOptionDetailpage({
   return (
     <div className="w-1/2 mx-auto my-10">
       <div className="flex flex-row items-center justify-between gap-5">
+        {/* 상품옵션리스트 */}
         <div>
           {product?.productoption &&
             product.productoption.map((el: any, index: number) => (
@@ -64,6 +73,7 @@ export default function AddOptionDetailpage({
         </div>
 
         <div>
+          <Button onClick={() => toModifyBtn(product?.id)} text="상품수정" />
           <div className="relative block w-28 h-28">
             {product?.productoption && (
               <Image

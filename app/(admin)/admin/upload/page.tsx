@@ -2,16 +2,18 @@
 import Button from "@/components/button";
 import Input from "@/components/input";
 import { PhotoIcon } from "@heroicons/react/24/solid";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ProductType, productSchema } from "./schema";
-import { getUploadUrl, uploadProduct } from "./actions";
+import { getUploadUrl, uploadProduct, uploadUpdateProduct } from "./actions";
 import Image from "next/image";
 import Select from "@/components/Selcect";
 import { CATEGORIES } from "@/lib/constants";
+import { NullableProduct } from "@/types/type";
 
-export default function AddProduct() {
+export default function AddProduct({ edit }: { edit?: NullableProduct }) {
+  console.log("edit : ", edit);
   const [uploadUrl, setUploadUrl] = useState("");
   const [preview, setPreview] = useState("");
   const [file, setFile] = useState<File | null>(null);
@@ -47,9 +49,7 @@ export default function AddProduct() {
         `https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/${id}`
       );
     }
-    console.log(file);
   };
-
   const onSlideImageChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -71,10 +71,16 @@ export default function AddProduct() {
     }
     setValue("photos", dummyid.join(","));
   };
-  console.log(slideFile);
 
   const onSubmit = handleSubmit(async (data) => {
-    if (file) {
+    console.log("onSubmit");
+    if (!file && edit) {
+      data.photo = edit.photo;
+      const existingSlideImages = edit.slideimages
+        .map((image) => image.src)
+        .join(",");
+      data.photos = existingSlideImages;
+    } else if (file) {
       const formData = new FormData();
       formData.append("file", file);
       const response = await fetch(uploadUrl, {
@@ -84,8 +90,7 @@ export default function AddProduct() {
       if (response.status !== 200) {
       }
     }
-    console.log("file : ", file);
-    console.log("slideFile : ", slideFile);
+
     if (slideFile.length > 0) {
       for (let index = 0; index < slideFile.length; index++) {
         const slideFormData = new FormData();
@@ -108,13 +113,31 @@ export default function AddProduct() {
     formData.append("discount", String(data.discount));
     formData.append("photos", data.photos);
     formData.append("category", data.category);
-    const errors = await uploadProduct(formData);
-    if (errors) {
-      // setError("")
+    console.log("set");
+    if (edit) {
+      // const errors = await uploadUpdateProduct(formData, edit.id);
+      console.log("formData : ", formData);
+      // const errors = await updateProduct(formData);
+      console.log("update logic ");
       console.log("errors : ", errors);
+      if (errors) {
+        // setError("")
+        console.log("errors : ", errors);
+      } else {
+        // If all async operations complete successfully, refresh the page
+        window.location.reload();
+        alert("수정완료");
+      }
     } else {
-      // If all async operations complete successfully, refresh the page
-      window.location.reload();
+      console.log("insert logic ");
+      const errors = await uploadProduct(formData);
+      if (errors) {
+        // setError("")
+        console.log("errors : ", errors);
+      } else {
+        // If all async operations complete successfully, refresh the page
+        window.location.reload();
+      }
     }
   });
 
@@ -127,9 +150,34 @@ export default function AddProduct() {
     e.preventDefault();
     await onSubmit();
   };
-  console.log(errors);
+  useEffect(() => {
+    if (edit) {
+      setValue("title", edit.title);
+      setValue("price", edit.price);
+      setValue("description", edit.description);
+      setValue("discount", edit.discount ?? undefined); // null을 undefined로 변환
+
+      setValue("category", edit.category);
+      setPreview(`${edit.photo}/avatar`); // 기본 이미지 프리뷰
+      if (edit && edit.slideimages) {
+        // slideimages가 존재하는지 확인하고 배열로 설정
+        if (Array.isArray(edit.slideimages)) {
+          setPhotoPreview(edit.slideimages.map((image) => image.src));
+        } else {
+          console.warn("Expected slideimages to be an array.");
+          setPhotoPreview([]);
+        }
+      }
+      // setPhotoPreview(edit.sladeImages.map((image) => image.src)); // 슬라이드 이미지 배열로 설정
+      // if (edit.sladeImages && Array.isArray(edit.sladeImages)) {
+      //   setPhotoPreview(edit.sladeImages.map((image) => image.src)); // 슬라이드 이미지 배열로 설정
+      // }
+      // setPhotoPreview(edit.sladeImages.map((image) => image.src)); // 슬라이드 이미지
+    }
+  }, [edit, setValue]);
+  console.log("photoPreview : ", photoPreview);
   return (
-    <div className="w-1/4 mx-auto my-10">
+    <div className="w-1/4 mx-auto my-10 overflow-y-auto">
       <form onSubmit={onValid} className="p-5 flex flex-col gap-5">
         <label
           htmlFor="photo"
@@ -183,7 +231,7 @@ export default function AddProduct() {
           />
         </label>
         {photoPreview ? (
-          <div className="flex w-30">
+          <div className="flex flex-wrap">
             {photoPreview.map((src: any, idx: any) => (
               <span className="mr-3 relative" key={idx}>
                 <span
@@ -194,11 +242,11 @@ export default function AddProduct() {
                   X
                 </span>
                 <Image
-                  src={src}
-                  className=" text-gray-600 h-46 rounded-md bg-slate-300 object-cover"
-                  width={80}
-                  height={80}
-                  alt={src}
+                  src={edit ? `${src}/avatar` : `${src}`}
+                  className=" text-gray-600 h-auto rounded-md bg-slate-300 object-cover"
+                  width={800}
+                  height={800}
+                  alt={edit ? `${src}/avatar` : `${src}`}
                 />
               </span>
             ))}
@@ -240,7 +288,7 @@ export default function AddProduct() {
           errors={errors}
         />
 
-        <Button text="작성 완료" type="submit" />
+        <Button text={edit ? "수정 완료" : "작성 완료"} type="submit" />
       </form>
     </div>
   );

@@ -2,8 +2,8 @@
 "use server";
 
 import { NullableProduct } from "@/types/type";
-import { getCachedProduct } from "./actions";
-import AddOptionDetailpage from "./components/AddOptionDetailpage";
+import { getCachedProduct } from "../../option/[id]/actions";
+import AddProduct from "../../upload/page";
 
 export default async function OptionDetailPage({
   params,
@@ -12,6 +12,7 @@ export default async function OptionDetailPage({
 }) {
   const product = await getCachedProduct(+params.id);
   return (
-    <AddOptionDetailpage params={params} product={product as NullableProduct} />
+    // <AddOptionDetailpage params={params} product={product as NullableProduct} />
+    <AddProduct edit={product as NullableProduct} />
   );
 }
