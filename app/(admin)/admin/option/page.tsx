@@ -7,7 +7,7 @@ export default async function AddOptionList() {
   const product = await getCachedProducts();
   revalidateTag("products");
   return (
-    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+    <div className="flex w-11/12 flex-wrap p-14">
       {product &&
         product.map((el) => {
           return (

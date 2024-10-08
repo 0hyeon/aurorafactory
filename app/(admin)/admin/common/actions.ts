@@ -13,11 +13,7 @@ export async function uploadUpdateProduct(
   const data = {
     photos: formData.get("photos"),
     photo: formData.get("photo"),
-    title: formData.get("title"),
-    price: formData.get("price"),
-    discount: formData.get("discount"),
     category: formData.get("category"),
-    description: formData.get("description"),
   };
   const result = productSchema.safeParse(data);
   if (!result.success) {
@@ -32,27 +28,21 @@ export async function uploadUpdateProduct(
     console.log("getSessionCarrot : ", session.id);
 
     // 제품 업데이트 쿼리 실행
-    const product = await db.product.update({
+    const product = await db.productPicture.update({
       where: {
         id: productId, // 업데이트할 제품의 id를 where로 사용
       },
       data: {
-        title: result.data.title,
-        description: result.data.description,
-        price: result.data.price,
         photo: result.data.photo,
         category: result.data.category,
-        discount: result.data.discount,
-        productPicture: {
-          slideimages: {
-            // 슬라이드 이미지도 업데이트
-            connectOrCreate: photoUrls.map((src: any) => {
-              return {
-                where: { src: src },
-                create: { src: src },
-              };
-            }),
-          },
+        slideimages: {
+          // 슬라이드 이미지도 업데이트
+          connectOrCreate: photoUrls.map((src: any) => {
+            return {
+              where: { src: src },
+              create: { src: src },
+            };
+          }),
         },
       },
       select: {
@@ -66,20 +56,12 @@ export async function uploadUpdateProduct(
     return product; // 성공 시 업데이트된 제품 반환
   }
 }
-export async function getCategory() {
-  const categoryies = await db.productPicture.findMany({});
-  return categoryies;
-}
 export async function uploadProduct(formData: FormData) {
   console.log("formData : ", formData);
   const data = {
     photos: formData.get("photos"),
     photo: formData.get("photo"),
-    title: formData.get("title"),
-    price: formData.get("price"),
-    discount: formData.get("discount"),
     category: formData.get("category"),
-    description: formData.get("description"),
   };
   const result = productSchema.safeParse(data);
 
@@ -96,19 +78,10 @@ export async function uploadProduct(formData: FormData) {
     const session = await getSessionCarrot();
     console.log("getSessionCarrot : ", session.id);
 
-    const product = await db.product.create({
+    const product = await db.productPicture.create({
       data: {
-        title: result.data.title,
-        description: result.data.description,
-        price: result.data.price,
         photo: result.data.photo,
         category: result.data.category,
-        discount: result.data.discount,
-        user: {
-          connect: {
-            id: session.id,
-          },
-        },
         slideimages: {
           connectOrCreate: photoUrls.map((src: any) => {
             return {

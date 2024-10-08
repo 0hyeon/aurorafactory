@@ -11,6 +11,9 @@ export default function LeftMenu() {
         <li className="p-3 cursor-pointer">
           <Link href="/admin/option">수량옵션</Link>
         </li>
+        <li className="p-3 cursor-pointer">
+          <Link href="/admin/common">사진등록</Link>
+        </li>
       </ul>
     </div>
   );

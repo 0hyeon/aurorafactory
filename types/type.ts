@@ -1,4 +1,11 @@
-import { Cart, Product, User, productOption, slideImage } from "@prisma/client";
+import {
+  Cart,
+  Product,
+  User,
+  productOption,
+  productPicture,
+  slideImage,
+} from "@prisma/client";
 
 export interface IslideData {
   id: number;
@@ -27,7 +34,7 @@ export type SlideFileType = FileDetails[];
 
 interface IProduct extends Product {
   productoption: productOption[];
-  slideimages: slideImage[];
+  productPicture: productPicture[];
   cart: Cart[];
   user: User;
 }

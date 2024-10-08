@@ -6,17 +6,17 @@ generator client {
 }
 
 // --dev
-datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
-}
+// datasource db {
+//   provider = "sqlite"
+//   url      = env("DATABASE_URL")
+// }
 
 // --production
-// datasource db {
-//   provider  = "postgresql"
-//   url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
-//   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
-// }
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
 
 model User {
   id            Int        @id @default(autoincrement())
@@ -39,7 +39,7 @@ model SMSToken {
   id         Int      @id @default(autoincrement())
   token      String   @unique
   created_at DateTime @default(now())
-  updated_at DateTime @default(now())
+  updated_at DateTime @updatedAt
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     Int
 
@@ -47,23 +47,27 @@ model SMSToken {
 }
 
 model Product {
-  id          Int          @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   title       String
   price       Float
   photo       String
   description String
   category    String
   discount    String?
-  created_at  DateTime     @default(now())
-  updated_at  DateTime     @default(now())
-  user        User         @relation(fields: [userId], references: [id])
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id])
   userId      Int
-  slideimages slideImage[]
+  // slideimages slideImage[]
 
   productoption productOption[]
   cart          Cart[]
 
+  productPicture   productPicture? @relation(fields: [productPictureId], references: [id])
+  productPictureId Int?
+
   @@index([userId])
+  @@index([productPictureId])
 }
 
 model productOption {
@@ -76,21 +80,33 @@ model productOption {
   color        String?
   plusdiscount Int
   created_at   DateTime @default(now())
-  updated_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
   cart         Cart[]
 
   @@index([productId])
 }
 
-model slideImage {
-  id        Int      @id @default(autoincrement())
-  src       String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId Int
+model productPicture {
+  id          Int          @id @default(autoincrement())
+  photo       String
+  // product     Product      @relation(fields: [productId], references: [id])
+  // productId   Int
+  category    String
+  slideimages slideImage[]
+  Product     Product[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
 
-  @@index([productId])
+model slideImage {
+  id               Int             @id @default(autoincrement())
+  src              String          @unique
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  productPicture   productPicture? @relation(fields: [productPictureId], references: [id], onDelete: Cascade)
+  productPictureId Int?
+
+  @@index([productPictureId])
 }
 
 model Cart {

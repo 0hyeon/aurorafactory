@@ -2,31 +2,38 @@
 import Button from "@/components/button";
 import Input from "@/components/input";
 import { PhotoIcon } from "@heroicons/react/24/solid";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useReducer } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ProductType, productSchema } from "./schema";
-import {
-  getCategory,
-  getUploadUrl,
-  uploadProduct,
-  uploadUpdateProduct,
-} from "./actions";
+import { getUploadUrl, uploadProduct, uploadUpdateProduct } from "./actions";
 import Image from "next/image";
-import Select from "@/components/Selcect";
 import { CATEGORIES } from "@/lib/constants";
 import { NullableProduct } from "@/types/type";
 
-export default function AddProduct({ edit }: { edit?: NullableProduct }) {
-  console.log("edit : ", edit);
+// Reducer for managing form state
+function formReducer(state: any, action: any) {
+  switch (action.type) {
+    case "START_SUBMIT":
+      return { ...state, pending: true };
+    case "END_SUBMIT":
+      return { ...state, pending: false };
+    default:
+      return state;
+  }
+}
+
+export default function AddProductCommon({ edit }: { edit?: NullableProduct }) {
+  const [state, dispatch] = useReducer(formReducer, { pending: false });
+
   const [uploadUrl, setUploadUrl] = useState("");
   const [preview, setPreview] = useState("");
   const [file, setFile] = useState<File | null>(null);
-  const [categoryData, setCategoryData] = useState<any[]>([]); // 비동기 데이터 상태 관리
 
   const [photoPreview, setPhotoPreview] = useState<string[]>([]);
   const [slideUploadUrl, setSlideUploadUrl] = useState<string[]>([]);
   const [slideFile, setSlideFile] = useState<File[]>([]);
+
   const {
     register,
     handleSubmit,
@@ -42,8 +49,8 @@ export default function AddProduct({ edit }: { edit?: NullableProduct }) {
     if (!files || files.length === 0) return;
 
     const file = files[0];
-    const previewurl = URL.createObjectURL(file);
-    setPreview(previewurl);
+    const previewUrl = URL.createObjectURL(file);
+    setPreview(previewUrl);
     setFile(file);
 
     const uploadResponse = await getUploadUrl();
@@ -56,14 +63,7 @@ export default function AddProduct({ edit }: { edit?: NullableProduct }) {
       );
     }
   };
-  const fetchCategories = async () => {
-    try {
-      const categories = await getCategory();
-      setCategoryData(categories);
-    } catch (error) {
-      console.error("Failed to fetch categories:", error);
-    }
-  };
+
   const onSlideImageChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -87,7 +87,7 @@ export default function AddProduct({ edit }: { edit?: NullableProduct }) {
   };
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log("onSubmit");
+    dispatch({ type: "START_SUBMIT" });
     if (!file && edit) {
       data.photo = edit.photo;
       const existingSlideImages = edit.slideimages
@@ -102,6 +102,7 @@ export default function AddProduct({ edit }: { edit?: NullableProduct }) {
         body: formData,
       });
       if (response.status !== 200) {
+        console.error("Failed to upload image");
       }
     }
 
@@ -120,38 +121,27 @@ export default function AddProduct({ edit }: { edit?: NullableProduct }) {
       }
     }
     const formData = new FormData();
-    formData.append("title", data.title);
-    formData.append("price", data.price + "");
-    formData.append("description", data.description);
     formData.append("photo", data.photo);
-    formData.append("discount", String(data.discount));
     formData.append("photos", data.photos);
     formData.append("category", data.category);
+
     if (edit) {
       const errors = await uploadUpdateProduct(formData, edit.id);
-      console.log("formData : ", formData);
-      // const errors = await updateProduct(formData);
-      console.log("update logic ");
-      console.log("errors : ", errors);
       if (errors) {
-        // setError("")
         console.log("errors : ", errors);
       } else {
-        // If all async operations complete successfully, refresh the page
         window.location.reload();
-        alert("수정완료");
+        alert("수정 완료");
       }
     } else {
-      console.log("insert logic ");
       const errors = await uploadProduct(formData);
       if (errors) {
-        // setError("")
         console.log("errors : ", errors);
       } else {
-        // If all async operations complete successfully, refresh the page
         window.location.reload();
       }
     }
+    dispatch({ type: "END_SUBMIT" });
   });
 
   const deleteHandler = (index: number) => {
@@ -159,24 +149,12 @@ export default function AddProduct({ edit }: { edit?: NullableProduct }) {
     setSlideFile((prev) => prev.filter((_, idx) => idx !== index));
     setSlideUploadUrl((prev) => prev.filter((_, idx) => idx !== index));
   };
-  const onValid = async (e: any) => {
-    e.preventDefault();
-    await onSubmit();
-  };
-  useEffect(() => {
-    fetchCategories();
-  }, []);
+
   useEffect(() => {
     if (edit) {
-      setValue("title", edit.title);
-      setValue("price", edit.price);
-      setValue("description", edit.description);
-      setValue("discount", edit.discount ?? undefined); // null을 undefined로 변환
-
-      setValue("category", "ㅗㅗㅗ");
-      setPreview(`${edit.photo}/public`); // 기본 이미지 프리뷰
-      if (edit && edit.slideimages) {
-        // slideimages가 존재하는지 확인하고 배열로 설정
+      setValue("category", edit.category);
+      setPreview(`${edit.photo}/public`);
+      if (edit.slideimages) {
         if (Array.isArray(edit.slideimages)) {
           setPhotoPreview(edit.slideimages.map((image) => image.src));
         } else {
@@ -184,17 +162,12 @@ export default function AddProduct({ edit }: { edit?: NullableProduct }) {
           setPhotoPreview([]);
         }
       }
-      // setPhotoPreview(edit.sladeImages.map((image) => image.src)); // 슬라이드 이미지 배열로 설정
-      // if (edit.sladeImages && Array.isArray(edit.sladeImages)) {
-      //   setPhotoPreview(edit.sladeImages.map((image) => image.src)); // 슬라이드 이미지 배열로 설정
-      // }
-      // setPhotoPreview(edit.sladeImages.map((image) => image.src)); // 슬라이드 이미지
     }
   }, [edit, setValue]);
-  console.log("categoryData : ", categoryData);
+
   return (
     <div className="w-1/3 mx-auto my-10 overflow-y-auto">
-      <form onSubmit={onValid} className="p-5 flex flex-col gap-5">
+      <form onSubmit={onSubmit} className="p-5 flex flex-col gap-5">
         <label
           htmlFor="photo"
           className="border-2 aspect-square flex items-center justify-center flex-col text-neutral-300 border-neutral-300 rounded-md border-dashed cursor-pointer bg-center bg-cover"
@@ -205,11 +178,7 @@ export default function AddProduct({ edit }: { edit?: NullableProduct }) {
             backgroundRepeat: "no-repeat",
           }}
         >
-          {preview === "" ? (
-            <>
-              <PhotoIcon className="w-20" />
-            </>
-          ) : null}
+          {preview === "" ? <PhotoIcon className="w-20" /> : null}
         </label>
 
         <input
@@ -246,20 +215,20 @@ export default function AddProduct({ edit }: { edit?: NullableProduct }) {
             multiple
           />
         </label>
+
         {photoPreview ? (
           <div className="flex flex-wrap">
             {photoPreview.map((src: any, idx: any) => (
-              <span className="mr-3 relative" key={idx}>
+              <span className="mr-3 relative w-1/6" key={idx}>
                 <span
                   className="cursor-pointer absolute z-10 right-[-5px] top-[-10px] bg-black text-white rounded-full w-5 h-5 flex justify-center items-center text-sm"
                   onClick={() => deleteHandler(idx)}
-                  key={idx}
                 >
                   X
                 </span>
                 <Image
                   src={edit ? `${src}/public` : `${src}`}
-                  className=" text-gray-600 h-auto rounded-md bg-slate-300 object-cover"
+                  className="text-gray-600 h-auto rounded-md bg-slate-300 object-cover"
                   width={800}
                   height={800}
                   alt={edit ? `${src}/public` : `${src}`}
@@ -270,39 +239,11 @@ export default function AddProduct({ edit }: { edit?: NullableProduct }) {
         ) : null}
 
         <Input
-          required
-          placeholder="제목"
-          type="text"
-          {...register("title")}
-          errors={[errors.title?.message ?? ""]}
-        />
-        <Input
-          type="number"
-          required
-          placeholder="가격"
-          {...register("price")}
-          errors={[errors.price?.message ?? ""]}
-        />
-        <Input
           type="text"
           required
-          placeholder="자세한 설명"
-          {...register("description")}
-          errors={[errors.description?.message ?? ""]}
-        />
-        <Input
-          type="number"
-          required
-          placeholder="할인율"
-          {...register("discount")}
-          errors={[errors.discount?.message ?? ""]}
-        />
-        <Select
-          data={categoryData.map((el) => el.category)}
-          name="category"
-          defaultValue={edit?.productPicture?.category ?? ""} // 기본값 설정
-          register={register}
-          errors={errors}
+          placeholder="카테고리명"
+          {...register("category")}
+          errors={[errors.category?.message ?? ""]}
         />
 
         <Button text={edit ? "수정 완료" : "작성 완료"} type="submit" />
