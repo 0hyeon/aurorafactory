@@ -89,11 +89,11 @@ export default function AddProductCommon({ edit }: { edit?: NullableProduct }) {
   const onSubmit = handleSubmit(async (data) => {
     dispatch({ type: "START_SUBMIT" });
     if (!file && edit) {
-      data.photo = edit.photo;
-      const existingSlideImages = edit.slideimages
-        .map((image) => image.src)
-        .join(",");
-      data.photos = existingSlideImages;
+      // data.photo = edit.photo;
+      // const existingSlideImages = edit.productPicture
+      //   .map((image) => image.src)
+      //   .join(",");
+      // data.photos = existingSlideImages;
     } else if (file) {
       const formData = new FormData();
       formData.append("file", file);
@@ -154,14 +154,14 @@ export default function AddProductCommon({ edit }: { edit?: NullableProduct }) {
     if (edit) {
       setValue("category", edit.category);
       setPreview(`${edit.photo}/public`);
-      if (edit.slideimages) {
-        if (Array.isArray(edit.slideimages)) {
-          setPhotoPreview(edit.slideimages.map((image) => image.src));
-        } else {
-          console.warn("Expected slideimages to be an array.");
-          setPhotoPreview([]);
-        }
-      }
+      // if (edit.slideimages) {
+      //   if (Array.isArray(edit.slideimages)) {
+      //     setPhotoPreview(edit.slideimages.map((image) => image.src));
+      //   } else {
+      //     console.warn("Expected slideimages to be an array.");
+      //     setPhotoPreview([]);
+      //   }
+      // }
     }
   }, [edit, setValue]);
 

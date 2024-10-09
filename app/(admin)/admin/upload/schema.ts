@@ -1,10 +1,6 @@
 import { z } from "zod";
 
 export const productSchema = z.object({
-  photos: z.string().min(1, "At least one photo is required"),
-  photo: z.string({
-    required_error: "photo is required",
-  }),
   title: z.string({
     required_error: "Title is required",
   }),
@@ -18,6 +14,9 @@ export const productSchema = z.object({
     required_error: "Price is required",
   }),
   discount: z.coerce.string().optional(),
+  productPictureId: z.number({
+    required_error: "productPictureId is required",
+  }),
 });
 
 export type ProductType = z.infer<typeof productSchema>;

@@ -34,8 +34,16 @@ export type SlideFileType = FileDetails[];
 
 interface IProduct extends Product {
   productoption: productOption[];
-  productPicture: productPicture[];
+  productPicture?: {
+    id: number;
+    photo: string;
+    category: string;
+    createdAt: Date;
+    updatedAt: Date;
+    slideimages: slideImage[];
+  };
   cart: Cart[];
   user: User;
 }
+
 export type NullableProduct = IProduct | null;

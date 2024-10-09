@@ -55,8 +55,20 @@ export default function Slide({ data }: { data: any }) {
           setSwiper(e);
         }}
       >
+        {data.productPicture.photo && (
+          <SwiperSlide key="main-photo">
+            <div className="relative w-[500px] h-[500px]">
+              <Image
+                alt="main-photo"
+                src={`${data.productPicture.photo}/public`}
+                fill
+                className="object-contain"
+              />
+            </div>
+          </SwiperSlide>
+        )}
         {data &&
-          data.slideimages.map((slide: any) => (
+          data.productPicture.slideimages.map((slide: any) => (
             <div key={slide.id} className="">
               <SwiperSlide key={slide.id}>
                 <div className="relative w-[500px] h-[500px]">

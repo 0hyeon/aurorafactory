@@ -1,4 +1,5 @@
 "use server";
+import { slideImage } from "@prisma/client";
 import { productSchema } from "./schema";
 
 import db from "@/lib/db";
@@ -11,22 +12,23 @@ export async function uploadUpdateProduct(
   productId: number
 ) {
   const data = {
-    photos: formData.get("photos"),
-    photo: formData.get("photo"),
+    // photos: formData.get("photos"),
+    // photo: formData.get("photo"),
     title: formData.get("title"),
     price: formData.get("price"),
     discount: formData.get("discount"),
     category: formData.get("category"),
     description: formData.get("description"),
+    productPictureId: Number(formData.get("productPictureId")),
   };
   const result = productSchema.safeParse(data);
   if (!result.success) {
     return result.error.flatten();
   } else {
-    let photoUrls: string[] = [];
-    if (typeof data.photos === "string") {
-      photoUrls = data.photos.split(",");
-    }
+    // let photoUrls: string[] = [];
+    // if (typeof data.photos === "string") {
+    //   photoUrls = data.photos.split(",");
+    // }
 
     const session = await getSessionCarrot();
     console.log("getSessionCarrot : ", session.id);
@@ -40,19 +42,11 @@ export async function uploadUpdateProduct(
         title: result.data.title,
         description: result.data.description,
         price: result.data.price,
-        photo: result.data.photo,
+        // photo: result.data.photo,
         category: result.data.category,
         discount: result.data.discount,
         productPicture: {
-          slideimages: {
-            // 슬라이드 이미지도 업데이트
-            connectOrCreate: photoUrls.map((src: any) => {
-              return {
-                where: { src: src },
-                create: { src: src },
-              };
-            }),
-          },
+          connect: { id: Number(result.data.productPictureId) }, // 연결할 productPicture ID
         },
       },
       select: {
@@ -62,8 +56,7 @@ export async function uploadUpdateProduct(
     console.log("update  : ", product);
     revalidateTag("products");
     revalidateTag("product-detail");
-    redirect(`/products/${product.id}`);
-    return product; // 성공 시 업데이트된 제품 반환
+    redirect(`/admin/option`);
   }
 }
 export async function getCategory() {
@@ -73,8 +66,8 @@ export async function getCategory() {
 export async function uploadProduct(formData: FormData) {
   console.log("formData : ", formData);
   const data = {
-    photos: formData.get("photos"),
-    photo: formData.get("photo"),
+    // photos: formData.get("photos"),
+    // photo: formData.get("photo"),
     title: formData.get("title"),
     price: formData.get("price"),
     discount: formData.get("discount"),
@@ -88,43 +81,46 @@ export async function uploadProduct(formData: FormData) {
   } else {
     // const session = await getSession();
     // if (session.id) {
-    let photoUrls: string[] = [];
+    //let photoUrls: string[] = [];
 
-    if (typeof data.photos === "string") {
-      photoUrls = data.photos.split(",");
-    }
+    // if (typeof data.photos === "string") {
+    //   photoUrls = data.photos.split(",");
+    // }
     const session = await getSessionCarrot();
     console.log("getSessionCarrot : ", session.id);
 
-    const product = await db.product.create({
-      data: {
-        title: result.data.title,
-        description: result.data.description,
-        price: result.data.price,
-        photo: result.data.photo,
-        category: result.data.category,
-        discount: result.data.discount,
-        user: {
-          connect: {
-            id: session.id,
-          },
-        },
-        slideimages: {
-          connectOrCreate: photoUrls.map((src: any) => {
-            return {
-              where: { src: src },
-              create: { src: src },
-            };
-          }),
-        },
-      },
-      select: {
-        id: true,
-      },
-    });
-    revalidateTag("products");
-    revalidateTag("product-detail");
-    redirect(`/products/${product.id}`);
+    // const product = await db.product.create({
+    //   data: {
+    //     title: result.data.title,
+    //     description: result.data.description,
+    //     price: result.data.price,
+    //     // photo: result.data.photo,
+    //     category: result.data.category,
+    //     discount: result.data.discount,
+    //     user: {
+    //       connect: {
+    //         id: session.id,
+    //       },
+    //     },
+    //     productPicture: {
+    //       slideImage: {
+    //         connectOrCreate: photoUrls.map((src: any) => {
+    //           return {
+    //             where: { src: src },
+    //             create: { src: src },
+    //           };
+    //         }),
+    //       },
+    //     },
+    //   },
+    //   select: {
+    //     id: true,
+    //   },
+    // });
+    // revalidateTag("products");
+    // revalidateTag("product-detail");
+    // redirect(`/products/${product.id}`);
+
     //redirect("/products")
     // }
   }

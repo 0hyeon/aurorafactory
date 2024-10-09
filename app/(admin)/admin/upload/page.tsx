@@ -18,13 +18,12 @@ import { CATEGORIES } from "@/lib/constants";
 import { NullableProduct } from "@/types/type";
 
 export default function AddProduct({ edit }: { edit?: NullableProduct }) {
-  console.log("edit : ", edit);
   const [uploadUrl, setUploadUrl] = useState("");
   const [preview, setPreview] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [categoryData, setCategoryData] = useState<any[]>([]); // 비동기 데이터 상태 관리
 
-  const [photoPreview, setPhotoPreview] = useState<string[]>([]);
+  // const [photoPreview, setPhotoPreview] = useState<string[]>([]);
   const [slideUploadUrl, setSlideUploadUrl] = useState<string[]>([]);
   const [slideFile, setSlideFile] = useState<File[]>([]);
   const {
@@ -37,25 +36,25 @@ export default function AddProduct({ edit }: { edit?: NullableProduct }) {
     resolver: zodResolver(productSchema),
   });
 
-  const onImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (!files || files.length === 0) return;
+  // const onImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const files = event.target.files;
+  //   if (!files || files.length === 0) return;
 
-    const file = files[0];
-    const previewurl = URL.createObjectURL(file);
-    setPreview(previewurl);
-    setFile(file);
+  //   const file = files[0];
+  //   const previewurl = URL.createObjectURL(file);
+  //   setPreview(previewurl);
+  //   setFile(file);
 
-    const uploadResponse = await getUploadUrl();
-    if (uploadResponse.success) {
-      const { id, uploadURL } = uploadResponse.result;
-      setUploadUrl(uploadURL);
-      setValue(
-        "photo",
-        `https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/${id}`
-      );
-    }
-  };
+  //   const uploadResponse = await getUploadUrl();
+  //   if (uploadResponse.success) {
+  //     const { id, uploadURL } = uploadResponse.result;
+  //     setUploadUrl(uploadURL);
+  //     setValue(
+  //       "photo",
+  //       `https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/${id}`
+  //     );
+  //   }
+  // };
   const fetchCategories = async () => {
     try {
       const categories = await getCategory();
@@ -64,126 +63,148 @@ export default function AddProduct({ edit }: { edit?: NullableProduct }) {
       console.error("Failed to fetch categories:", error);
     }
   };
-  const onSlideImageChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const files = event.target.files;
-    if (!files || files.length === 0) return;
-    const dummyid = [];
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      const previewUrl = URL.createObjectURL(file);
-      const uploadResponse = await getUploadUrl();
-      if (uploadResponse.success) {
-        const { id, uploadURL } = uploadResponse.result;
-        dummyid.push(`https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/${id}`);
+  // const onSlideImageChange = async (
+  //   event: React.ChangeEvent<HTMLInputElement>
+  // ) => {
+  //   const files = event.target.files;
+  //   if (!files || files.length === 0) return;
+  //   const dummyid = [];
+  //   for (let i = 0; i < files.length; i++) {
+  //     const file = files[i];
+  //     const previewUrl = URL.createObjectURL(file);
+  //     const uploadResponse = await getUploadUrl();
+  //     if (uploadResponse.success) {
+  //       const { id, uploadURL } = uploadResponse.result;
+  //       dummyid.push(`https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/${id}`);
 
-        setPhotoPreview((prev) => [...prev, previewUrl]);
-        setSlideUploadUrl((prev) => [...prev, uploadURL]);
-        setSlideFile((prev) => [...prev, file]);
-      }
-    }
-    setValue("photos", dummyid.join(","));
-  };
+  //       setPhotoPreview((prev) => [...prev, previewUrl]);
+  //       setSlideUploadUrl((prev) => [...prev, uploadURL]);
+  //       setSlideFile((prev) => [...prev, file]);
+  //     }
+  //   }
+  //   setValue("photos", dummyid.join(","));
+  // };
 
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmitEvent = handleSubmit(async (data) => {
+    console.log("data : ", data);
     console.log("onSubmit");
-    if (!file && edit) {
-      data.photo = edit.photo;
-      const existingSlideImages = edit.slideimages
-        .map((image) => image.src)
-        .join(",");
-      data.photos = existingSlideImages;
-    } else if (file) {
-      const formData = new FormData();
-      formData.append("file", file);
-      const response = await fetch(uploadUrl, {
-        method: "POST",
-        body: formData,
-      });
-      if (response.status !== 200) {
-      }
-    }
+    try {
+      // console.log("data : ", data);
 
-    if (slideFile.length > 0) {
-      for (let index = 0; index < slideFile.length; index++) {
-        const slideFormData = new FormData();
-        slideFormData.append("file", slideFile[index]);
-        const slideResponse = await fetch(slideUploadUrl[index], {
-          method: "POST",
-          body: slideFormData,
-        });
-        if (slideResponse.status !== 200) {
-          console.error(`Failed to upload slide image ${index}`);
-          continue;
+      // if (!file && edit) {
+      //   data.photo = edit.photo;
+      //   const existingSlideImages = edit?.productPicture?.slideimages
+      //     .map((image) => image.src)
+      //     .join(",");
+
+      //   if (existingSlideImages) {
+      //     data.photos = existingSlideImages;
+      //   }
+      // } else if (file) {
+      //   const formData = new FormData();
+      //   formData.append("file", file);
+      //   const response = await fetch(uploadUrl, {
+      //     method: "POST",
+      //     body: formData,
+      //   });
+      //   if (response.status !== 200) {
+      //     throw new Error("Failed to upload main image");
+      //   }
+      // }
+
+      // Slide images upload
+      if (slideFile.length > 0) {
+        for (let index = 0; index < slideFile.length; index++) {
+          const slideFormData = new FormData();
+          slideFormData.append("file", slideFile[index]);
+          const slideResponse = await fetch(slideUploadUrl[index], {
+            method: "POST",
+            body: slideFormData,
+          });
+          if (slideResponse.status !== 200) {
+            console.error(`Failed to upload slide image ${index}`);
+            continue;
+          }
         }
       }
-    }
-    const formData = new FormData();
-    formData.append("title", data.title);
-    formData.append("price", data.price + "");
-    formData.append("description", data.description);
-    formData.append("photo", data.photo);
-    formData.append("discount", String(data.discount));
-    formData.append("photos", data.photos);
-    formData.append("category", data.category);
-    if (edit) {
-      const errors = await uploadUpdateProduct(formData, edit.id);
-      console.log("formData : ", formData);
-      // const errors = await updateProduct(formData);
-      console.log("update logic ");
-      console.log("errors : ", errors);
-      if (errors) {
-        // setError("")
-        console.log("errors : ", errors);
+
+      // Collect data for submission
+      const formData = new FormData();
+      formData.append("title", data.title);
+      formData.append("price", data.price.toString());
+      formData.append("description", data.description);
+      // formData.append("photo", data.photo);
+      formData.append(
+        "discount",
+        data.discount ? data.discount.toString() : ""
+      );
+      // formData.append("photos", data.photos);
+      formData.append("category", data.category);
+      formData.append(
+        "productPictureId",
+        data.productPictureId?.toString() || ""
+      );
+
+      let errors;
+      if (edit) {
+        errors = await uploadUpdateProduct(formData, edit.id);
       } else {
-        // If all async operations complete successfully, refresh the page
-        window.location.reload();
-        alert("수정완료");
+        errors = await uploadProduct(formData);
       }
-    } else {
-      console.log("insert logic ");
-      const errors = await uploadProduct(formData);
+
       if (errors) {
-        // setError("")
         console.log("errors : ", errors);
+        alert("업로드 실패");
       } else {
-        // If all async operations complete successfully, refresh the page
         window.location.reload();
+        alert("수정 완료");
       }
+    } catch (error) {
+      console.error("Submission error:", error);
+      alert("업로드 중 오류가 발생했습니다.");
     }
   });
 
-  const deleteHandler = (index: number) => {
-    setPhotoPreview((prev) => prev.filter((_, idx) => idx !== index));
-    setSlideFile((prev) => prev.filter((_, idx) => idx !== index));
-    setSlideUploadUrl((prev) => prev.filter((_, idx) => idx !== index));
-  };
+  // const deleteHandler = (index: number) => {
+  //   setPhotoPreview((prev) => prev.filter((_, idx) => idx !== index));
+  //   setSlideFile((prev) => prev.filter((_, idx) => idx !== index));
+  //   setSlideUploadUrl((prev) => prev.filter((_, idx) => idx !== index));
+  // };
   const onValid = async (e: any) => {
     e.preventDefault();
-    await onSubmit();
+    console.log("onValid called"); // 디버깅 로그 추가
+    if (Object.keys(errors).length > 0) {
+      console.log("Form validation errors:", errors);
+    } else {
+      await onSubmitEvent();
+    }
   };
   useEffect(() => {
     fetchCategories();
   }, []);
   useEffect(() => {
     if (edit) {
+      console.log("edit : ", edit);
       setValue("title", edit.title);
       setValue("price", edit.price);
       setValue("description", edit.description);
       setValue("discount", edit.discount ?? undefined); // null을 undefined로 변환
+      setValue("category", edit?.productPicture?.category ?? "");
+      setValue("productPictureId", edit?.id ?? null);
 
-      setValue("category", "ㅗㅗㅗ");
-      setPreview(`${edit.photo}/public`); // 기본 이미지 프리뷰
-      if (edit && edit.slideimages) {
-        // slideimages가 존재하는지 확인하고 배열로 설정
-        if (Array.isArray(edit.slideimages)) {
-          setPhotoPreview(edit.slideimages.map((image) => image.src));
-        } else {
-          console.warn("Expected slideimages to be an array.");
-          setPhotoPreview([]);
-        }
-      }
+      // setValue("photo", edit?.productPicture?.photo ?? "");
+      // setPreview(`${edit.photo}/public`); // 기본 이미지 프리뷰
+      // if (edit && edit.productPicture) {
+      //   // slideimages가 존재하는지 확인하고 배열로 설정
+      //   if (Array.isArray(edit.productPicture)) {
+      //     setPhotoPreview(
+      //       edit.productPicture.slideimages.map((image) => image.src)
+      //     );
+      //   } else {
+      //     console.warn("Expected slideimages to be an array.");
+      //     setPhotoPreview([]);
+      //   }
+      // }
       // setPhotoPreview(edit.sladeImages.map((image) => image.src)); // 슬라이드 이미지 배열로 설정
       // if (edit.sladeImages && Array.isArray(edit.sladeImages)) {
       //   setPhotoPreview(edit.sladeImages.map((image) => image.src)); // 슬라이드 이미지 배열로 설정
@@ -191,11 +212,10 @@ export default function AddProduct({ edit }: { edit?: NullableProduct }) {
       // setPhotoPreview(edit.sladeImages.map((image) => image.src)); // 슬라이드 이미지
     }
   }, [edit, setValue]);
-  console.log("categoryData : ", categoryData);
   return (
     <div className="w-1/3 mx-auto my-10 overflow-y-auto">
       <form onSubmit={onValid} className="p-5 flex flex-col gap-5">
-        <label
+        {/* <label
           htmlFor="photo"
           className="border-2 aspect-square flex items-center justify-center flex-col text-neutral-300 border-neutral-300 rounded-md border-dashed cursor-pointer bg-center bg-cover"
           style={{
@@ -210,18 +230,18 @@ export default function AddProduct({ edit }: { edit?: NullableProduct }) {
               <PhotoIcon className="w-20" />
             </>
           ) : null}
-        </label>
+        </label> */}
 
-        <input
+        {/* <input
           onChange={onImageChange}
           type="file"
           id="photo"
           name="photo"
           accept="image/*"
           className="hidden"
-        />
+        /> */}
 
-        <label className="mr-3 w-20 h-20 cursor-pointer text-gray-600 hover:border-orange-500 hover:text-orange-500 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-md">
+        {/* <label className="mr-3 w-20 h-20 cursor-pointer text-gray-600 hover:border-orange-500 hover:text-orange-500 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-md">
           <svg
             className="h-12 w-12"
             stroke="currentColor"
@@ -245,8 +265,8 @@ export default function AddProduct({ edit }: { edit?: NullableProduct }) {
             className="hidden"
             multiple
           />
-        </label>
-        {photoPreview ? (
+        </label> */}
+        {/* {photoPreview ? (
           <div className="flex flex-wrap">
             {photoPreview.map((src: any, idx: any) => (
               <span className="mr-3 relative" key={idx}>
@@ -267,7 +287,7 @@ export default function AddProduct({ edit }: { edit?: NullableProduct }) {
               </span>
             ))}
           </div>
-        ) : null}
+        ) : null} */}
 
         <Input
           required
@@ -302,7 +322,21 @@ export default function AddProduct({ edit }: { edit?: NullableProduct }) {
           name="category"
           defaultValue={edit?.productPicture?.category ?? ""} // 기본값 설정
           register={register}
-          errors={errors}
+          errors={errors.productPictureId?.message ?? ""}
+          onChange={(event) => {
+            const selectedCategory = event.target.value;
+            const selectedProductPicture = categoryData.find(
+              (cat) => cat.category === selectedCategory
+            );
+            console.log(
+              "selectedCategory, selectedProductPicture : ",
+              selectedCategory,
+              selectedProductPicture
+            );
+            if (selectedProductPicture) {
+              setValue("productPictureId", selectedProductPicture.id);
+            }
+          }}
         />
 
         <Button text={edit ? "수정 완료" : "작성 완료"} type="submit" />

@@ -52,7 +52,11 @@ async function getProduct(id: number) {
           avatar: true,
         },
       },
-      productPicture: true,
+      productPicture: {
+        include: {
+          slideimages: true,
+        },
+      },
       productoption: true,
     },
   });

@@ -58,7 +58,11 @@ export async function getProduct(id: number) {
           avatar: true,
         },
       },
-      slideimages: true,
+      productPicture: {
+        include: {
+          slideimages: true,
+        },
+      },
       productoption: true,
     },
   });
