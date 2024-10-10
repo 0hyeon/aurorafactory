@@ -114,5 +114,6 @@ export async function getUploadUrl() {
     }
   );
   const data = await response.json();
+  console.log("data : ", data);
   return data;
 }

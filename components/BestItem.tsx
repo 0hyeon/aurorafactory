@@ -9,15 +9,16 @@ import "swiper/css/pagination";
 import Image from "next/image";
 
 import Link from "next/link";
-import { IslideData } from "@/types/type";
+import { IProduct, IslideData } from "@/types/type";
 import { Product } from "@prisma/client";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
-interface IBestItem {
-  data: any;
+interface NullableProduct {
+  data: IProduct[] | undefined;
   title: string;
   subtitle: string;
 }
-export default function BestItem({ data, title, subtitle }: IBestItem) {
+export default function BestItem({ data, title, subtitle }: NullableProduct) {
+  console.log("data : ", data);
   const [swiperIndex, setSwiperIndex] = useState(0); //페이지네이션
   const [swiper, setSwiper] = useState<SwiperClass>(); //슬라이드
   const handlePrev = () => {
@@ -79,7 +80,7 @@ export default function BestItem({ data, title, subtitle }: IBestItem) {
                     <div className="relative w-[260px] h-[260px] object-contain">
                       <Image
                         alt={String(slide.id)}
-                        src={`${slide.photo}/public`}
+                        src={`${slide.productPicture.photo}/public`}
                         className="object-contain rounded-2xl border border-gray-400"
                         fill
                       />
