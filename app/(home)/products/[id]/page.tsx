@@ -70,7 +70,7 @@ export async function getProduct(id: number) {
 }
 
 export async function getProducts() {
-  const product = db.product.findMany({
+  const product = await db.product.findMany({
     include: {
       productPicture: {
         include: {

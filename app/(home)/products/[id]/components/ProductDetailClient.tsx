@@ -33,7 +33,7 @@ interface CartButtonProps {
 }
 
 const ProductDetailClient = ({ product, params }: any) => {
-  console.log("product : ", product);
+  console.log(params);
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
   const [quantity, setQuantity] = useState<number>(1);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);

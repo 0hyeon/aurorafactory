@@ -34,20 +34,21 @@ const CartButton = ({ options, cartId, text }: CartButtonProps) => {
         cartCreate({ quantity, cartId, optionId: id })
       )
     );
-
+    console.log("responses : ", responses);
+    // 로그인 상태 확인
     const notLoggedIn = responses.some(
-      (response) => response.message === "로그인 후 이용해주세요"
+      (response) => response?.message?.trim() === "로그인 후 이용해주세요"
     );
-    const alreadyInCart = responses.every(
-      (response) => response.message === "이미 장바구니에 담긴 상품입니다"
-    );
-    const addedToCart = responses.some((response) => response.ok);
-
     if (notLoggedIn) {
       alert("로그인 후 이용해주세요");
       setIsCartAdded(false); // 상태를 원래대로 돌리기
       return;
     }
+    const alreadyInCart = responses.every(
+      (response) =>
+        response.message?.trim() === "이미 장바구니에 담긴 상품입니다"
+    );
+    const addedToCart = responses.some((response) => response.ok);
 
     if (alreadyInCart) {
       setPopupMessage("이미 장바구니에 담긴 상품입니다");

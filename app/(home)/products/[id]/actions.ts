@@ -24,12 +24,13 @@ export async function cartCreate({ quantity, cartId, optionId }: IcartCreate) {
 
   const cookieStore = cookies();
   const session = await getSession(cookieStore);
+  console.log("session : ", session); // {}
   if (session.id) {
     console.log("getCachedLikeStatus : ", session.id);
     await getCachedLikeStatus(session.id);
   }
 
-  if (!session.id) return { ok: false, message: " 로그인 후 이용해주세요" };
+  if (!session.id) return { ok: false, message: "로그인 후 이용해주세요" };
 
   const existingCartItem = await db.cart.findFirst({
     where: {
