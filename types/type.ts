@@ -19,8 +19,8 @@ export interface IslideData {
 export type TabValue =
   | "드시모네"
   | "또박케어LAB"
-  | "발포지"
-  | "은박봉투"
+  | "라미봉투"
+  | "보냉봉투"
   | "에어캡봉투";
 
 export type PhotoPreviewType = string[];

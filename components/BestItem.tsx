@@ -18,7 +18,6 @@ interface NullableProduct {
   subtitle: string;
 }
 export default function BestItem({ data, title, subtitle }: NullableProduct) {
-  console.log("data : ", data);
   const [swiperIndex, setSwiperIndex] = useState(0); //페이지네이션
   const [swiper, setSwiper] = useState<SwiperClass>(); //슬라이드
   const handlePrev = () => {
@@ -81,7 +80,7 @@ export default function BestItem({ data, title, subtitle }: NullableProduct) {
                       <Image
                         alt={String(slide.id)}
                         src={`${slide.productPicture.photo}/public`}
-                        className="object-contain rounded-2xl border border-gray-400"
+                        className="object-cover rounded-2xl border border-gray-400"
                         fill
                       />
                     </div>

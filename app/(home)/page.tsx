@@ -27,19 +27,25 @@ export default async function Home() {
           {/* <Best data={slideData} /> */}
 
           <BestItem
-            data={items.filter((el) => el.category === "에어캡봉투")}
+            data={items.filter(
+              (el) => el.productPicture?.category === "에어캡봉투"
+            )}
             subtitle="완충효과 100%"
             title="에어캡봉투"
           />
           <BestItem
-            data={items.filter((el) => el.category === "은박봉투")}
+            data={items.filter(
+              (el) => el.productPicture?.category === "보냉봉투"
+            )}
             subtitle="온도유지"
-            title="은박봉투"
+            title="보냉봉투"
           />
           <BestItem
-            data={items.filter((el) => el.category === "발포지")}
+            data={items.filter(
+              (el) => el.productPicture?.category === "라미봉투"
+            )}
             subtitle="가성비ㆍ탁월한"
-            title="발포봉투"
+            title="라미봉투"
           />
           <Youtube url="https://youtu.be/EwqRj6SHNxg?si=Ixqv5SGzytn63ByB" />
           {/* <SlideSmall /> */}

@@ -198,13 +198,13 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
           </div>
         </div>
       </div>
-      <div className="relative block w-[50%] mx-auto aspect-[1/10] overflow-hidden">
+      <div className="relative block w-[40%] mx-auto aspect-[1/10] overflow-hidden">
         {product && product.productPicture?.category && (
           <Image
             src={
               product.productPicture.category === "보냉봉투"
                 ? "/images/BoNengDetail.jpg"
-                : product.productPicture.category === "발포봉투"
+                : product.productPicture.category === "라미봉투"
                 ? "/images/BpSangsaePage.jpg"
                 : product.productPicture.category === "에어캡봉투"
                 ? "/images/aircapDetail.jpg"
@@ -217,7 +217,7 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
             blurDataURL={
               product.productPicture.category === "보냉봉투"
                 ? "/images/BoNengDetail.jpg"
-                : product.productPicture.category === "발포봉투"
+                : product.productPicture.category === "라미봉투"
                 ? "/images/BpSangsaePage.jpg"
                 : product.productPicture.category === "에어캡봉투"
                 ? "/images/aircapDetail.jpg"

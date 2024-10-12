@@ -22,7 +22,7 @@ export const PLZ_ADD_PHOTO = "사진을 추가해주세요.";
 export const CATEGORIES = [
   "발포지",
   "에어캡봉투",
-  "은박봉투",
+  "보냉봉투",
   "과일박스",
   "에어셀.공기주입",
   "과일비닐봉투",

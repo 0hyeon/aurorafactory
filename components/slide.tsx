@@ -29,10 +29,10 @@ export default function Slide() {
     {
       id: 1,
       text: "오로라팩",
-      src: "/images/main_banner1.png",
+      src: "/images/main_banner4.jpg",
     },
     {
-      id: 2,
+      id: 1,
       text: "오로라팩",
       src: "/images/main_banner1.png",
     },
@@ -71,10 +71,10 @@ export default function Slide() {
           </div>
         ))}
       </Swiper>
-      <div className="relative w-full max-w-[1000px] mx-0 my-auto font-normal">
+      <div className="relative w-full max-w-[1000px] mx-0 my-auto font-normal mx-auto">
         <div
           style={{ background: "rgba(0,0,0,.5)" }}
-          className="absolute z-[1] flex right-[-200px] bottom-4 left-[inherit] text-white rounded-[100px] w-[110px] width: 110px; py-2 text-base justify-around items-center"
+          className="absolute z-[1] flex right-0 bottom-4 left-[inherit] text-white rounded-[100px] w-[110px] width: 110px; py-2 text-base justify-around items-center"
         >
           <div
             className="w-8 h-8 cursor-pointer mt-0 bg-no-repeat bg-center bg-cover"

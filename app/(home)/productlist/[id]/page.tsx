@@ -1,41 +1,44 @@
 import React from "react";
-import { getCachedProducts } from "../../products/[id]/page";
+import {
+  getCachedProductCategory,
+  getProductCategory,
+  mappingSubtitle,
+} from "./actions";
+import CategoryList from "./components/CategoryList";
 
-type Mapping = {
+export type Mapping = {
   [key: string]: string;
 };
 const ProductListPage = async ({ params }: { params: { id: string } }) => {
   const category = params.id;
 
-  // 함수 정의: title은 string, 리턴 타입도 string
-  const mappingSubtitle = (item: string): string => {
-    const mapping: Mapping = {
-      lame: "발포지",
-      aircap: "에어캡봉투",
-      eunbak: "은박봉투",
-    };
-
-    return mapping[item];
-  };
-
-  const items = await getCachedProducts();
+  //캐싱
+  const itemsCategory = await getCachedProductCategory({
+    category: mappingSubtitle(category),
+  });
 
   return (
-    <div>
-      {items
-        .filter((el) => el.category === mappingSubtitle(category))
-        .map((el) => {
-          return (
-            <div key={el.id}>
-              <div>{el.id}</div>
-              <div>{el.title}</div>
-              <div>{el.price}</div>
-              <div>{el.category}</div>
-            </div>
-          );
-        })}
+    <div className="max-w-[1000px] mx-auto my-0">
+      <CategoryList itemsCategory={itemsCategory} category={category} />
     </div>
   );
 };
 
 export default ProductListPage;
+// export async function generateStaticParams() {
+//   // 모든 가능한 카테고리를 배열로 정의
+//   const categories = ["lame", "aircap", "eunbak"];
+
+//   // 각 카테고리에 대해 제품을 가져와 ID를 생성
+//   const allParams = await Promise.all(
+//     categories.map(async (category) => {
+//       const products = await getCachedProductCategory({
+//         category: mappingSubtitle(category),
+//       });
+//       return products.map((product) => ({ id: String(product.id) }));
+//     })
+//   );
+
+//   // 평탄화하여 하나의 배열로 만듦
+//   return allParams.flat();
+// }

@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Best from "./Best";
-import { TabValue } from "@/types/type";
+import { IProduct, TabValue } from "@/types/type";
 import { slideData } from "@/static/data";
 import { cls } from "@/lib/utils";
 import ListProduct from "./list-product";
@@ -9,10 +9,11 @@ import ProductList from "./productList";
 import { getCachedProducts } from "@/app/(home)/products/[id]/page";
 import BestItem from "./BestItem";
 import { Product } from "@prisma/client";
+import { mappingSubDesc } from "@/app/(home)/productlist/[id]/actions";
 
 const Tabs = () => {
-  const [method, setMethod] = useState<TabValue>("발포지");
-  const [isData, setData] = useState<Product[]>([]);
+  const [method, setMethod] = useState<TabValue>("라미봉투");
+  const [isData, setData] = useState<IProduct[]>([]);
   // const onClickOpen = (e: React.MouseEvent<HTMLDivElement>) => {
   //   console.log(e.currentTarget.innerText);
   //   setMethod(e.currentTarget.innerText as TabValue);
@@ -34,15 +35,7 @@ const Tabs = () => {
   };
 
   // 함수 정의: title은 string, 리턴 타입도 string
-  const mappingSubtitle = (title: string): string => {
-    const mapping: Mapping = {
-      발포지: "가성비ㆍ탁월한",
-      에어캡봉투: "완충효과 100%",
-      은박봉투: "온도유지",
-    };
 
-    return mapping[title] || "default";
-  };
   useEffect(() => {
     fetchData(); // 컴포넌트가 마운트될 때 데이터 가져오기
   }, [method]);
@@ -57,18 +50,20 @@ const Tabs = () => {
       <div className="flex flex-wrap justify-center py-0 px-p[12px] border-b border-b-[#909090] m-b-[20px] items-center m-b[50px]">
         <div className="flex">
           <div
-            className={`${tabBase} ${method === "발포지" ? tabOn : tabDefault}`}
-            onClick={onClickOpen}
-          >
-            발포지
-          </div>
-          <div
             className={`${tabBase} ${
-              method === "은박봉투" ? tabOn : tabDefault
+              method === "라미봉투" ? tabOn : tabDefault
             }`}
             onClick={onClickOpen}
           >
-            은박봉투
+            라미봉투
+          </div>
+          <div
+            className={`${tabBase} ${
+              method === "보냉봉투" ? tabOn : tabDefault
+            }`}
+            onClick={onClickOpen}
+          >
+            보냉봉투
           </div>
           <div
             className={`${tabBase} ${
@@ -84,9 +79,9 @@ const Tabs = () => {
         <Best data={slideData.filter((el) => el.category === method)} />
       ) : (
         <BestItem
-          data={isData.filter((el) => el.category === method)}
+          data={isData.filter((el) => el.productPicture?.category === method)}
           title={method}
-          subtitle={mappingSubtitle(method)}
+          subtitle={mappingSubDesc(method)}
         />
       )}
     </>

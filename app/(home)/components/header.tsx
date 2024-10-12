@@ -85,7 +85,7 @@ export default function Header({ cartcount }: any) {
           <Link href={"/productlist/lame"}>라미봉투</Link>
         </div>
         <div>
-          <Link href={"/productlist/eunbak"}>은박봉투</Link>
+          <Link href={"/productlist/eunbak"}>보냉봉투</Link>
         </div>
         <div>
           <Link href={"/productlist/aircap"}>에어캡봉투</Link>

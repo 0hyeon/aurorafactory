@@ -32,7 +32,7 @@ export default function Menu() {
           </div>
         </div>
         <div>라미봉투</div>
-        <div>은박봉투</div>
+        <div>보냉봉투</div>
         <div>에어캡봉투</div>
         <div>발포시트지</div>
         <div>이벤트/혜택</div>

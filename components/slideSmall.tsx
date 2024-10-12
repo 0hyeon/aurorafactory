@@ -16,10 +16,10 @@ export default function SlideSmall() {
     {
       id: 1,
       text: "오로라팩",
-      src: "/images/middle_banner_1.png",
+      src: "/images/middle_banner_1_2.jpg",
     },
     {
-      id: 2,
+      id: 1,
       text: "오로라팩",
       src: "/images/middle_banner_1.png",
     },
