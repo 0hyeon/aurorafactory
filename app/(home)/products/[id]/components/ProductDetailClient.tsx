@@ -20,7 +20,6 @@ interface CartButtonProps {
 }
 
 const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
-  console.log("product : ", product);
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
   const [quantity, setQuantity] = useState<number>(1);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
@@ -213,7 +212,17 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
             }
             alt="상세페이지"
             fill
+            placeholder="blur"
             className="object-cover"
+            blurDataURL={
+              product.productPicture.category === "보냉봉투"
+                ? "/images/BoNengDetail.jpg"
+                : product.productPicture.category === "발포봉투"
+                ? "/images/BpSangsaePage.jpg"
+                : product.productPicture.category === "에어캡봉투"
+                ? "/images/aircapDetail.jpg"
+                : ""
+            }
           />
         )}
       </div>
