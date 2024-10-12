@@ -17,7 +17,7 @@ import Select from "@/components/Selcect";
 import { CATEGORIES } from "@/lib/constants";
 import { NullableProduct } from "@/types/type";
 
-export default function AddProduct({ edit }: { edit?: NullableProduct }) {
+export default function AddProduct() {
   const [uploadUrl, setUploadUrl] = useState("");
   const [preview, setPreview] = useState("");
   const [file, setFile] = useState<File | null>(null);
@@ -146,11 +146,8 @@ export default function AddProduct({ edit }: { edit?: NullableProduct }) {
       );
 
       let errors;
-      if (edit) {
-        errors = await uploadUpdateProduct(formData, edit.id);
-      } else {
-        errors = await uploadProduct(formData);
-      }
+
+      errors = await uploadProduct(formData);
 
       if (errors) {
         console.log("errors : ", errors);
@@ -182,36 +179,7 @@ export default function AddProduct({ edit }: { edit?: NullableProduct }) {
   useEffect(() => {
     fetchCategories();
   }, []);
-  useEffect(() => {
-    if (edit) {
-      console.log("edit : ", edit);
-      setValue("title", edit.title);
-      setValue("price", edit.price);
-      setValue("description", edit.description);
-      setValue("discount", edit.discount ?? undefined); // null을 undefined로 변환
-      setValue("category", edit?.productPicture?.category ?? "");
-      setValue("productPictureId", edit?.id ?? null);
 
-      // setValue("photo", edit?.productPicture?.photo ?? "");
-      // setPreview(`${edit.photo}/public`); // 기본 이미지 프리뷰
-      // if (edit && edit.productPicture) {
-      //   // slideimages가 존재하는지 확인하고 배열로 설정
-      //   if (Array.isArray(edit.productPicture)) {
-      //     setPhotoPreview(
-      //       edit.productPicture.slideimages.map((image) => image.src)
-      //     );
-      //   } else {
-      //     console.warn("Expected slideimages to be an array.");
-      //     setPhotoPreview([]);
-      //   }
-      // }
-      // setPhotoPreview(edit.sladeImages.map((image) => image.src)); // 슬라이드 이미지 배열로 설정
-      // if (edit.sladeImages && Array.isArray(edit.sladeImages)) {
-      //   setPhotoPreview(edit.sladeImages.map((image) => image.src)); // 슬라이드 이미지 배열로 설정
-      // }
-      // setPhotoPreview(edit.sladeImages.map((image) => image.src)); // 슬라이드 이미지
-    }
-  }, [edit, setValue]);
   return (
     <div className="w-1/3 mx-auto my-10 overflow-y-auto">
       <form onSubmit={onValid} className="p-5 flex flex-col gap-5">
@@ -320,7 +288,6 @@ export default function AddProduct({ edit }: { edit?: NullableProduct }) {
         <Select
           data={categoryData.map((el) => el.category)}
           name="category"
-          defaultValue={edit?.productPicture?.category ?? ""} // 기본값 설정
           register={register}
           errors={errors.productPictureId?.message ?? ""}
           onChange={(event) => {
@@ -339,7 +306,7 @@ export default function AddProduct({ edit }: { edit?: NullableProduct }) {
           }}
         />
 
-        <Button text={edit ? "수정 완료" : "작성 완료"} type="submit" />
+        <Button text={"작성 완료"} type="submit" />
       </form>
     </div>
   );

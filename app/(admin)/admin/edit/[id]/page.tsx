@@ -3,7 +3,6 @@
 
 import { NullableProduct } from "@/types/type";
 import { getCachedProduct } from "../../option/[id]/actions";
-import AddProduct from "../../upload/page";
 import AddProductCommon from "../../common/page";
 
 export default async function OptionDetailPage({
