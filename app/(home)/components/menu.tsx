@@ -7,7 +7,7 @@ export default function Menu() {
   const [isActive, setIsActive] = useState<boolean>(false);
   return (
     <>
-      <div className="flex justify-between pb-4">
+      <div className="flex justify-between pb-4 text-[#111]">
         {/* Menu */}
         <div
           onClick={() => {
@@ -16,12 +16,12 @@ export default function Menu() {
           className="flex items-center justify-center gap-2 cursor-pointer"
         >
           <div className="relative">
-            <motion.p
+            {/* <motion.p
               variants={opacity}
               animate={!isActive ? "open" : "closed"}
             >
               Menu
-            </motion.p>
+            </motion.p> */}
             <motion.p
               variants={opacity}
               className="absolute opacity-0 top-0"

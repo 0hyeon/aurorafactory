@@ -16,6 +16,7 @@ export interface IslideData {
   reviews: number;
   category: string;
 }
+export type LameBagValue = "0.5T" | "1T" | "2T";
 export type TabValue =
   | "드시모네"
   | "또박케어LAB"

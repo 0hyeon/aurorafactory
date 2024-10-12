@@ -44,9 +44,7 @@ export default function BestItem({ data, title, subtitle }: NullableProduct) {
     <div>
       <div className="flex pt-[100px] pb-[18px] items-end justify-between">
         <div className="flex gap-3 justify-between items-end">
-          <h3 className="cursor-pointer text-black text-3xl font-bold">
-            {title}
-          </h3>
+          <h3 className="text-black text-3xl font-bold">{title}</h3>
           <h1 className=" text-[#999] text-lg font-medium">{subtitle}</h1>
         </div>
         <div className="cursor-pointer text-gray-700 pr-4">

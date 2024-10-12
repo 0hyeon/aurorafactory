@@ -57,9 +57,9 @@ export default function Header({ cartcount }: any) {
           </Link>
         </motion.div>
       </div>
-      <div className="flex justify-between pb-4">
+      <div className="flex justify-between pb-4 text-[#111]">
         {/* Menu */}
-        <div
+        {/* <div
           onClick={() => {
             setIsActive(!isActive);
           }}
@@ -80,7 +80,7 @@ export default function Header({ cartcount }: any) {
               Close
             </motion.p>
           </div>
-        </div>
+        </div> */}
         <div>
           <Link href={"/productlist/lame"}>라미봉투</Link>
         </div>

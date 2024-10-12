@@ -25,7 +25,7 @@ export default function Slide({ data }: { data: any }) {
     clickable: true,
     renderBullet: function (index: number, className: string) {
       return (
-        '<span class="!w-5 !h-5 !bg-black navi-wrap ' +
+        '<span class="!w-5 !h-5 !bg-black border-2 border-[#ddd] navi-wrap ' +
         className +
         '">' +
         // (index + 1) +
@@ -63,6 +63,8 @@ export default function Slide({ data }: { data: any }) {
                 src={`${data.productPicture.photo}/public`}
                 fill
                 className="object-contain"
+                placeholder="blur"
+                blurDataURL={`${data.productPicture.photo}/public`}
               />
             </div>
           </SwiperSlide>
