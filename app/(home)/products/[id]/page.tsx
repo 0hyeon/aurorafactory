@@ -52,12 +52,7 @@ export async function getProduct(id: number) {
       id,
     },
     include: {
-      user: {
-        select: {
-          username: true,
-          avatar: true,
-        },
-      },
+      user: true,
       productPicture: {
         include: {
           slideimages: true,

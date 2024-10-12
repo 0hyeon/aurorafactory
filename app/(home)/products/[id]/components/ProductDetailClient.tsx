@@ -8,23 +8,10 @@ import { User, productOption, slideImage } from "@prisma/client";
 import Purchase from "@/app/(home)/cart/components/Purchase";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { IProduct } from "@/types/type";
 
 interface ProductDetailClientProps {
-  product: {
-    id: number;
-    title: string;
-    price: number;
-    photo: string;
-    description: string;
-    category: string;
-    discount: string | null;
-    created_at: Date;
-    updated_at: Date;
-    userId: number;
-    user: User;
-    slideimages: slideImage;
-    productoption: productOption;
-  };
+  product: IProduct;
   params: number;
 }
 interface CartButtonProps {
@@ -32,8 +19,8 @@ interface CartButtonProps {
   cartId: number;
 }
 
-const ProductDetailClient = ({ product, params }: any) => {
-  console.log(params);
+const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
+  console.log("product : ", product);
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
   const [quantity, setQuantity] = useState<number>(1);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
@@ -213,12 +200,22 @@ const ProductDetailClient = ({ product, params }: any) => {
         </div>
       </div>
       <div className="relative block w-[50%] mx-auto aspect-[1/10] overflow-hidden">
-        <Image
-          src={`/images/BpSangsaePage.jpg`}
-          alt="상세페이지"
-          fill
-          className="object-cover"
-        />
+        {product && product.productPicture?.category && (
+          <Image
+            src={
+              product.productPicture.category === "보냉봉투"
+                ? "/images/BoNengDetail.jpg"
+                : product.productPicture.category === "발포봉투"
+                ? "/images/BpSangsaePage.jpg"
+                : product.productPicture.category === "에어캡봉투"
+                ? "/images/aircapDetail.jpg"
+                : ""
+            }
+            alt="상세페이지"
+            fill
+            className="object-cover"
+          />
+        )}
       </div>
     </>
   );
