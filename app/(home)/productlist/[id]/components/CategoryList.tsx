@@ -74,8 +74,9 @@ const CategoryList = ({
                 <Link
                   href={`/products/${el.id}`}
                   style={{ textDecoration: "none", color: "unset" }}
+                  key={el.id}
                 >
-                  <div key={el.id} className="p-4">
+                  <div className="p-4">
                     <div className="relative block w-full aspect-[12/12] flex-grow-0">
                       {el.productPicture?.photo && (
                         <Image
@@ -113,8 +114,9 @@ const CategoryList = ({
               <Link
                 href={`/products/${el.id}`}
                 style={{ textDecoration: "none", color: "unset" }}
+                key={el.id}
               >
-                <div key={el.id} className="p-4">
+                <div className="p-4">
                   <div className="relative block w-full aspect-[12/12] flex-grow-0">
                     {el.productPicture?.photo && (
                       <Image
