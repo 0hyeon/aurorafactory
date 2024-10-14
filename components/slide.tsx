@@ -29,10 +29,10 @@ export default function Slide() {
     {
       id: 1,
       text: "오로라팩",
-      src: "/images/main_banner4.jpg",
+      src: "/images/main_banner5.jpg",
     },
     {
-      id: 1,
+      id: 2,
       text: "오로라팩",
       src: "/images/main_banner1.png",
     },

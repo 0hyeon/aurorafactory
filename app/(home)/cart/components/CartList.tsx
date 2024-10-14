@@ -2,7 +2,7 @@
 import { Cart, productOption, Product } from "@prisma/client";
 import { formatToWon } from "@/lib/utils";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Purchase from "./Purchase";
 import { delCart } from "../actions";
 
@@ -41,8 +41,26 @@ const dicountedPrice = ({ item }: { item: any }) => {
 };
 
 export default function CartList({ data }: CartListProps) {
-  console.log("CartList :", data);
-  console.log(data.length);
+  const [paymentMethod, setPaymentMethod] = useState<string>("");
+  const [vbankHolder, setVbankHolder] = useState<string>("");
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+
+  const [purchaseData, setPurchaseData] =
+    useState<CartWithProductOption[]>(data);
+
+  useEffect(() => {
+    setPurchaseData(data);
+  }, [data]);
+
+  const handlePaymentMethodChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setPaymentMethod(event.target.value);
+    if (event.target.value !== "vbank") {
+      setVbankHolder(""); // 가상계좌가 아닐 경우 사용자명 초기화
+    }
+  };
+
   const [cart, setCart] = useState<CartWithProductOption[]>(() =>
     data.map((item) => ({
       ...item,
@@ -88,8 +106,20 @@ export default function CartList({ data }: CartListProps) {
     window.dispatchEvent(new Event("cartUpdated"));
   };
 
-  const totalPrice = cart.reduce((acc, item) => acc + item.totalPrice, 0);
+  const isPhoneNumberValid = (number: string) => {
+    const phoneRegex = /^010\d{8}$/;
+    return phoneRegex.test(number);
+  };
 
+  // 구매 버튼 비활성화 조건
+  const isPurchaseDisabled = () => {
+    if (paymentMethod === "vbank") {
+      return !vbankHolder || !phoneNumber || !isPhoneNumberValid(phoneNumber);
+    }
+    return !paymentMethod;
+  };
+  const totalPrice = cart.reduce((acc, item) => acc + item.totalPrice, 0);
+  console.log("totalPrice : ", totalPrice);
   return (
     <div className="flex flex-col gap-8 max-w-[1100px] mx-auto">
       {data.length !== 0 ? (
@@ -162,10 +192,70 @@ export default function CartList({ data }: CartListProps) {
               </div>
             </div>
           ))}
-          <div className="total-price text-2xl font-semibold">
-            총 가격: {formatToWon(totalPrice)}원
+          {/* 결제 방법 선택 드롭다운 추가 */}
+          <div className=" flex items-center justify-between">
+            <div className="">
+              <div className="my-12 flex flex-col">
+                <label className=" text-lg font-bold mb-2">
+                  결제 방법을 선택하세요:
+                </label>
+                <select
+                  value={paymentMethod}
+                  onChange={handlePaymentMethodChange}
+                  className="p-2 border border-gray-300 rounded"
+                >
+                  <option value="">선택하세요</option>
+                  <option value="cardAndEasyPay">
+                    신용카드 (카카오페이/네이버페이/삼성페이)
+                  </option>
+                  <option value="vbank">가상계좌</option>
+                  <option value="bank">계좌이체</option>
+                  <option value="cellphone">휴대폰결제</option>
+                  <option value="payco">PAYCO</option>
+                </select>
+              </div>
+              {paymentMethod === "vbank" && (
+                //입금자명 입력필드
+                <div className="mt-4">
+                  <label className="text-lg font-bold mb-2">입금자명:</label>
+                  <input
+                    type="text"
+                    value={vbankHolder}
+                    onChange={(e) => setVbankHolder(e.target.value)}
+                    className="p-2 border border-gray-300 rounded w-full mb-10"
+                    maxLength={40}
+                    placeholder="가맹점 상호명 또는 사용자명"
+                  />
+                  {/* 핸드폰 번호 입력 필드 */}
+                  <label className="text-lg font-bold mb-2">핸드폰 번호:</label>
+                  <input
+                    type="tel"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    className="p-2 border border-gray-300 rounded w-full"
+                    maxLength={11}
+                    placeholder="01012345678"
+                  />
+                </div>
+              )}
+            </div>
+
+            <div className="total-price text-2xl font-semibold">
+              총 가격: {formatToWon(totalPrice)}원
+            </div>
           </div>
-          <Purchase data={cart} />
+          {/* 가상계좌 선택 시 사용자명 입력 필드 추가 */}
+          <Purchase
+            data={purchaseData}
+            method={paymentMethod}
+            vbankHolder={vbankHolder} // 사용자명 전달
+            totalPrice={totalPrice}
+            // disabled={
+            //   !paymentMethod || (paymentMethod === "vbank" && !vbankHolder)
+            // } // 필수 입력 체크
+            phoneNumber={phoneNumber} // 핸드폰 번호 전달
+            disabled={isPurchaseDisabled()} // 필수 입력 체크 및 유효성 검사 추가
+          />
         </>
       ) : (
         <>
