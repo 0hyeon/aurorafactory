@@ -61,8 +61,8 @@ export default function Purchase({
         goodsName: productNames,
         vbankHolder,
         mallReserved: phoneNumber,
-        // returnUrl: `http://localhost:3000/paysuccess?orderId=${orderId}&amount=${totalPrice}`,
-        returnUrl: `http://localhost:3000/api/serverAuth`,
+        // returnUrl: `https://aurorafactory.vercel.app/paysuccess?orderId=${orderId}&amount=${totalPrice}`,
+        returnUrl: `https://aurorafactory.vercel.app/api/serverAuth`,
         fnError: (result: any) => {
           alert(
             "고객용 메시지 : " +

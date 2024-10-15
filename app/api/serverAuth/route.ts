@@ -37,7 +37,7 @@ export async function POST(request: Request) {
     const result = await updateCart({ cartIds, orderId: originalOrderId });
 
     if (result.success) {
-      const redirectUrl = `http://localhost:3000/paysuccess?orderId=${orderId}&amount=${amount}&tid=${tid}`;
+      const redirectUrl = `https://aurorafactory.vercel.app/paysuccess?orderId=${orderId}&amount=${amount}&tid=${tid}`;
       return NextResponse.redirect(redirectUrl);
     } else {
       return NextResponse.json(

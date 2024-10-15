@@ -24,6 +24,8 @@ export default function PaySuccess() {
     const amt = query.get("amount");
     const pid = query.get("tid");
 
+    console.log("orderId:", id, "amount:", amt, "tid:", pid);
+
     setOrderId(id);
     setAmount(Number(amt));
     setPid(pid);
