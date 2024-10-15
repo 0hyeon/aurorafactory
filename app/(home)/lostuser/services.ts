@@ -29,3 +29,23 @@ export async function sendTwilioMesage({
 
   return;
 }
+export async function sendTwilioVbankMsg({
+  vbankNum,
+  phone,
+}: {
+  vbankNum: string;
+  phone: string | null;
+}) {
+  const client = twilio(
+    process.env.TWILIO_ACCOUNT_SID,
+    process.env.TWILIO_AUTH_TOKEN
+  );
+  client.messages.create({
+    body: `가상계좌입금부탁드려요.  ${vbankNum}`,
+    from: process.env.TWILIO_PHONE_NUMBER!,
+    to: formatPhoneNumberToE164(phone),
+  });
+
+  return;
+}
+// await sendTwilioVbankMsg({ vbankNum, phone: data.phone });

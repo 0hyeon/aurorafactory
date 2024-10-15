@@ -2,15 +2,16 @@
 import { NextResponse } from "next/server";
 import qs from "qs";
 import { updateCart } from "@/app/(home)/cart/actions";
+import { sendTwilioVbankMsg } from "@/app/(home)/lostuser/services";
 
 export async function POST(request: Request) {
   const bodyText = await request.text();
   const body = qs.parse(bodyText);
 
   const {
-    authResultCode,
-    tid,
-    orderId,
+    resultCode, // 성공 여부
+    tid, // 거래 키
+    orderId, // 주문 ID
     amount,
     bankCode,
     bankName,
@@ -18,7 +19,7 @@ export async function POST(request: Request) {
     depositor,
     dueDate,
   } = body as {
-    authResultCode: string;
+    resultCode: string;
     tid: string;
     orderId: string;
     amount: string;
@@ -28,9 +29,10 @@ export async function POST(request: Request) {
     depositor: string;
     dueDate: string;
   };
+
   console.log(
-    "authResultCode : ",
-    authResultCode,
+    "resultCode : ",
+    resultCode,
     "tid : ",
     tid,
     "orderId : ",
@@ -48,22 +50,29 @@ export async function POST(request: Request) {
     "dueDate : ",
     dueDate
   );
-  if (authResultCode === "0000") {
-    console.log("결제 이벤트 수신 성공:", authResultCode);
+
+  // 성공 코드가 "0000"인 경우에만 처리
+  if (resultCode === "0000") {
+    console.log("결제 이벤트 수신 성공:", resultCode);
     console.log("거래ID:", tid);
 
-    // `orderId`와 연관된 cartIds를 추출하거나 이미 `cartIds`가 주어졌다고 가정
     const cartIds = orderId.split("-").map((id) => Number(id));
-
     const result = await updateCart({ cartIds, orderId });
 
     if (result.success) {
-      return NextResponse.json({ message: "웹훅 처리 완료" });
+      await sendTwilioVbankMsg({ vbankNum: accountNum, phone: "01041096590" });
     } else {
-      return NextResponse.json({ message: result.message }, { status: 500 });
+      console.error("카트 업데이트 실패:", result.message);
     }
   } else {
-    console.log("결제 인증 실패:", authResultCode);
-    return NextResponse.json({ message: "결제 인증 실패" }, { status: 400 });
+    console.log("결제 인증 실패:", resultCode);
   }
+
+  // 최종적으로 "OK"를 응답으로 반환
+  return new Response("OK", {
+    status: 200,
+    headers: {
+      "Content-Type": "text/html;charset=utf-8",
+    },
+  });
 }
