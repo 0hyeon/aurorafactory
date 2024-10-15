@@ -34,7 +34,6 @@ export default function Purchase({
   }
 
   async function serverAuth() {
-    console.log("phoneNumber : ", phoneNumber);
     if (data.length === 0) {
       alert("옵션을 선택해주세요.");
       return;
@@ -61,6 +60,7 @@ export default function Purchase({
         amount: Number(totalPrice),
         goodsName: productNames,
         vbankHolder,
+        mallReserved: phoneNumber,
         // returnUrl: `http://localhost:3000/paysuccess?orderId=${orderId}&amount=${totalPrice}`,
         returnUrl: `http://localhost:3000/api/serverAuth`,
         fnError: (result: any) => {

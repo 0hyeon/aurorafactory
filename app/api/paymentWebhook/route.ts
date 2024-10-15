@@ -18,6 +18,7 @@ export async function POST(request: Request) {
     accountNum,
     depositor,
     dueDate,
+    mallReserved,
   } = body as {
     resultCode: string;
     tid: string;
@@ -28,6 +29,7 @@ export async function POST(request: Request) {
     accountNum: string;
     depositor: string;
     dueDate: string;
+    mallReserved: string;
   };
 
   console.log(
@@ -51,7 +53,6 @@ export async function POST(request: Request) {
     dueDate
   );
 
-  // 성공 코드가 "0000"인 경우에만 처리
   if (resultCode === "0000") {
     console.log("결제 이벤트 수신 성공:", resultCode);
     console.log("거래ID:", tid);
@@ -59,8 +60,8 @@ export async function POST(request: Request) {
     const cartIds = orderId.split("-").map((id) => Number(id));
     const result = await updateCart({ cartIds, orderId });
 
-    if (result.success) {
-      await sendTwilioVbankMsg({ vbankNum: accountNum, phone: "01041096590" });
+    if (result.success && mallReserved) {
+      await sendTwilioVbankMsg({ vbankNum: accountNum, phone: mallReserved });
     } else {
       console.error("카트 업데이트 실패:", result.message);
     }
