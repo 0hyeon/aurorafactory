@@ -30,10 +30,16 @@ export async function sendTwilioMesage({
   return;
 }
 export async function sendTwilioVbankMsg({
-  vbankNum,
+  bankName,
+  accountNum,
+  depositor,
+  dueDate,
   phone,
 }: {
-  vbankNum: string;
+  bankName: string;
+  accountNum: string;
+  depositor: string;
+  dueDate: string;
   phone: string | null;
 }) {
   const client = twilio(
@@ -41,7 +47,7 @@ export async function sendTwilioVbankMsg({
     process.env.TWILIO_AUTH_TOKEN
   );
   client.messages.create({
-    body: `가상계좌입금부탁드려요.  ${vbankNum}`,
+    body: `가상계좌입금부탁드려요.  ${bankName}${accountNum}${depositor}${dueDate}`,
     from: process.env.TWILIO_PHONE_NUMBER!,
     to: formatPhoneNumberToE164(phone),
   });
