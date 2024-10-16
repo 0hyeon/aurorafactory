@@ -6,7 +6,7 @@ import { sendTwilioVbankMsg } from "@/app/(home)/lostuser/services";
 
 export async function POST(request: Request) {
   const bodyText = await request.text();
-  console.log("bodyText : ", bodyText);
+  console.log("web hook : ", bodyText);
   const body = JSON.parse(bodyText);
   //bodyText :  {"resultCode":"0000","resultMsg":"가상계좌 발급 성공",
   //"tid":"UTWEBHOOKm03012410161928322466","cancelledTid":null,

@@ -6,7 +6,8 @@ import qs from "qs";
 export async function POST(request: Request) {
   // application/x-www-form-urlencoded로 전송된 데이터를 파싱합니다.
   const bodyText = await request.text();
-  const body = qs.parse(bodyText);
+  console.log("serverAuth : ", bodyText);
+  const body = JSON.parse(bodyText);
 
   const {
     authResultCode,
