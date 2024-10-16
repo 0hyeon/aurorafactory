@@ -7,7 +7,8 @@ import { sendTwilioVbankMsg } from "@/app/(home)/lostuser/services";
 export async function POST(request: Request) {
   const bodyText = await request.text();
   console.log("bodyText : ", bodyText);
-  const body = qs.parse(bodyText);
+  const body = JSON.parse(bodyText);
+
   const {
     resultCode, // 성공 여부
     tid, // 거래 키
