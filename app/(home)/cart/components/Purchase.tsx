@@ -57,7 +57,7 @@ export default function Purchase({
 
       // PG사에 결제 요청 전송
       AUTHNICE.requestPay({
-        clientId: "S2_07a6c2d843654d7eb32a6fcc0759eef4",
+        clientId: "R2_8bad4063b9a942668b156d221c3489ea",
         method,
         orderId: orderId,
         amount: Number(totalPrice),

@@ -4,11 +4,21 @@ import qs from "qs"; // query string 파싱을 위한 라이브러리
 
 export async function POST(request: Request) {
   const bodyText = await request.text();
-  console.log("serverAuth : ", bodyText);
 
   // URL-encoded 데이터를 파싱합니다
   const body = qs.parse(bodyText);
   console.log("serverAuth : ", body);
+  // serverAuth :  {
+  //   authResultCode: '0000',
+  //   authResultMsg: '인증 성공',
+  //   tid: 'UT0013870m03012410192304232121',
+  //   clientId: 'S2_07a6c2d843654d7eb32a6fcc0759eef4',
+  //   orderId: '1729346637375425',
+  //   amount: '30000',
+  //   mallReserved: '{"phoneNumber":"01041096590","cartIds":"29"}',
+  //   authToken: 'NICEUNTT7E6FA672A8A1420665A8B29D86DED574',
+  //   signature: '9882b635be8b2a6726888b95e2dd3ae0c971222b553409a2a837a9cab562cbff'
+  // }
   const { authResultCode, tid, orderId, amount, mallReserved, authResultMsg } =
     body;
 
