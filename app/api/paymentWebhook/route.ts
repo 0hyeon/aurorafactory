@@ -1,5 +1,6 @@
 //api/paymentWebhook/route.ts
 import { updateCart } from "@/app/(home)/cart/actions";
+import { sendTwilioVbankMsg } from "@/app/(home)/lostuser/services";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -8,8 +9,14 @@ export async function POST(request: Request) {
   console.log("webhook : ", body);
   const { resultCode, tid, orderId, amount, vbank } = body;
 
-  if (resultCode === "0000" && vbank) {
+  if (resultCode === "0000" && vbank !== null) {
     console.log("가상계좌 입금 확인 성공:", tid);
+    await sendTwilioVbankMsg({
+      bankName: vbank.vbankName,
+      accountNum: vbank.vbankNumber,
+      dueDate: vbank.vbankExpDate,
+      phone: "01041096590",
+    });
     // 가상계좌 입금 확인이므로 장바구니 업데이트는 진행하지 않습니다.
     return new Response("OK", {
       status: 200,
