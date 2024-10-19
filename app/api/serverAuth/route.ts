@@ -1,56 +1,77 @@
-// app/api/serverAuth/route.ts
 import { updateCart } from "@/app/(home)/cart/actions";
 import { NextResponse } from "next/server";
-import qs from "qs";
+import qs from "qs"; // query string 파싱을 위한 라이브러리
 
 export async function POST(request: Request) {
-  // application/x-www-form-urlencoded로 전송된 데이터를 파싱합니다.
   const bodyText = await request.text();
   console.log("serverAuth : ", bodyText);
-  const body = JSON.parse(bodyText);
 
-  const {
-    authResultCode,
-    authResultMsg,
-    tid,
-    orderId,
-    amount,
-    authToken,
-    signature,
-  } = body as {
-    authResultCode: string;
-    authResultMsg: string;
-    tid: string;
-    orderId: string;
-    amount: string;
-    authToken: string;
-    signature: string;
-  };
-  const [originalOrderId, cartIdsString] = orderId.split("-");
-  const cartIds = cartIdsString ? cartIdsString.split("-").map(Number) : [];
+  // URL-encoded 데이터를 파싱합니다
+  const body = qs.parse(bodyText);
+  console.log("serverAuth : ", body);
+  const { authResultCode, tid, orderId, amount, mallReserved, authResultMsg } =
+    body;
 
-  // 인증 결과를 확인합니다.
-  if (authResultCode === "0000") {
-    console.log("인증 성공:", authResultMsg);
-    console.log("TID:", tid);
+  try {
+    // mallReserved가 문자열이므로 JSON으로 파싱합니다.
+    const parsedMallReserved = JSON.parse(mallReserved as string);
+    const phoneNumber = parsedMallReserved?.phoneNumber || null;
+    const cartIds = parsedMallReserved?.cartIds || null;
 
-    // 장바구니 업데이트
-    const result = await updateCart({ cartIds, orderId: originalOrderId });
+    if (typeof orderId === "string" && cartIds) {
+      const [originalOrderId] = orderId.split("-");
 
-    if (result.success) {
-      const redirectUrl = `https://aurorafactory.vercel.app/paysuccess?orderId=${orderId}&amount=${amount}&tid=${tid}`;
-      return NextResponse.redirect(redirectUrl);
+      if (authResultCode === "0000") {
+        console.log("인증 성공:", tid);
+        console.log("authResultMsg : ", authResultMsg);
+
+        if (authResultMsg === "인증 성공") {
+          const redirectUrl = `http://localhost:3000/paysuccess?orderId=${orderId}&amount=${amount}&tid=${tid}`;
+          return NextResponse.redirect(redirectUrl);
+        } else {
+          // 결제 인증이 아닌 경우 장바구니 업데이트
+          const result = await updateCart({
+            cartIds: cartIds.split("-").map(Number),
+            orderId: originalOrderId,
+          });
+          if (result.success) {
+            const redirectUrl = `http://localhost:3000/paysuccess?orderId=${orderId}&amount=${amount}&tid=${tid}`;
+            return NextResponse.redirect(redirectUrl);
+          } else {
+            return NextResponse.json(
+              {
+                status: "failed",
+                message: "장바구니 업데이트에 실패하였습니다.",
+              },
+              { status: 400 }
+            );
+          }
+        }
+      } else {
+        console.log("인증 실패:", authResultCode);
+        return NextResponse.json(
+          { status: "failed", message: "결제 인증에 실패하였습니다." },
+          { status: 400 }
+        );
+      }
     } else {
+      console.error("cartIds 또는 orderId가 유효하지 않습니다.");
       return NextResponse.json(
-        { message: "장바구니 업데이트에 실패하였습니다." },
+        {
+          status: "failed",
+          message: "유효한 cartIds 또는 orderId가 없습니다.",
+        },
         { status: 400 }
       );
     }
-  } else {
-    console.log("인증 실패:", authResultMsg);
+  } catch (error) {
+    console.error("mallReserved 파싱 중 오류 발생:", error);
     return NextResponse.json(
-      { message: "결제 인증에 실패하였습니다." },
-      { status: 400 }
+      {
+        status: "failed",
+        message: "mallReserved 파싱 중 오류가 발생했습니다.",
+      },
+      { status: 500 }
     );
   }
 }

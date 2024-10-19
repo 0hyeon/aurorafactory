@@ -1,8 +1,5 @@
-// "use client"; // 클라이언트 사이드에서만 실행됨
-
 import Script from "next/script";
 import { CartWithProductOption } from "./CartList";
-import { updateCart } from "../actions";
 
 interface PurchaseProps {
   data: CartWithProductOption[];
@@ -21,7 +18,7 @@ export default function Purchase({
   phoneNumber,
   totalPrice,
 }: PurchaseProps) {
-  console.log(totalPrice);
+  // 주문 ID 생성 함수
   function generateNumericUniqueId(length: number = 16) {
     const now = new Date().getTime();
     const timestamp = now.toString().slice(-length);
@@ -38,21 +35,27 @@ export default function Purchase({
       alert("옵션을 선택해주세요.");
       return;
     }
+
     const productNames =
       data.length === 1
         ? data[0].option.product.title
-        : `${data[0].option.product.title} 외${data.length - 1}개`;
-
-    // const orderId = generateNumericUniqueId();
-    // const cartIds = data.map((item) => item.id);
+        : `${data[0].option.product.title} 외 ${data.length - 1}개`;
 
     const cartIds = data.map((item) => item.id).join("-");
-    const orderId = `ORD${generateNumericUniqueId()}-${cartIds}`;
-    let paymentSuccess = false;
+    const orderId = generateNumericUniqueId();
+    const mallReserved = JSON.stringify({ phoneNumber, cartIds });
+
     if (typeof window !== "undefined") {
       const pay_obj: any = window;
       const { AUTHNICE } = pay_obj;
 
+      // 결제 완료 후 성공 페이지로 이동하는 URL
+      const returnUrl =
+        process.env.NODE_ENV === "production"
+          ? `https://aurorafactory.vercel.app/api/serverAuth`
+          : `http://localhost:3000/api/serverAuth`;
+
+      // PG사에 결제 요청 전송
       AUTHNICE.requestPay({
         clientId: "S2_07a6c2d843654d7eb32a6fcc0759eef4",
         method,
@@ -60,27 +63,19 @@ export default function Purchase({
         amount: Number(totalPrice),
         goodsName: productNames,
         vbankHolder,
-        mallReserved: phoneNumber,
-        // returnUrl: `https://aurorafactory.vercel.app/paysuccess?orderId=${orderId}&amount=${totalPrice}`,
-        returnUrl: `https://aurorafactory.vercel.app/api/serverAuth`,
+        mallReserved, // JSON 문자열로 전송
+        returnUrl,
         fnError: (result: any) => {
           alert(
-            "고객용 메시지 : " +
+            "고객용 메시지: " +
               result.msg +
-              "\n개발자 확인용 : " +
+              "\n개발자 확인용: " +
               result.errorMsg
           );
           return;
         },
       });
     }
-    // const result = await updateCart({ cartIds, orderId });
-
-    // if (!result.success) {
-    //   alert("주문을 처리하는 중 오류가 발생했습니다. 다시 시도해주세요.");
-    //   console.error(result.message);
-    //   return;
-    // }
   }
 
   return (

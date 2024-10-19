@@ -1,4 +1,3 @@
-// paymentUtil.ts
 export async function handlePaymentVerification(
   orderId: string,
   amount: number,
