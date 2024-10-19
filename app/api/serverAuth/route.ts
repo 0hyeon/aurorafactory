@@ -26,7 +26,11 @@ export async function POST(request: Request) {
         console.log("authResultMsg : ", authResultMsg);
 
         if (authResultMsg === "인증 성공") {
-          const redirectUrl = `http://localhost:3000/paysuccess?orderId=${orderId}&amount=${amount}&tid=${tid}`;
+          const redirectUrl =
+            process.env.NODE_ENV === "production"
+              ? `https://aurorafactory.vercel.app/paysuccess?orderId=${orderId}&amount=${amount}&tid=${tid}`
+              : `http://localhost:3000/paysuccess?orderId=${orderId}&amount=${amount}&tid=${tid}`;
+
           return NextResponse.redirect(redirectUrl);
         } else {
           // 결제 인증이 아닌 경우 장바구니 업데이트
@@ -35,7 +39,11 @@ export async function POST(request: Request) {
             orderId: originalOrderId,
           });
           if (result.success) {
-            const redirectUrl = `http://localhost:3000/paysuccess?orderId=${orderId}&amount=${amount}&tid=${tid}`;
+            const redirectUrl =
+              process.env.NODE_ENV === "production"
+                ? `https://aurorafactory.vercel.app/paysuccess?orderId=${orderId}&amount=${amount}&tid=${tid}`
+                : `http://localhost:3000/paysuccess?orderId=${orderId}&amount=${amount}&tid=${tid}`;
+
             return NextResponse.redirect(redirectUrl);
           } else {
             return NextResponse.json(
