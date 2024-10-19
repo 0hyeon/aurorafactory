@@ -10,7 +10,6 @@ export async function POST(request: Request) {
 
   if (resultCode === "0000" && vbank) {
     console.log("가상계좌 입금 확인 성공:", tid);
-
     // 가상계좌 입금 확인이므로 장바구니 업데이트는 진행하지 않습니다.
     return new Response("OK", {
       status: 200,
