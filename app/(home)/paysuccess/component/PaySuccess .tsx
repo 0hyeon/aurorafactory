@@ -17,6 +17,10 @@ export default function PaySuccess() {
     const orderId = query.get("orderId");
     const amount = Number(query.get("amount"));
     const tid = query.get("tid");
+    // https://aurorafactory.vercel.app/paysuccess?
+    // orderId=1729439356280690&
+    // amount=30000&
+    // tid=UT0014446m03012410210049332840
     const verifyPayment = async () => {
       if (orderId && amount && tid) {
         const verificationResult = await handlePaymentVerification(
