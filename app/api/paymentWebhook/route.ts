@@ -7,11 +7,12 @@ export async function POST(request: Request) {
   const bodyText = await request.text();
   const body = JSON.parse(bodyText);
   console.log("webhook : ", body);
-  const { resultCode, tid, orderId, amount, vbank } = body;
+  const { resultCode, tid, orderId, amount, vbank, goodsName } = body;
 
   if (resultCode === "0000" && vbank !== null) {
     console.log("가상계좌 입금 확인 성공:", tid);
     await sendTwilioVbankMsg({
+      goodsName: goodsName,
       bankName: vbank.vbankName,
       accountNum: vbank.vbankNumber,
       dueDate: vbank.vbankExpDate,

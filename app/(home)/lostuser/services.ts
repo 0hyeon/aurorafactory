@@ -30,22 +30,34 @@ export async function sendTwilioMesage({
   return;
 }
 export async function sendTwilioVbankMsg({
+  goodsName,
   bankName,
   accountNum,
   dueDate,
   phone,
 }: {
+  goodsName: string;
   bankName: string;
   accountNum: string;
   dueDate: string;
   phone: string | null;
 }) {
+  const date = new Date(dueDate);
+  const formattedDate = date.toLocaleDateString("ko-KR", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
   const client = twilio(
     process.env.TWILIO_ACCOUNT_SID,
     process.env.TWILIO_AUTH_TOKEN
   );
   client.messages.create({
-    body: `가상계좌입금부탁드려요.  ${bankName}${accountNum}${dueDate}`,
+    body: `오로라팩 가상계좌입금  
+제품명:  ${goodsName}
+입금은행: ${bankName}
+계좌번호: ${accountNum}
+입금기간: ${formattedDate} 까지`,
     from: process.env.TWILIO_PHONE_NUMBER!,
     to: formatPhoneNumberToE164(phone),
   });
