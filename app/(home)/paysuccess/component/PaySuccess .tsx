@@ -48,6 +48,18 @@ export default function PaySuccess() {
       ) : (
         <div>{status.message}</div>
       )}
+      {status === "ready" ? (
+        <div>
+          <div>{status.resultMsg}</div>
+          <div>상품명 : {status.goodsName}</div>
+          <div>금액 : {status.amount}</div>
+          <div>은행명 : {status.vbank.vbankName}</div>
+          <div>입금계좌 : {status.vbank.vbankNumber}</div>
+          <div>예금주명 : {status.vbank.vbankNumber}</div>
+        </div>
+      ) : (
+        <div>{status.message}</div>
+      )}
     </div>
   );
 }
