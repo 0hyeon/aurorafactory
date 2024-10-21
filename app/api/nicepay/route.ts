@@ -6,18 +6,12 @@ function generateSignData(tid: any, amount: any, ediDate: any, secretKey: any) {
   const data = `${tid}${amount}${ediDate}${secretKey}`;
   return crypto.createHash("sha256").update(data).digest("hex");
 }
-
 export async function POST(request: NextRequest) {
   const { orderId, amount, isPid } = await request.json();
-  const clientKey = "R2_8bad4063b9a942668b156d221c3489ea";
-  const secretKey = "731f20c8498345b1ba7db90194076451";
+  const clientKey = "S2_af4543a0be4d49a98122e01ec2059a56";
+  const secretKey = "9eb85607103646da9f9c02b128f2e5eef";
 
-  // 현재 시간 ISO 8601 형식으로 ediDate 생성
-  const ediDate = new Date().toISOString();
-
-  // signData 생성 (tid, amount, ediDate, secretKey)
-  const signData = generateSignData(isPid, String(amount), ediDate, secretKey);
-
+  // Base64 인코딩된 Authorization 헤더 생성
   const authHeader =
     "Basic " + Buffer.from(`${clientKey}:${secretKey}`).toString("base64");
 
@@ -28,12 +22,11 @@ export async function POST(request: NextRequest) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: authHeader,
+          Authorization: authHeader, // Authorization 헤더 추가
         },
         body: JSON.stringify({
           amount: String(amount),
-          ediDate: ediDate, // ediDate 추가
-          signData: signData, // signData 추가
+          // 필요한 다른 필드들도 포함
         }),
       }
     );
@@ -48,16 +41,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (responseBody.resultCode === "0000" && responseBody.status === "paid") {
-      return NextResponse.json({ status: "paid", ...responseBody });
-    } else {
-      return NextResponse.json({
-        status: "failed",
-        message: responseBody.resultMsg,
-      });
-    }
+    return NextResponse.json(responseBody);
   } catch (error) {
-    console.error("nicepay verify error: ", error);
+    console.error("Error:", error);
     return NextResponse.json({
       status: "error",
       message: "Server error",
