@@ -14,8 +14,8 @@ function generateSignData(
 
 export async function POST(request: NextRequest) {
   const { orderId, amount, isPid } = await request.json();
-  const clientKey = "S2_af4543a0be4d49a98122e01ec2059a56";
-  const secretKey = "9eb85607103646da9f9c02b128f2e5eef";
+  const clientKey = "R2_8bad4063b9a942668b156d221c3489ea"; // 실제 운영 키
+  const secretKey = "731f20c8498345b1ba7db90194076451"; // 실제 운영 시크릿 키
 
   // Base64 인코딩된 Authorization 헤더 생성
   const authHeader =
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const response = await fetch(
-      `https://sandbox-api.nicepay.co.kr/v1/payments/${isPid}`,
+      `https://api.nicepay.co.kr/v1/payments/${isPid}`, // 운영 환경 경로
       {
         method: "POST",
         headers: {
