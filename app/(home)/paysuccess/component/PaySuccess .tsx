@@ -67,7 +67,7 @@ export default function PaySuccess() {
     <div>
       {statusData.status === "paid" ? (
         <div className="text-center text-xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-          <div className="text-2xl">구매가 완료되었습니다.</div>
+          <div className="text-2xl mb-4">구매가 완료되었습니다.</div>
           <div>이용해주셔서 감사합니다.</div>
         </div>
       ) : (
@@ -75,7 +75,7 @@ export default function PaySuccess() {
       )}
       {statusData.status === "ready" ? (
         <div className="text-center text-xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-          <div className="text-2xl">
+          <div className="text-2xl mb-4">
             가상계좌 입금대기입니다 문자발송 {statusData.resultMsg}
           </div>
           <div>상품명 : {statusData.goodsName}</div>
