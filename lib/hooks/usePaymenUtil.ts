@@ -3,9 +3,6 @@ export async function handlePaymentVerification(
   amount: number,
   isPid: string | null
 ): Promise<{ status: string; message?: string }> {
-  console.log("orderId : ", orderId);
-  console.log("amount : ", amount);
-  console.log("isPid : ", isPid);
   try {
     const response = await fetch(
       "https://aurorafactory.vercel.app/api/nicepay",

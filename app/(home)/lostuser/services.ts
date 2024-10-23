@@ -53,7 +53,7 @@ export async function sendTwilioVbankMsg({
     process.env.TWILIO_AUTH_TOKEN
   );
   client.messages.create({
-    body: `오로라팩 제품:${goodsName} 입금은행:${bankName} 계좌:${accountNum} 기간: ${formattedDate}까지`,
+    body: `${goodsName} ${bankName} ${accountNum} ${formattedDate}까지`,
     from: process.env.TWILIO_PHONE_NUMBER!,
     to: formatPhoneNumberToE164(phone),
   });

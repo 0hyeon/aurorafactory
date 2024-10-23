@@ -5,12 +5,38 @@ import { handlePaymentVerification } from "@/lib/hooks/usePaymenUtil";
 import { triggerConfetti } from "@/lib/hooks";
 
 interface IStatus {
+  amount: number;
+  balanceAmt: number;
+  buyerEmail: string;
+  currency: string;
+  ediDate: string;
+  failedAt: string;
+  goodsName: string;
+  issuedCashReceipt: boolean;
+  mallReserved: string;
+  messageSource: string;
+  orderId: string;
+  paidAt: string;
+  payMethod: string;
+  receiptUrl: string;
+  resultCode: string;
+  resultMsg: string;
+  signature: string;
   status: string;
+  tid: string;
   message: string;
+  useEscrow: boolean;
+  vbank: {
+    vbankCode: string;
+    vbankExpDate: string;
+    vbankHolder: string;
+    vbankName: string;
+    vbankNumber: string;
+  };
 }
 
 export default function PaySuccess() {
-  const [status, setStatus] = useState<any>({ status: "", message: "" });
+  const [statusData, setStatusData] = useState<IStatus | null>(null);
 
   useEffect(() => {
     const query = new URLSearchParams(window.location.search);
@@ -28,8 +54,8 @@ export default function PaySuccess() {
           amount,
           tid
         );
-        console.log("verificationResult : ", verificationResult);
-        setStatus(verificationResult);
+        // console.log("verificationResult : ", verificationResult);
+        setStatusData(verificationResult as IStatus);
         if (verificationResult.status === "paid") {
           triggerConfetti();
         }
@@ -39,26 +65,29 @@ export default function PaySuccess() {
     verifyPayment();
   }, []);
 
-  if (status === null) return <div>로딩 중...</div>;
+  if (statusData === null) return <div>로딩 중...</div>;
 
   return (
     <div>
-      {status === "paid" ? (
-        <div>구매가 완료되었습니다.</div>
-      ) : (
-        <div>{status.message}</div>
-      )}
-      {status === "ready" ? (
+      {statusData.status === "paid" ? (
         <div>
-          <div>{status.resultMsg}</div>
-          <div>상품명 : {status.goodsName}</div>
-          <div>금액 : {status.amount}</div>
-          <div>은행명 : {status.vbank.vbankName}</div>
-          <div>입금계좌 : {status.vbank.vbankNumber}</div>
-          <div>예금주명 : {status.vbank.vbankNumber}</div>
+          <div>구매가 완료되었습니다.</div>
+          <div>이용해주셔서 감사합니다.</div>
         </div>
       ) : (
-        <div>{status.message}</div>
+        <div>{statusData.message}</div>
+      )}
+      {statusData.status === "ready" ? (
+        <div>
+          <div>가상계좌 입금대기입니다 문자발송 {statusData.resultMsg}</div>
+          <div>상품명 : {statusData.goodsName}</div>
+          <div>금액 : {statusData.amount}원</div>
+          <div>은행명 : {statusData.vbank.vbankName}</div>
+          <div>예금주명 : {statusData.vbank.vbankHolder}</div>
+          <div>입금계좌 : {statusData.vbank.vbankNumber}</div>
+        </div>
+      ) : (
+        <div>{statusData.message}</div>
       )}
     </div>
   );
