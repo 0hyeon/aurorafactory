@@ -35,12 +35,14 @@ export async function sendTwilioVbankMsg({
   accountNum,
   dueDate,
   phone,
+  price,
 }: {
   goodsName: string;
   bankName: string;
   accountNum: string;
   dueDate: string;
   phone: string | null;
+  price: any;
 }) {
   const date = new Date(dueDate);
   const formattedDate = date.toLocaleDateString("ko-KR", {
@@ -53,7 +55,7 @@ export async function sendTwilioVbankMsg({
     process.env.TWILIO_AUTH_TOKEN
   );
   client.messages.create({
-    body: `${goodsName} ${bankName} ${accountNum} ${formattedDate}까지`,
+    body: `${goodsName} ${bankName} ${accountNum} ${formattedDate}까지 ${price}원`,
     from: process.env.TWILIO_PHONE_NUMBER!,
     to: formatPhoneNumberToE164(phone),
   });

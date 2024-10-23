@@ -21,6 +21,7 @@ export async function POST(request: Request) {
       accountNum: vbank.vbankNumber,
       dueDate: vbank.vbankExpDate,
       phone: phoneNumber, // mallReserved의 phoneNumber 값 사용
+      price: amount,
     });
     return new Response("가상계좌 발급 성공", {
       status: 200,
