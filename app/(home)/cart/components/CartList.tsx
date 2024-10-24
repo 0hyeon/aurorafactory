@@ -224,7 +224,7 @@ export default function CartList({ data }: CartListProps) {
                     onChange={(e) => setVbankHolder(e.target.value)}
                     className="p-2 border border-gray-300 rounded w-full mb-10"
                     maxLength={40}
-                    placeholder="가맹점 상호명 또는 사용자명"
+                    placeholder="입금자성명"
                   />
                   {/* 핸드폰 번호 입력 필드 */}
                   <label className="text-lg font-bold mb-2">핸드폰 번호:</label>

@@ -76,7 +76,7 @@ export async function sendTwilioVbankSuccessMsg({
     process.env.TWILIO_AUTH_TOKEN
   );
   client.messages.create({
-    body: `오로라팩 ${goodsName}  ${price}원 입금이 완료되었습니다. 이용해 주셔서 감사합니다.`,
+    body: `오로라팩 ${goodsName} 주문이 완료되었습니다. 감사합니다.`,
     from: process.env.TWILIO_PHONE_NUMBER!,
     to: formatPhoneNumberToE164(phone),
   });
