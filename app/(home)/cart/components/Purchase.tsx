@@ -50,7 +50,7 @@ export default function Purchase({
     const session = await getSessionCarrot();
     const sessionPhone = session.phone;
     const finalPhoneNumber = method === "vbank" ? phoneNumber : sessionPhone;
-
+    console.log("finalPhoneNumber : ", finalPhoneNumber);
     const mallReserved = JSON.stringify({ finalPhoneNumber, cartIds });
 
     if (typeof window !== "undefined") {
