@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
-
+import qs, { ParsedQs } from "qs";
 function generateSignData(
-  tid: string,
+  tid: string | ParsedQs | string[] | ParsedQs[] | undefined,
   amount: string,
   ediDate: string,
   secretKey: string
@@ -12,7 +12,12 @@ function generateSignData(
 }
 
 export async function POST(request: NextRequest) {
-  const { orderId, amount, tid } = await request.json();
+  const bodyText = await request.text();
+  const body = qs.parse(bodyText);
+  const { authResultCode, tid, orderId, amount, mallReserved, authResultMsg } =
+    body;
+
+  console.log("serverAuth : ", body);
   const clientKey = "R2_8bad4063b9a942668b156d221c3489ea"; // 실제 운영 키
   const secretKey = "731f20c8498345b1ba7db90194076451"; // 실제 운영 시크릿 키
 
