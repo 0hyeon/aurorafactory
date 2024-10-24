@@ -78,5 +78,5 @@ export default async function CartPage() {
     (item): item is CartWithProductOption => item !== null
   );
 
-  return <CartList data={validCartItems} />;
+  return <CartList data={validCartItems} user={session} />;
 }

@@ -1,8 +1,9 @@
-"use server";
 import Script from "next/script";
 import { CartWithProductOption } from "./CartList";
 import { cookies } from "next/headers";
 import getSessionCarrot, { getSession } from "@/lib/session";
+import { IronSession } from "iron-session";
+import { SessionContent } from "@/lib/types";
 
 interface PurchaseProps {
   data: CartWithProductOption[];
@@ -11,6 +12,7 @@ interface PurchaseProps {
   disabled: boolean;
   phoneNumber: string;
   totalPrice: number;
+  user: IronSession<SessionContent>;
 }
 
 export default function Purchase({
@@ -20,6 +22,7 @@ export default function Purchase({
   disabled,
   phoneNumber,
   totalPrice,
+  user,
 }: PurchaseProps) {
   // 주문 ID 생성 함수
   function generateNumericUniqueId(length: number = 16) {
@@ -49,9 +52,11 @@ export default function Purchase({
 
     // 결제 방식이 vbank일 때만 phoneNumber 사용, 아니면 sessionPhone 사용
     const session = await getSessionCarrot();
-    const sessionPhone = session.phone;
-    const finalPhoneNumber = method === "vbank" ? phoneNumber : sessionPhone;
-    console.log("finalPhoneNumber : ", finalPhoneNumber);
+    // console.log("getSessionCarrot : ", session.id);
+
+    // const sessionPhone = sessionㅋㅋ
+    const finalPhoneNumber = method === "vbank" ? phoneNumber : user.phone;
+
     const mallReserved = JSON.stringify({ finalPhoneNumber, cartIds });
 
     if (typeof window !== "undefined") {

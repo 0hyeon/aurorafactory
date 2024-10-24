@@ -1,10 +1,12 @@
 "use client";
-import { Cart, productOption, Product } from "@prisma/client";
+import { Cart, productOption, Product, User } from "@prisma/client";
 import { formatToWon } from "@/lib/utils";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Purchase from "./Purchase";
 import { delCart } from "../actions";
+import { IronSession } from "iron-session";
+import { SessionContent } from "@/lib/types";
 
 interface ProductOptionWithProduct extends productOption {
   product: Product & { photo: string | null };
@@ -19,6 +21,7 @@ export interface CartWithProductOption {
 
 interface CartListProps {
   data: CartWithProductOption[];
+  user: IronSession<SessionContent>;
 }
 
 const calculateTotalPrice = (
@@ -40,7 +43,7 @@ const dicountedPrice = ({ item }: { item: any }) => {
   return item.basePrice * objdiscount;
 };
 
-export default function CartList({ data }: CartListProps) {
+export default function CartList({ data, user }: CartListProps) {
   const [paymentMethod, setPaymentMethod] = useState<string>("");
   const [vbankHolder, setVbankHolder] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
@@ -250,6 +253,7 @@ export default function CartList({ data }: CartListProps) {
             method={paymentMethod}
             vbankHolder={vbankHolder} // 사용자명 전달
             totalPrice={totalPrice}
+            user={user}
             // disabled={
             //   !paymentMethod || (paymentMethod === "vbank" && !vbankHolder)
             // } // 필수 입력 체크
