@@ -19,7 +19,7 @@ export const login = async (prevState: any, formData: FormData) => {
     return result.error.flatten();
   } else {
     // 사용자를 찾았다면 암호화된 비밀번호 검사
-    const user = await getUserWithEmail(result.data.email);
+    const user = (await getUserWithEmail(result.data.email)) as any;
     const ok = await bcrypt.compare(
       result.data.password,
       user!.password ?? "xxxx"
