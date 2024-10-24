@@ -1,7 +1,6 @@
 import Script from "next/script";
 import { CartWithProductOption } from "./CartList";
 import { cookies } from "next/headers";
-import getSessionCarrot, { getSession } from "@/lib/session";
 import { IronSession } from "iron-session";
 import { SessionContent } from "@/lib/types";
 
@@ -50,11 +49,6 @@ export default function Purchase({
     const cartIds = data.map((item) => item.id).join("-");
     const orderId = generateNumericUniqueId();
 
-    // 결제 방식이 vbank일 때만 phoneNumber 사용, 아니면 sessionPhone 사용
-    const session = await getSessionCarrot();
-    // console.log("getSessionCarrot : ", session.id);
-
-    // const sessionPhone = sessionㅋㅋ
     const finalPhoneNumber = method === "vbank" ? phoneNumber : user.phone;
 
     const mallReserved = JSON.stringify({ finalPhoneNumber, cartIds });
