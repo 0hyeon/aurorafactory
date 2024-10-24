@@ -9,7 +9,7 @@ interface IStatus {
 
 export default function PaySuccess() {
   const [statusData, setStatusData] = useState<IStatus | null>(null);
-
+  // https://aurorafactory.vercel.app/paysuccess?orderId=1729780546854091&amount=30000&status=paid
   useEffect(() => {
     const query = new URLSearchParams(window.location.search);
     const amount = Number(query.get("amount"));
@@ -31,17 +31,18 @@ export default function PaySuccess() {
           <div>결제 금액: {statusData.amount}원</div>
           <div>이용해주셔서 감사합니다.</div>
         </div>
-      ) : (
-        <div>결제가 실패했습니다. 다시 시도해 주세요.</div>
-      )}
-      {statusData.status === "ready" ? (
+      ) : statusData.status === "ready" ? (
         <div className="text-center text-xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
           <div className="text-2xl mb-4">
             가상계좌 입금 완료 문자를 발송하였습니다.
           </div>
         </div>
       ) : (
-        <div>결제가 실패했습니다. 다시 시도해 주세요.</div>
+        <div className="text-center text-xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+          <div className="text-2xl mb-4">
+            결제가 실패했습니다. 다시 시도해 주세요.
+          </div>
+        </div>
       )}
     </div>
   );
