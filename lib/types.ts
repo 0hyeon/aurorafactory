@@ -1,8 +1,9 @@
-import { MouseEventHandler } from 'react';
+import { MouseEventHandler } from "react";
 
 export type SessionContent = {
   id?: number;
   user_id?: number;
+  phone: string;
 };
 
 export type SessionUser = {
@@ -14,10 +15,10 @@ export type SessionUser = {
 export type ButtonProps = {
   children: React.ReactNode | string;
   icon?: React.ReactNode;
-  type?: 'button' | 'reset' | 'submit';
+  type?: "button" | "reset" | "submit";
   href?: string;
   isLoading?: boolean;
-  method?: 'post' | 'delete';
+  method?: "post" | "delete";
   onClick?: MouseEventHandler<HTMLButtonElement>;
   rounded?: boolean;
   outlined?: boolean;

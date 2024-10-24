@@ -1,5 +1,7 @@
 import Script from "next/script";
 import { CartWithProductOption } from "./CartList";
+import { cookies } from "next/headers";
+import getSessionCarrot, { getSession } from "@/lib/session";
 
 interface PurchaseProps {
   data: CartWithProductOption[];
@@ -43,7 +45,13 @@ export default function Purchase({
 
     const cartIds = data.map((item) => item.id).join("-");
     const orderId = generateNumericUniqueId();
-    const mallReserved = JSON.stringify({ phoneNumber, cartIds });
+
+    // 결제 방식이 vbank일 때만 phoneNumber 사용, 아니면 sessionPhone 사용
+    const session = await getSessionCarrot();
+    const sessionPhone = session.phone;
+    const finalPhoneNumber = method === "vbank" ? phoneNumber : sessionPhone;
+
+    const mallReserved = JSON.stringify({ finalPhoneNumber, cartIds });
 
     if (typeof window !== "undefined") {
       const pay_obj: any = window;
