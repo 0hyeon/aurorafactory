@@ -48,6 +48,7 @@ export async function updateCart({ cartIds, orderId }: IupdateCart) {
         orderId: orderId,
       },
     });
+    await revalidateCartCount(); // 캐시된 카트 카운트를 갱신
 
     return { success: true };
   } catch (error) {
