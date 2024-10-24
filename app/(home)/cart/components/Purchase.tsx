@@ -1,3 +1,4 @@
+"use server";
 import Script from "next/script";
 import { CartWithProductOption } from "./CartList";
 import { cookies } from "next/headers";
