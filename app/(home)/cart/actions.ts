@@ -4,11 +4,25 @@ import { unstable_cache as nextCache, revalidateTag } from "next/cache";
 import { getSession } from "@/lib/session";
 import { Cart } from "@prisma/client";
 import { cookies } from "next/headers";
+import { getIronSession } from "iron-session";
+import { SessionContent } from "@/lib/types";
 
 // Define types for clarity
 interface IupdateCart {
   cartIds: number[];
   orderId: string;
+}
+
+export async  function getSessionAurora() {
+  const session =  await getIronSession<SessionContent>(cookies(), {
+    cookieName: "delicious-aurorafac",
+    password: process.env.COOKIE_PASSWORD!,
+  });
+  console.log("getSessionAurora : ",session)
+  return {
+    id: session.id,  // 필요한 정보만 추출
+    phone: session.phone
+  };
 }
 
 export async function getSessionFromCookies() {

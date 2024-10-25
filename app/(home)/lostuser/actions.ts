@@ -4,14 +4,10 @@ import {
   passwordFindSchema,
   phoneSchema,
   psswordSetSchema,
-  userFormSchema,
 } from "./schemas";
-import { getUserWithEmail, getUserWithPhone, updateUser } from "./repositories";
-import { getSession, saveLoginSession } from "@/lib/session";
-import { cookies } from "next/headers";
+import {  getUserWithPhone, updateUser } from "./repositories";
 import db from "@/lib/db";
 import { signTokenSchema } from "../signup/schema";
-import twilio from "twilio";
 import crypto from "crypto";
 import { sendTwilioMesage } from "./services";
 import bcrypt from "bcrypt";

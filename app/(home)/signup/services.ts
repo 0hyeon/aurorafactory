@@ -19,6 +19,7 @@ export const signIn = async (data: any) => {
   const cookieStore = cookies();
   const session = await getSession(cookieStore);
   session.id = user.id;
+  session.phone = user.phone;
   await session.save();
 
   redirect("/");

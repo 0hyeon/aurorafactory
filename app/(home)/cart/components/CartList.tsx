@@ -21,7 +21,7 @@ export interface CartWithProductOption {
 
 interface CartListProps {
   data: CartWithProductOption[];
-  user: IronSession<SessionContent>;
+  phone: string;
 }
 
 const calculateTotalPrice = (
@@ -43,7 +43,8 @@ const dicountedPrice = ({ item }: { item: any }) => {
   return item.basePrice * objdiscount;
 };
 
-export default function CartList({ data, user }: CartListProps) {
+export default function CartList({ data, phone }: CartListProps) {
+  console.log("CartList phone : ",phone)
   const [paymentMethod, setPaymentMethod] = useState<string>("");
   const [vbankHolder, setVbankHolder] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
@@ -253,7 +254,7 @@ export default function CartList({ data, user }: CartListProps) {
             method={paymentMethod}
             vbankHolder={vbankHolder} // 사용자명 전달
             totalPrice={totalPrice}
-            user={user}
+            phone={phone}
             // disabled={
             //   !paymentMethod || (paymentMethod === "vbank" && !vbankHolder)
             // } // 필수 입력 체크

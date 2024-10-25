@@ -3,7 +3,7 @@
 import bcrypt from "bcrypt";
 import { formSchema } from "./schemas";
 import { getUserWithEmail } from "./repositories";
-import { getSession, saveLoginSession } from "@/lib/session";
+import getSessionCarrot, { getSession, saveLoginSession } from "@/lib/session";
 import { cookies } from "next/headers";
 
 export const login = async (prevState: any, formData: FormData) => {
@@ -11,8 +11,8 @@ export const login = async (prevState: any, formData: FormData) => {
     email: formData.get("email"),
     password: formData.get("password"),
   };
-  const cookieStore = cookies();
-  const session = await getSession(cookieStore);
+  // const cookieStore = cookies();
+  const session = await getSessionCarrot();
   const result = await formSchema.spa(data);
 
   if (!result.success) {

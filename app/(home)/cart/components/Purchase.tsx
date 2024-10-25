@@ -11,7 +11,7 @@ interface PurchaseProps {
   disabled: boolean;
   phoneNumber: string;
   totalPrice: number;
-  user: IronSession<SessionContent>;
+  phone: string;
 }
 
 export default function Purchase({
@@ -21,7 +21,7 @@ export default function Purchase({
   disabled,
   phoneNumber,
   totalPrice,
-  user,
+  phone,
 }: PurchaseProps) {
   // 주문 ID 생성 함수
   function generateNumericUniqueId(length: number = 16) {
@@ -49,7 +49,7 @@ export default function Purchase({
     const cartIds = data.map((item) => item.id).join("-");
     const orderId = generateNumericUniqueId();
 
-    const finalPhoneNumber = method === "vbank" ? phoneNumber : user.phone;
+    const finalPhoneNumber = method === "vbank" ? phoneNumber : phone;
 
     const mallReserved = JSON.stringify({ finalPhoneNumber, cartIds });
 

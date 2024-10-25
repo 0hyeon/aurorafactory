@@ -23,7 +23,7 @@ model User {
   username      String
   email         String?    @unique
   password      String?
-  phone         String?    @unique
+  phone         String    @unique
   avatar        String?
   address       String?
   postaddress   String?
