@@ -23,6 +23,8 @@ export default function Purchase({
   totalPrice,
   phone,
 }: PurchaseProps) {
+  console.log("phoneNumber : ", phoneNumber);
+  console.log("phone : ", phone);
   // 주문 ID 생성 함수
   function generateNumericUniqueId(length: number = 16) {
     const now = new Date().getTime();
@@ -50,8 +52,11 @@ export default function Purchase({
     const orderId = generateNumericUniqueId();
 
     const finalPhoneNumber = method === "vbank" ? phoneNumber : phone;
-
-    const mallReserved = JSON.stringify({ finalPhoneNumber, cartIds });
+    console.log("finalPhoneNumber : ", finalPhoneNumber);
+    const mallReserved = JSON.stringify({
+      phoneNumber: finalPhoneNumber,
+      cartIds,
+    });
 
     if (typeof window !== "undefined") {
       const pay_obj: any = window;
