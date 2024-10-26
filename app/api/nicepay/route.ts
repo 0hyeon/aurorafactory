@@ -14,8 +14,15 @@ function generateSignData(
 
 export async function POST(request: NextRequest) {
   const { orderId, amount, isPid } = await request.json();
-  const clientKey = "R2_8bad4063b9a942668b156d221c3489ea"; // 실제 운영 키
-  const secretKey = "731f20c8498345b1ba7db90194076451"; // 실제 운영 시크릿 키
+  const clientKey =
+    process.env.NODE_ENV === "production"
+      ? `R2_8bad4063b9a942668b156d221c3489ea`
+      : `S2_07a6c2d843654d7eb32a6fcc0759eef4`;
+
+  const secretKey =
+    process.env.NODE_ENV === "production"
+      ? `731f20c8498345b1ba7db90194076451`
+      : `09899b0eb73a44d69be3c159a1109416`;
 
   // Base64 인코딩된 Authorization 헤더 생성
   const authHeader =
@@ -25,9 +32,15 @@ export async function POST(request: NextRequest) {
   const ediDate = new Date().toISOString(); // ISO 8601 형식으로 현재 시간 생성
   const signData = generateSignData(isPid, String(amount), ediDate, secretKey);
 
+  const apiBaseUrl =
+    process.env.NODE_ENV === "production"
+      ? "https://api.nicepay.co.kr/v1/payments"
+      : "https://sandbox-api.nicepay.co.kr/v1/payments";
+
   try {
     const response = await fetch(
-      `https://api.nicepay.co.kr/v1/payments/${isPid}`, // 운영 환경 경로
+      `${apiBaseUrl}/${isPid}`,
+      // `https://api.nicepay.co.kr/v1/payments/${isPid}`, // 운영 환경 경로
       {
         method: "POST",
         headers: {

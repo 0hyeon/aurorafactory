@@ -29,18 +29,29 @@ export async function POST(request: NextRequest) {
   //   authToken: 'NICEUNTT7E22363DEB83A9D3B7986695575CC671',
   //   signature: 'ed52a90ef896d0c8b97529f46b2c6dfb1d8638de8eedd770f7953aeec5666f52'
   // }
-  const clientKey = "R2_8bad4063b9a942668b156d221c3489ea"; // 실제 운영 키
-  const secretKey = "731f20c8498345b1ba7db90194076451"; // 실제 운영 시크릿 키
+  const clientKey =
+    process.env.NODE_ENV === "production"
+      ? `R2_8bad4063b9a942668b156d221c3489ea`
+      : `S2_07a6c2d843654d7eb32a6fcc0759eef4`;
 
+  const secretKey =
+    process.env.NODE_ENV === "production"
+      ? `731f20c8498345b1ba7db90194076451`
+      : `09899b0eb73a44d69be3c159a1109416`;
   const authHeader =
     "Basic " + Buffer.from(`${clientKey}:${secretKey}`).toString("base64");
   const ediDate = new Date().toISOString();
   const signData = generateSignData(tid, String(amount), ediDate, secretKey);
+  const apiBaseUrl =
+    process.env.NODE_ENV === "production"
+      ? "https://api.nicepay.co.kr/v1/payments"
+      : "https://sandbox-api.nicepay.co.kr/v1/payments";
 
   try {
     // Nicepay 결제 승인 API 호출
     const response = await fetch(
-      `https://api.nicepay.co.kr/v1/payments/${tid}`,
+      `${apiBaseUrl}/${tid}`,
+      // `https://api.nicepay.co.kr/v1/payments/${tid}`,
       {
         method: "POST",
         headers: {
@@ -101,9 +112,10 @@ export async function POST(request: NextRequest) {
     // }
     if (responseBody.resultCode === "0000") {
       // 승인 성공 시, PaySuccess 페이지로 승인 결과 전달
-      const redirectUrl = process.env.NODE_ENV === "production"
-      ? `https://aurorafactory.vercel.app/paysuccess?orderId=${orderId}&amount=${amount}&status=${responseBody.status}`
-      : `https://localhost:3000/paysuccess?orderId=${orderId}&amount=${amount}&status=${responseBody.status}`
+      const redirectUrl =
+        process.env.NODE_ENV === "production"
+          ? `https://aurorafactory.vercel.app/paysuccess?orderId=${orderId}&amount=${amount}&status=${responseBody.status}`
+          : `https://localhost:3000/paysuccess?orderId=${orderId}&amount=${amount}&status=${responseBody.status}`;
       return NextResponse.redirect(redirectUrl);
     } else {
       return NextResponse.json({

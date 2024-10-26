@@ -116,8 +116,6 @@ export async function POST(request: Request) {
   const cartIds = reservedInfo.cartIds.split("-").map(Number); // cartIds를 배열로 변환
 
   if (resultCode === "0000" && vbank !== null && body.status === "ready") {
-    console.log("가상계좌 발급");
-
     // 가상계좌 발급 후 Twilio 메시지 전송 (입금 전 로직)
     await sendTwilioVbankMsg({
       goodsName: goodsName,
@@ -134,8 +132,6 @@ export async function POST(request: Request) {
   }
   // 가상계좌 입금 완료 로직
   else if (resultCode === "0000" && body.status === "paid") {
-    console.log("입금 완료 로직 발동:");
-
     // 카트 업데이트
     const updateResult = await updateCart({
       cartIds: cartIds, // cartIds 배열 사용
@@ -152,10 +148,9 @@ export async function POST(request: Request) {
       phone: phoneNumber,
       price: amount,
     });
-
     return new Response("OK", {
       status: 200,
-      headers: { "Content-Type": "text/html;charset=utf-8" },
+      headers: { "Content-Type": "text/html" },
     });
   } else {
     console.log("결제 인증 실패:", resultCode);

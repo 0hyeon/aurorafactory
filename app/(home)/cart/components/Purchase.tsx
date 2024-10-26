@@ -63,9 +63,12 @@ export default function Purchase({
           ? `https://aurorafactory.vercel.app/api/serverAuth`
           : `http://localhost:3000/api/serverAuth`;
 
-      // PG사에 결제 요청 전송
+      const clientId =
+        process.env.NODE_ENV === "production"
+          ? `R2_8bad4063b9a942668b156d221c3489ea`
+          : `S2_07a6c2d843654d7eb32a6fcc0759eef4`;
       AUTHNICE.requestPay({
-        clientId: "R2_8bad4063b9a942668b156d221c3489ea",
+        clientId,
         method,
         orderId: orderId,
         amount: Number(totalPrice),
