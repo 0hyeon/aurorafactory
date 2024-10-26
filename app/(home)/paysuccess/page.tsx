@@ -8,6 +8,7 @@ import {
   sendAlimtalk,
 } from "./actions";
 import PaySuccess from "./component/PaySuccess ";
+import { revalidateCartCount } from "../cart/actions";
 
 export const metadata: Metadata = {
   title: "Payment Success",
@@ -15,6 +16,7 @@ export const metadata: Metadata = {
 };
 
 export default async function PaymentSuccessPage() {
+  revalidateCartCount();
   // `authAligoToken` 함수를 서버 컴포넌트 내에서 실행합니다.
   //const tokenResponse = await authAligoToken();
   //const tokenResponseCtg = await authAligoCtgSearch();

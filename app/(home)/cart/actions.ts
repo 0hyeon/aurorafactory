@@ -13,15 +13,15 @@ interface IupdateCart {
   orderId: string;
 }
 
-export async  function getSessionAurora() {
-  const session =  await getIronSession<SessionContent>(cookies(), {
+export async function getSessionAurora() {
+  const session = await getIronSession<SessionContent>(cookies(), {
     cookieName: "delicious-aurorafac",
     password: process.env.COOKIE_PASSWORD!,
   });
-  console.log("getSessionAurora : ",session)
+  console.log("getSessionAurora : ", session);
   return {
-    id: session.id,  // 필요한 정보만 추출
-    phone: session.phone
+    id: session.id, // 필요한 정보만 추출
+    phone: session.phone,
   };
 }
 
@@ -62,7 +62,6 @@ export async function updateCart({ cartIds, orderId }: IupdateCart) {
         orderId: orderId,
       },
     });
-    await revalidateCartCount(); // 캐시된 카트 카운트를 갱신
 
     return { success: true };
   } catch (error) {
