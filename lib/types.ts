@@ -3,7 +3,7 @@ import { MouseEventHandler } from "react";
 export type SessionContent = {
   id?: number;
   user_id?: number;
-  phone: string;
+  phone: string | null;
 };
 
 export type SessionUser = {
