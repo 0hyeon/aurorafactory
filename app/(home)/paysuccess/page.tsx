@@ -19,9 +19,6 @@ export const metadata: Metadata = {
 };
 
 export default async function PaymentSuccessPage() {
-  const cookieStore = cookies();
-  const session = await getSession(cookieStore);
-  const cartcount = await getCachedLikeStatus(session.id!);
   // `authAligoToken` 함수를 서버 컴포넌트 내에서 실행합니다.
   //const tokenResponse = await authAligoToken();
   //const tokenResponseCtg = await authAligoCtgSearch();

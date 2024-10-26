@@ -1,9 +1,12 @@
 //api/paymentWebhook/route.ts
-import { updateCart } from "@/app/(home)/cart/actions";
+import { getCachedLikeStatus } from "@/app/(admin)/actions";
+import { revalidateCartCount, updateCart } from "@/app/(home)/cart/actions";
 import {
   sendTwilioVbankMsg,
   sendTwilioVbankSuccessMsg,
 } from "@/app/(home)/lostuser/services";
+import { getSession } from "@/lib/session";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -148,6 +151,14 @@ export async function POST(request: Request) {
       phone: phoneNumber,
       price: amount,
     });
+    revalidateCartCount();
+    const cookieStore = cookies();
+    const session = await getSession(cookieStore);
+    if (session.id) {
+      console.log("getCachedLikeStatus : ", session.id);
+      await getCachedLikeStatus(session.id);
+    }
+
     return new Response("OK", {
       status: 200,
       headers: { "Content-Type": "text/html" },
