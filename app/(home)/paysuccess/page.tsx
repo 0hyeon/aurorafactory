@@ -9,6 +9,9 @@ import {
 } from "./actions";
 import PaySuccess from "./component/PaySuccess ";
 import { revalidateCartCount } from "../cart/actions";
+import { cookies } from "next/headers";
+import { getSession } from "@/lib/session";
+import { getCachedLikeStatus } from "@/app/(admin)/actions";
 
 export const metadata: Metadata = {
   title: "Payment Success",
@@ -16,7 +19,9 @@ export const metadata: Metadata = {
 };
 
 export default async function PaymentSuccessPage() {
-  revalidateCartCount();
+  const cookieStore = cookies();
+  const session = await getSession(cookieStore);
+  const cartcount = await getCachedLikeStatus(session.id!);
   // `authAligoToken` 함수를 서버 컴포넌트 내에서 실행합니다.
   //const tokenResponse = await authAligoToken();
   //const tokenResponseCtg = await authAligoCtgSearch();
