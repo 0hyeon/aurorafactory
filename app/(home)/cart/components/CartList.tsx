@@ -21,7 +21,7 @@ export interface CartWithProductOption {
 
 interface CartListProps {
   data: CartWithProductOption[];
-  phone: string;
+  phone: string | null;
 }
 
 const calculateTotalPrice = (
@@ -44,7 +44,7 @@ const dicountedPrice = ({ item }: { item: any }) => {
 };
 
 export default function CartList({ data, phone }: CartListProps) {
-  console.log("CartList phone : ",phone)
+  console.log("CartList phone : ", phone);
   const [paymentMethod, setPaymentMethod] = useState<string>("");
   const [vbankHolder, setVbankHolder] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");

@@ -11,7 +11,7 @@ interface PurchaseProps {
   disabled: boolean;
   phoneNumber: string;
   totalPrice: number;
-  phone: string;
+  phone: string | null;
 }
 
 export default function Purchase({
@@ -23,8 +23,6 @@ export default function Purchase({
   totalPrice,
   phone,
 }: PurchaseProps) {
-  console.log("phone : ", phone);
-  console.log("phoneNumber : ", phoneNumber);
   // 주문 ID 생성 함수
   function generateNumericUniqueId(length: number = 16) {
     const now = new Date().getTime();
