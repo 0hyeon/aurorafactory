@@ -4,21 +4,20 @@ import { useEffect, useState } from "react";
 import { revalidateCartCount } from "../../cart/actions";
 
 interface IStatus {
-  amount: number;
+  amount: string;
   status: string;
 }
 
 export default function PaySuccess() {
   const [statusData, setStatusData] = useState<IStatus | null>(null);
   useEffect(() => {
-    const query = new URLSearchParams(window.location.search);
-    const amount = query.get("amount") ? Number(query.get("amount")) : 0;
-    const status = query.get("status") || "unknown";
-
-    setStatusData({
-      amount: amount,
-      status: status || "unknown",
-    });
+    if (typeof window !== "undefined") {
+      // Ensures code runs in the browser
+      const query = new URLSearchParams(window.location.search);
+      const amount = String(query.get("amount") || "0");
+      const status = query.get("status") || "unknown";
+      setStatusData({ amount, status });
+    }
   }, []);
 
   if (statusData === null) return <div>로딩 중...</div>;

@@ -112,10 +112,20 @@ export async function POST(request: NextRequest) {
     // }
     if (responseBody.resultCode === "0000") {
       // 승인 성공 시, PaySuccess 페이지로 승인 결과 전달
-      const redirectUrl =
+
+      const redirectBaseUrl =
         process.env.NODE_ENV === "production"
-          ? `https://aurorafactory.shop/paysuccess?amount=${amount}&status=${responseBody.status}`
-          : `https://localhost:3000/paysuccess?amount=${amount}&status=${responseBody.status}`;
+          ? "https://aurorafactory.shop"
+          : "http://localhost:3000";
+      const redirectUrl = `${redirectBaseUrl}/paysuccess?amount=${
+        amount || 0
+      }&status=${responseBody.status || "unknown"}`;
+
+      console.log(`Redirecting to URL: ${redirectUrl}`);
+      // const redirectUrl =
+      //   process.env.NODE_ENV === "production"
+      //     ? `https://aurorafactory.shop/paysuccess?amount=${amount}&status=${responseBody.status}`
+      //     : `https://localhost:3000/paysuccess?amount=${amount}&status=${responseBody.status}`;
       return NextResponse.redirect(redirectUrl);
     } else {
       return NextResponse.json({
