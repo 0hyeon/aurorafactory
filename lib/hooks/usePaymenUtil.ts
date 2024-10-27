@@ -4,16 +4,13 @@ export async function handlePaymentVerification(
   isPid: string | null
 ): Promise<{ status: string; message?: string }> {
   try {
-    const response = await fetch(
-      "https://aurorafactory.vercel.app/api/nicepay",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ orderId, amount, isPid }),
-      }
-    );
+    const response = await fetch("https://aurorafactory.shop/api/nicepay", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ orderId, amount, isPid }),
+    });
 
     if (!response.ok) {
       const errorText = await response.text();
