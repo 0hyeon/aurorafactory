@@ -52,6 +52,7 @@ export const getCachedCart = nextCache(
 );
 
 export async function updateCart({ cartIds, orderId }: IupdateCart) {
+  console.log("updateCart : 발동");
   try {
     await db.cart.updateMany({
       where: {
@@ -66,6 +67,7 @@ export async function updateCart({ cartIds, orderId }: IupdateCart) {
     return { success: true };
   } catch (error) {
     console.error("Error updating cart:", error);
+    console.log(" updating cart:", error);
     return {
       success: false,
       message: "주문을 처리하는 중 오류가 발생했습니다. 다시 시도해주세요.",
@@ -109,6 +111,7 @@ export const getCachedProductSrc = nextCache(getProductSrc, ["product-src"], {
 });
 
 export async function revalidateCartCount() {
+  console.log("revalidateCartCount called"); // 디버깅 로그
   revalidateTag("cart-count");
   revalidateTag("cart");
 }

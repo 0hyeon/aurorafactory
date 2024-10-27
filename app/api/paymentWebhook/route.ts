@@ -144,14 +144,14 @@ export async function POST(request: Request) {
     if (!updateResult.success) {
       return new Response(updateResult.message, { status: 500 });
     }
-    revalidateCartCount();
-    
-  const cookieStore = cookies();
-  const session = await getSession(cookieStore);
-  if (session.id) {
-    console.log("getCachedLikeStatus : ", session.id);
-    await getCachedLikeStatus(session.id);
-  }
+    await revalidateCartCount();
+
+    // const cookieStore = cookies();
+    // const session = await getSession(cookieStore);
+    // if (session.id) {
+    //   console.log("getCachedLikeStatus : ", session.id);
+    //   await getCachedLikeStatus(session.id);
+    // }
     // 입금 완료  메시지 전송
     await sendTwilioVbankSuccessMsg({
       goodsName: goodsName,
