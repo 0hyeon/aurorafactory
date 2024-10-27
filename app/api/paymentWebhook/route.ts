@@ -18,7 +18,10 @@ export async function POST(request: Request) {
   const { resultCode, tid, orderId, amount, vbank, goodsName, mallReserved } =
     body;
 
-  const reservedInfo = mallReserved ? JSON.parse(mallReserved) : {};
+  const reservedInfo =
+    mallReserved && mallReserved.startsWith("{")
+      ? JSON.parse(mallReserved)
+      : {};
   const phoneNumber = reservedInfo.phoneNumber || "기본 값";
   const cartIds = reservedInfo.cartIds
     ? reservedInfo.cartIds.split("-").map(Number)
