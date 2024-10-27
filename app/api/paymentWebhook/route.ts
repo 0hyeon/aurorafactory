@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     ? reservedInfo.cartIds.split("-").map(Number)
     : [];
 
-  if (resultCode === "0000" && (!body.status || body.status === "")) {
+  if (resultCode === "0000" && body.status === "") {
     // 필요한 로직이 있을 경우 추가
     // const updateResult = await updateCart({
     //   cartIds: cartIds, // cartIds 배열 사용
