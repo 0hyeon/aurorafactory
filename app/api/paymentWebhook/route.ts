@@ -24,7 +24,20 @@ export async function POST(request: Request) {
     ? reservedInfo.cartIds.split("-").map(Number)
     : [];
 
-  if (resultCode === "0000" && body.status === "ready") {
+  if (resultCode === "0000" && (!body.status || body.status === "")) {
+    // 필요한 로직이 있을 경우 추가
+    // const updateResult = await updateCart({
+    //   cartIds: cartIds, // cartIds 배열 사용
+    //   orderId: orderId,
+    // });
+    // if (!updateResult.success) {
+    //   return new Response(updateResult.message, { status: 500 });
+    // }
+    return new Response("OK", {
+      status: 200,
+      headers: { "Content-Type": "text/html" },
+    });
+  } else if (resultCode === "0000" && body.status === "ready") {
     // 가상계좌 발급 후 Twilio 메시지 전송 (입금 전 로직)
     await sendTwilioVbankMsg({
       goodsName: goodsName,
@@ -34,20 +47,6 @@ export async function POST(request: Request) {
       phone: phoneNumber, // mallReserved의 phoneNumber 값 사용
       price: amount,
     });
-    return new Response("OK", {
-      status: 200,
-      headers: { "Content-Type": "text/html" },
-    });
-  }
-  if (resultCode === "0000" && body.status === "") {
-    // 필요한 로직이 있을 경우 추가
-    // const updateResult = await updateCart({
-    //   cartIds: cartIds, // cartIds 배열 사용
-    //   orderId: orderId,
-    // });
-    // if (!updateResult.success) {
-    //   return new Response(updateResult.message, { status: 500 });
-    // }
     return new Response("OK", {
       status: 200,
       headers: { "Content-Type": "text/html" },
