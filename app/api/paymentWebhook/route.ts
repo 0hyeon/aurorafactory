@@ -70,3 +70,9 @@ export async function POST(request: Request) {
     return new Response("결제 인증 실패", { status: 400 });
   }
 }
+export async function GET(request: Request) {
+  return new Response("OK", {
+    status: 200,
+    headers: { "Content-Type": "text/html" },
+  });
+}
