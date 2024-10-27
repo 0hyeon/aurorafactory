@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { revalidateCartCount } from "../../cart/actions";
 
 interface IStatus {
   amount: number;
@@ -9,7 +10,6 @@ interface IStatus {
 
 export default function PaySuccess() {
   const [statusData, setStatusData] = useState<IStatus | null>(null);
-  // https://aurorafactory.vercel.app/paysuccess?orderId=1729780546854091&amount=30000&status=paid
   useEffect(() => {
     const query = new URLSearchParams(window.location.search);
     const amount = Number(query.get("amount"));
