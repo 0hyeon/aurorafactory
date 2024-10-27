@@ -114,8 +114,8 @@ export async function POST(request: NextRequest) {
       // 승인 성공 시, PaySuccess 페이지로 승인 결과 전달
       const redirectUrl =
         process.env.NODE_ENV === "production"
-          ? `https://aurorafactory.shop/paysuccess?orderId=${orderId}&amount=${amount}&status=${responseBody.status}`
-          : `https://localhost:3000/paysuccess?orderId=${orderId}&amount=${amount}&status=${responseBody.status}`;
+          ? `https://aurorafactory.shop/paysuccess?amount=${amount}&status=${responseBody.status}`
+          : `https://localhost:3000/paysuccess?amount=${amount}&status=${responseBody.status}`;
       return NextResponse.redirect(redirectUrl);
     } else {
       return NextResponse.json({
