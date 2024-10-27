@@ -18,9 +18,11 @@ export async function POST(request: Request) {
   const { resultCode, tid, orderId, amount, vbank, goodsName, mallReserved } =
     body;
 
-  const reservedInfo = JSON.parse(mallReserved);
-  const phoneNumber = reservedInfo.phoneNumber;
-  const cartIds = reservedInfo.cartIds.split("-").map(Number); // cartIds를 배열로 변환
+  const reservedInfo = mallReserved ? JSON.parse(mallReserved) : {};
+  const phoneNumber = reservedInfo.phoneNumber || "기본 값";
+  const cartIds = reservedInfo.cartIds
+    ? reservedInfo.cartIds.split("-").map(Number)
+    : [];
 
   if (resultCode === "0000" && body.status === "ready") {
     // 가상계좌 발급 후 Twilio 메시지 전송 (입금 전 로직)

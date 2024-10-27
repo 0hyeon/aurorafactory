@@ -12,8 +12,8 @@ export default function PaySuccess() {
   const [statusData, setStatusData] = useState<IStatus | null>(null);
   useEffect(() => {
     const query = new URLSearchParams(window.location.search);
-    const amount = Number(query.get("amount"));
-    const status = query.get("status");
+    const amount = query.get("amount") ? Number(query.get("amount")) : 0;
+    const status = query.get("status") || "unknown";
 
     setStatusData({
       amount: amount,
