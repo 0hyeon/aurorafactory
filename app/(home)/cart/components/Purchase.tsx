@@ -23,8 +23,6 @@ export default function Purchase({
   totalPrice,
   phone,
 }: PurchaseProps) {
-  console.log("phoneNumber : ", phoneNumber);
-  console.log("phone : ", phone);
   // 주문 ID 생성 함수
   function generateNumericUniqueId(length: number = 16) {
     const now = new Date().getTime();

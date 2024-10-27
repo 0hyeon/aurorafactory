@@ -1,6 +1,6 @@
 //api/paymentWebhook/route.ts
 import { getCachedLikeStatus } from "@/app/(admin)/actions";
-import { updateCart } from "@/app/(home)/cart/actions";
+import { revalidateCartCount, updateCart } from "@/app/(home)/cart/actions";
 import {
   sendTwilioVbankMsg,
   sendTwilioVbankSuccessMsg,
@@ -10,6 +10,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
+  revalidateCartCount();
   const bodyText = await request.text();
   const body = JSON.parse(bodyText);
   console.log("webhook : ", body);
@@ -140,6 +141,7 @@ export async function POST(request: Request) {
       cartIds: cartIds, // cartIds 배열 사용
       orderId: orderId,
     });
+    console.log("updateResult : ", updateResult);
     // 카트 업데이트 실패 처리
     if (!updateResult.success) {
       return new Response(updateResult.message, { status: 500 });
