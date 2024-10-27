@@ -32,6 +32,7 @@ export async function getSessionFromCookies() {
 
 // Define the function to get cart data
 async function fetchCartData(userId: string): Promise<Cart[]> {
+  console.log("fetchCartData : 실행", userId);
   return await db.cart.findMany({
     where: {
       userId: Number(userId),

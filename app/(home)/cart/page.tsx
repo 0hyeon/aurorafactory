@@ -1,6 +1,6 @@
 "use server";
 import React from "react";
-import  {
+import {
   getCachedCart,
   getCachedProductSrc,
   getSessionAurora,
@@ -26,7 +26,7 @@ interface CartWithProductOption {
 
 export default async function CartPage() {
   const session = await getSessionAurora();
-  console.log("Cart page session : ",session)
+  console.log("Cart page session : ", session);
   const cartData: Cart[] = await getCachedCart(String(session.id));
   revalidateCartCount();
 

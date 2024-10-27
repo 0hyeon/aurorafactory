@@ -12,6 +12,7 @@ export default function PaySuccess() {
   const [statusData, setStatusData] = useState<IStatus | null>(null);
   // https://aurorafactory.vercel.app/paysuccess?orderId=1729780546854091&amount=30000&status=paid
   useEffect(() => {
+    revalidateCartCount();
     const query = new URLSearchParams(window.location.search);
     const amount = Number(query.get("amount"));
     const status = query.get("status");
@@ -20,7 +21,7 @@ export default function PaySuccess() {
       amount: amount,
       status: status || "unknown",
     });
-  }, []);
+  }, [statusData]);
 
   if (statusData === null) return <div>로딩 중...</div>;
 

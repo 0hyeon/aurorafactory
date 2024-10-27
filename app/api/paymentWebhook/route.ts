@@ -1,6 +1,6 @@
 //api/paymentWebhook/route.ts
 import { getCachedLikeStatus } from "@/app/(admin)/actions";
-import { revalidateCartCount, updateCart } from "@/app/(home)/cart/actions";
+import { updateCart } from "@/app/(home)/cart/actions";
 import {
   sendTwilioVbankMsg,
   sendTwilioVbankSuccessMsg,
@@ -144,8 +144,6 @@ export async function POST(request: Request) {
     if (!updateResult.success) {
       return new Response(updateResult.message, { status: 500 });
     }
-    await revalidateCartCount();
-
     // const cookieStore = cookies();
     // const session = await getSession(cookieStore);
     // if (session.id) {

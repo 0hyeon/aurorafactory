@@ -40,9 +40,3 @@ export async function getCachedLikeStatus(sessionId: number) {
   });
   return cachedCartCount(sessionId);
 }
-
-// 별도의 revalidateTag 함수 호출
-// export async function revalidateCartCount() {
-//   revalidateTag("cart-count");
-//   revalidateTag("cart");
-// }
