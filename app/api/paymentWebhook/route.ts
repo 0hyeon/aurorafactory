@@ -92,3 +92,4 @@ export async function GET(request: Request) {
     headers: { "Content-Type": "text/html" },
   });
 }
+// https://www.aurorafactory.shop/paysuccess?amount=30000&status=paid

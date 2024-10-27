@@ -115,7 +115,7 @@ export async function POST(request: NextRequest) {
 
       const redirectBaseUrl =
         process.env.NODE_ENV === "production"
-          ? "https://aurorafactory.shop"
+          ? "https://www.aurorafactory.shop"
           : "http://localhost:3000";
       const redirectUrl = `${redirectBaseUrl}/paysuccess?amount=${
         amount || 0

@@ -4,7 +4,7 @@ export async function handlePaymentVerification(
   isPid: string | null
 ): Promise<{ status: string; message?: string }> {
   try {
-    const response = await fetch("https://aurorafactory.shop/api/nicepay", {
+    const response = await fetch("https://www.aurorafactory.shop/api/nicepay", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
