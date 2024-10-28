@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
     //   cashReceipts: null,
     //   messageSource: 'nicepay'
     // }
-    if (responseBody.resultCode === "0000") {
+    if (responseBody.resultCode === "0000" && responseBody.status === "paid") {
       // 업데이트
       const reservedInfo =
         responseBody.mallReserved && responseBody.mallReserved.startsWith("{")
@@ -139,11 +139,19 @@ export async function POST(request: NextRequest) {
         amount || 0
       }&status=${responseBody.status || "unknown"}`;
 
-      console.log(`Redirecting to URL: ${redirectUrl}`);
-      // const redirectUrl =
-      //   process.env.NODE_ENV === "production"
-      //     ? `https://aurorafactory.shop/paysuccess?amount=${amount}&status=${responseBody.status}`
-      //     : `https://localhost:3000/paysuccess?amount=${amount}&status=${responseBody.status}`;
+      return NextResponse.redirect(redirectUrl);
+    } else if (
+      responseBody.resultCode === "0000" &&
+      responseBody.status === "ready"
+    ) {
+      const redirectBaseUrl =
+        process.env.NODE_ENV === "production"
+          ? "https://www.aurorafactory.shop"
+          : "http://localhost:3000";
+      const redirectUrl = `${redirectBaseUrl}/paysuccess?amount=${
+        amount || 0
+      }&status=${responseBody.status || "unknown"}`;
+
       return NextResponse.redirect(redirectUrl);
     } else {
       return NextResponse.json({
