@@ -9,7 +9,6 @@ interface IStatus {
 }
 
 export default function PaySuccess() {
-  revalidateCartCount();
   const [statusData, setStatusData] = useState<IStatus | null>(null);
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -18,6 +17,7 @@ export default function PaySuccess() {
       const amount = String(query.get("amount") || "0");
       const status = query.get("status") || "unknown";
       setStatusData({ amount, status });
+      revalidateCartCount();
     }
   }, []);
 

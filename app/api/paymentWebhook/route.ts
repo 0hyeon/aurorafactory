@@ -10,7 +10,6 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-  revalidateCartCount();
   const bodyText = await request.text();
   const body = JSON.parse(bodyText);
   console.log("webhook : ", body);
@@ -33,10 +32,12 @@ export async function POST(request: Request) {
       cartIds: cartIds, // cartIds 배열 사용
       orderId: orderId,
     });
+    console.log("updateResult : ", updateResult);
 
     if (!updateResult.success) {
       return new Response(updateResult.message, { status: 500 });
     }
+    await revalidateCartCount();
 
     // 독립적실행
     sendTwilioVbankSuccessMsg({
