@@ -1,4 +1,3 @@
-"use server";
 // app/payment-success/page.tsx (서버 컴포넌트)
 
 import { Metadata } from "next";
@@ -20,16 +19,6 @@ export const metadata: Metadata = {
 };
 
 export default async function PaymentSuccessPage() {
-  revalidateCartCount();
-
-  const cookieStore = cookies();
-  const session = await getSession(cookieStore);
-  console.log("session : ", session); // {}
-  if (session.id) {
-    console.log("getCachedLikeStatus : ", session.id);
-    await getCachedLikeStatus(session.id);
-  }
-
   // `authAligoToken` 함수를 서버 컴포넌트 내에서 실행합니다.
   //const tokenResponse = await authAligoToken();
   //const tokenResponseCtg = await authAligoCtgSearch();

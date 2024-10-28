@@ -26,10 +26,14 @@ interface CartWithProductOption {
 
 export default async function CartPage() {
   const session = await getSessionAurora();
-  console.log("Cart page session : ", session);
-  const cartData: Cart[] = await getCachedCart(String(session.id));
-  revalidateCartCount();
+  const cartData: Cart[] = session.id
+    ? await getCachedCart(String(session.id))
+    : [];
 
+  // 카트 카운트 무효화
+  if (session.id) {
+    revalidateCartCount();
+  }
   // 모든 장바구니 항목에 대한 제품 옵션을 가져옵니다.
   const cartItems = await Promise.all(
     cartData.map(async (el: Cart): Promise<CartWithProductOption | null> => {

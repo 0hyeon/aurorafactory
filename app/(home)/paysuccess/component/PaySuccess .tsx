@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { revalidateCartCount } from "../../cart/actions";
 
 interface IStatus {
   amount: string;
