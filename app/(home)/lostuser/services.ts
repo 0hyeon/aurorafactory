@@ -65,7 +65,6 @@ export async function sendTwilioVbankMsg({
 export async function sendTwilioVbankSuccessMsg({
   goodsName,
   phone,
-  price,
 }: {
   goodsName: string;
   phone: string | null;

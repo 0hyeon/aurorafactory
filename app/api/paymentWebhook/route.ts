@@ -29,27 +29,43 @@ export async function POST(request: Request) {
 
   if (resultCode === "0000" && body.status === "") {
     // 필요한 로직이 있을 경우 추가
-    // const updateResult = await updateCart({
-    //   cartIds: cartIds, // cartIds 배열 사용
-    //   orderId: orderId,
-    // });
-    // if (!updateResult.success) {
-    //   return new Response(updateResult.message, { status: 500 });
-    // }
+    const updateResult = await updateCart({
+      cartIds: cartIds, // cartIds 배열 사용
+      orderId: orderId,
+    });
+
+    if (!updateResult.success) {
+      return new Response(updateResult.message, { status: 500 });
+    }
+
+    // 독립적실행
+    sendTwilioVbankSuccessMsg({
+      goodsName: goodsName,
+      phone: phoneNumber,
+      price: amount,
+    }).catch((error) => {
+      console.error("Twilio 메시지 전송 오류:", error);
+    });
+
     return new Response("OK", {
       status: 200,
       headers: { "Content-Type": "text/html" },
     });
   } else if (resultCode === "0000" && body.status === "ready") {
     // 가상계좌 발급 후 Twilio 메시지 전송 (입금 전 로직)
-    await sendTwilioVbankMsg({
+
+    // 독립적실행
+    sendTwilioVbankMsg({
       goodsName: goodsName,
       bankName: vbank.vbankName,
       accountNum: vbank.vbankNumber,
       dueDate: vbank.vbankExpDate,
-      phone: phoneNumber, // mallReserved의 phoneNumber 값 사용
+      phone: phoneNumber,
       price: amount,
+    }).catch((error) => {
+      console.error("Twilio 메시지 전송 오류:", error);
     });
+
     return new Response("OK", {
       status: 200,
       headers: { "Content-Type": "text/html" },
@@ -59,7 +75,7 @@ export async function POST(request: Request) {
   else if (resultCode === "0000" && body.status === "paid") {
     // 카트 업데이트
     const updateResult = await updateCart({
-      cartIds: cartIds, // cartIds 배열 사용
+      cartIds: cartIds,
       orderId: orderId,
     });
     // 카트 업데이트 실패 처리
@@ -67,11 +83,14 @@ export async function POST(request: Request) {
       return new Response(updateResult.message, { status: 500 });
     }
     await revalidateCartCount(); // 서버에서 무효화 호출
-    // 입금 완료  메시지 전송
-    await sendTwilioVbankSuccessMsg({
+
+    // 독립적실행 입금 완료  메시지 전송
+    sendTwilioVbankSuccessMsg({
       goodsName: goodsName,
       phone: phoneNumber,
       price: amount,
+    }).catch((error) => {
+      console.error("Twilio 메시지 전송 오류:", error);
     });
 
     return new Response("OK", {
