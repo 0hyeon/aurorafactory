@@ -17,7 +17,6 @@ export default function PaySuccess() {
       const amount = String(query.get("amount") || "0");
       const status = query.get("status") || "unknown";
       setStatusData({ amount, status });
-      revalidateCartCount();
     }
   }, []);
 

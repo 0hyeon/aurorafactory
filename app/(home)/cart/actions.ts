@@ -6,6 +6,7 @@ import { Cart } from "@prisma/client";
 import { cookies } from "next/headers";
 import { getIronSession } from "iron-session";
 import { SessionContent } from "@/lib/types";
+import { getCachedLikeStatus } from "@/app/(admin)/actions";
 
 // Define types for clarity
 interface IupdateCart {
@@ -66,6 +67,10 @@ export async function updateCart({ cartIds, orderId }: IupdateCart) {
         orderId: orderId,
       },
     });
+
+    const session = await getSessionFromCookies();
+    if (!session.id) return { ok: false, message: "로그인 필요" };
+    await getCachedLikeStatus(session.id);
 
     return { success: true };
   } catch (error) {

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import qs, { ParsedQs } from "qs";
+import { updateCart } from "@/app/(home)/cart/actions";
 function generateSignData(
   tid: string | ParsedQs | string[] | ParsedQs[] | undefined,
   amount: string,
@@ -111,6 +112,23 @@ export async function POST(request: NextRequest) {
     //   messageSource: 'nicepay'
     // }
     if (responseBody.resultCode === "0000") {
+      // 업데이트
+      const reservedInfo =
+        responseBody.mallReserved && responseBody.mallReserved.startsWith("{")
+          ? JSON.parse(responseBody.mallReserved)
+          : {};
+      const cartIds = reservedInfo.cartIds
+        ? reservedInfo.cartIds.split("-").map(Number)
+        : [];
+      const updateResult = await updateCart({
+        cartIds: cartIds,
+        orderId: responseBody.orderId,
+      });
+      // 카트 업데이트 실패 처리
+      if (!updateResult.success) {
+        return new Response(updateResult.message, { status: 500 });
+      }
+
       // 승인 성공 시, PaySuccess 페이지로 승인 결과 전달
 
       const redirectBaseUrl =

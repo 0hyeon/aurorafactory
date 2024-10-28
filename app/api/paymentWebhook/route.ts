@@ -28,16 +28,14 @@ export async function POST(request: Request) {
 
   if (resultCode === "0000" && body.status === "") {
     // 필요한 로직이 있을 경우 추가
-    const updateResult = await updateCart({
-      cartIds: cartIds, // cartIds 배열 사용
-      orderId: orderId,
-    });
-    console.log("updateResult : ", updateResult);
+    // const updateResult = await updateCart({
+    //   cartIds: cartIds, // cartIds 배열 사용
+    //   orderId: orderId,
+    // });
 
-    if (!updateResult.success) {
-      return new Response(updateResult.message, { status: 500 });
-    }
-    await revalidateCartCount();
+    // if (!updateResult.success) {
+    //   return new Response(updateResult.message, { status: 500 });
+    // }
 
     // 독립적실행
     sendTwilioVbankSuccessMsg({
@@ -75,16 +73,14 @@ export async function POST(request: Request) {
   // 가상계좌 입금 완료 로직
   else if (resultCode === "0000" && body.status === "paid") {
     // 카트 업데이트
-    const updateResult = await updateCart({
-      cartIds: cartIds,
-      orderId: orderId,
-    });
-    // 카트 업데이트 실패 처리
-    if (!updateResult.success) {
-      return new Response(updateResult.message, { status: 500 });
-    }
-    console.log("updateResult : ", updateResult);
-    await revalidateCartCount(); // 서버에서 무효화 호출
+    // const updateResult = await updateCart({
+    //   cartIds: cartIds,
+    //   orderId: orderId,
+    // });
+    // // 카트 업데이트 실패 처리
+    // if (!updateResult.success) {
+    //   return new Response(updateResult.message, { status: 500 });
+    // }
 
     // 독립적실행 입금 완료  메시지 전송
     sendTwilioVbankSuccessMsg({
