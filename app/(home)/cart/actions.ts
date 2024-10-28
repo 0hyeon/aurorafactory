@@ -53,6 +53,7 @@ export const getCachedCart = nextCache(
 );
 
 export async function updateCart({ cartIds, orderId }: IupdateCart) {
+  revalidateCartCount();
   console.log("updateCart : 발동");
   try {
     await db.cart.updateMany({
