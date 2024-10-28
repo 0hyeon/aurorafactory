@@ -23,7 +23,7 @@ export default async function TabLayout({
   // }
 
   const cartcount = await getCachedLikeStatus(session.id!);
-  const user = await getUserProfile(session);
+  console.log("cartcount : ", cartcount);
 
   async function getUser() {
     const session = await getSession(cookieStore);
