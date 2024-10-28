@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { revalidateCartCount } from "../../cart/actions";
 
 interface IStatus {
   amount: string;
@@ -10,13 +11,21 @@ interface IStatus {
 export default function PaySuccess() {
   const [statusData, setStatusData] = useState<IStatus | null>(null);
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      // Ensures code runs in the browser
+    const fetchStatus = async () => {
       const query = new URLSearchParams(window.location.search);
-      const amount = String(query.get("amount") || "0");
+      const amount = query.get("amount") || "0";
       const status = query.get("status") || "unknown";
       setStatusData({ amount, status });
-    }
+
+      // 서버에서 카트 데이터를 강제로 갱신하도록 호출
+      revalidateCartCount();
+    };
+
+    const interval = setInterval(fetchStatus, 5000); // 5초마다 상태 확인
+
+    fetchStatus(); // 초기 호출
+
+    return () => clearInterval(interval); // 컴포넌트 unmount 시 제거
   }, []);
 
   if (statusData === null) return <div>로딩 중...</div>;
