@@ -5,6 +5,7 @@ import { unstable_cache as nextCache, revalidateTag } from "next/cache";
 // Function to fetch cart count based on session ID
 export async function fetchCartCount(id: number) {
   const sessionId = id;
+  console.log("fetchCartCount인자 : ", id);
   if (!sessionId) return 0;
 
   const cartCount = await db.cart.count({

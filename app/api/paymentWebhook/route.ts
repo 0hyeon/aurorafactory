@@ -73,6 +73,7 @@ export async function POST(request: Request) {
   }
   // 가상계좌 입금 완료 로직
   else if (resultCode === "0000" && body.status === "paid") {
+    revalidateCartCount(); // 서버에서 무효화 호출
     // 카트 업데이트
     const updateResult = await updateCart({
       cartIds: cartIds,
@@ -82,7 +83,7 @@ export async function POST(request: Request) {
     if (!updateResult.success) {
       return new Response(updateResult.message, { status: 500 });
     }
-    await revalidateCartCount(); // 서버에서 무효화 호출
+    revalidateCartCount(); // 서버에서 무효화 호출
 
     // 독립적실행 입금 완료  메시지 전송
     sendTwilioVbankSuccessMsg({

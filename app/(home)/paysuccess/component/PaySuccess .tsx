@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { revalidateCartCount } from "../../cart/actions";
 
 interface IStatus {
   amount: string;
@@ -8,6 +9,7 @@ interface IStatus {
 }
 
 export default function PaySuccess() {
+  revalidateCartCount();
   const [statusData, setStatusData] = useState<IStatus | null>(null);
   useEffect(() => {
     if (typeof window !== "undefined") {
