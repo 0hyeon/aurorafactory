@@ -62,14 +62,11 @@ export async function POST(request: Request) {
       cartIds: cartIds, // cartIds 배열 사용
       orderId: orderId,
     });
-    console.log("updateResult : ", updateResult);
     // 카트 업데이트 실패 처리
     if (!updateResult.success) {
       return new Response(updateResult.message, { status: 500 });
     }
     await revalidateCartCount(); // 서버에서 무효화 호출
-    console.log("revalidateCartCount");
-    revalidateCartCount;
     // 입금 완료  메시지 전송
     await sendTwilioVbankSuccessMsg({
       goodsName: goodsName,
