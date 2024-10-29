@@ -68,17 +68,18 @@ export async function sendTwilioVbankSuccessMsg({
 }: {
   goodsName: string;
   phone: string | null;
-  price: any;
 }) {
+  console.log("sendTwilioVbankSuccessMsg : ",goodsName, phone)
   const client = twilio(
     process.env.TWILIO_ACCOUNT_SID,
     process.env.TWILIO_AUTH_TOKEN
   );
-  client.messages.create({
+  const message = client.messages.create({
     body: `오로라팩 ${goodsName} 주문이 완료되었습니다. 감사합니다.`,
     from: process.env.TWILIO_PHONE_NUMBER!,
     to: formatPhoneNumberToE164(phone),
   });
+  console.log("message : ",message)
 
   return;
 }

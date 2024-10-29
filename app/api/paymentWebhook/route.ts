@@ -26,13 +26,14 @@ export async function POST(request: Request) {
     ? reservedInfo.cartIds.split("-").map(Number)
     : [];
 
+  // 휴대폰결제
   if (resultCode === "0000" && body.status === "") {
     // 필요한 로직이 있을 경우 추가
     const updateResult = await updateCart({
       cartIds: cartIds, // cartIds 배열 사용
       orderId: orderId,
     });
-
+    console.log("updateCart2 : ", updateResult);
     if (!updateResult.success) {
       return new Response(updateResult.message, { status: 500 });
     }
@@ -41,7 +42,6 @@ export async function POST(request: Request) {
     sendTwilioVbankSuccessMsg({
       goodsName: goodsName,
       phone: phoneNumber,
-      price: amount,
     }).catch((error) => {
       console.error("Twilio 메시지 전송 오류:", error);
     });
@@ -86,7 +86,6 @@ export async function POST(request: Request) {
     sendTwilioVbankSuccessMsg({
       goodsName: goodsName,
       phone: phoneNumber,
-      price: amount,
     }).catch((error) => {
       console.error("Twilio 메시지 전송 오류:", error);
     });

@@ -137,12 +137,8 @@ export async function POST(request: NextRequest) {
           : "http://localhost:3000";
       const redirectUrl = `${redirectBaseUrl}/paysuccess?amount=${
         amount || 0
-      }&status=${responseBody.status || "unknown"}&vbank=${
-        responseBody.vbank || "unknown"
-      }&vbankNumber=${responseBody.vbankNumber || "unknown"}&vbankExpDate=${
-        responseBody.vbankExpDate || "unknown"
-      }`;
-
+      }&status=${responseBody.status || "unknown"}`;
+      
       return NextResponse.redirect(redirectUrl);
     } else if (
       responseBody.resultCode === "0000" &&
@@ -154,7 +150,11 @@ export async function POST(request: NextRequest) {
           : "http://localhost:3000";
       const redirectUrl = `${redirectBaseUrl}/paysuccess?amount=${
         amount || 0
-      }&status=${responseBody.status || "unknown"}`;
+      }&status=${responseBody.status || "unknown"}&vbank=${
+        responseBody.vbank || "unknown"
+      }&vbankNumber=${responseBody.vbankNumber || "unknown"}&vbankExpDate=${
+        responseBody.vbankExpDate || "unknown"
+      }`;
 
       return NextResponse.redirect(redirectUrl);
     } else {

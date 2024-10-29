@@ -46,11 +46,15 @@ export default function PaySuccess() {
         </div>
       ) : statusData.status === "ready" ? (
         <div className="text-center text-xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-          <div className="text-2xl mb-4">
+          <div>
+            <div className="text-3xl mb-4">
             가상계좌 입금 완료 문자를 발송하였습니다. (5분내로발송)
-            <div>은행:{statusData.vbank}</div>
-            <div>계좌번호:{statusData.vbankNumber}</div>
-            <div>입금기한:{statusData.vbankExpDate}</div>
+            </div>
+            <div className="text-2xl">
+              <div>은행:{statusData.vbank}</div>
+              <div>계좌번호:{statusData.vbankNumber}</div>
+              <div>입금기한:{statusData.vbankExpDate}</div>
+            </div>
           </div>
         </div>
       ) : (
