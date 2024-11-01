@@ -14,6 +14,10 @@ interface IupdateCart {
   orderId: string;
   stats: string;
 }
+interface IupdateCartCancle {
+  orderId: string;
+  stats: string;
+}
 
 export async function getSessionAurora() {
   const session = await getIronSession<SessionContent>(cookies(), {
@@ -66,6 +70,33 @@ export async function updateCart({ cartIds, orderId, stats }: IupdateCart) {
       data: {
         orderstat: stats,
         orderId: orderId,
+      },
+    });
+
+    const session = await getSessionFromCookies();
+    if (!session.id) return { ok: false, message: "로그인 필요" };
+    await getCachedLikeStatus(session.id);
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating cart:", error);
+    console.log(" updating cart:", error);
+    return {
+      success: false,
+      message: "주문을 처리하는 중 오류가 발생했습니다. 다시 시도해주세요.",
+    };
+  }
+}
+export async function updateCancleCart({ orderId, stats }: IupdateCartCancle) {
+  revalidateCartCount();
+  console.log("updateCart : 발동");
+  try {
+    await db.cart.updateMany({
+      where: {
+        orderId: orderId,
+      },
+      data: {
+        orderstat: stats,
       },
     });
 
