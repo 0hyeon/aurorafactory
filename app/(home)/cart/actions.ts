@@ -12,6 +12,7 @@ import { getCachedLikeStatus } from "@/app/(admin)/actions";
 interface IupdateCart {
   cartIds: number[];
   orderId: string;
+  stats: string;
 }
 
 export async function getSessionAurora() {
@@ -53,7 +54,7 @@ export const getCachedCart = nextCache(
   }
 );
 
-export async function updateCart({ cartIds, orderId }: IupdateCart) {
+export async function updateCart({ cartIds, orderId, stats }: IupdateCart) {
   revalidateCartCount();
   console.log("updateCart : 발동");
   console.log(cartIds, orderId);
@@ -63,7 +64,7 @@ export async function updateCart({ cartIds, orderId }: IupdateCart) {
         id: { in: cartIds },
       },
       data: {
-        orderstat: "결제완료",
+        orderstat: stats,
         orderId: orderId,
       },
     });

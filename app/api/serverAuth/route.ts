@@ -123,6 +123,7 @@ export async function POST(request: NextRequest) {
       const updateResult = await updateCart({
         cartIds: cartIds,
         orderId: responseBody.orderId,
+        stats: "결제완료",
       });
       // 카트 업데이트 실패 처리
       if (!updateResult.success) {
@@ -138,7 +139,7 @@ export async function POST(request: NextRequest) {
       const redirectUrl = `${redirectBaseUrl}/paysuccess?amount=${
         amount || 0
       }&status=${responseBody.status || "unknown"}`;
-      
+
       return NextResponse.redirect(redirectUrl);
     } else if (
       responseBody.resultCode === "0000" &&

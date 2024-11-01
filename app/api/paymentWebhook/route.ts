@@ -26,12 +26,25 @@ export async function POST(request: Request) {
     ? reservedInfo.cartIds.split("-").map(Number)
     : [];
 
-  // 휴대폰결제
-  if (resultCode === "0000" && body.status === "") {
-    // 필요한 로직이 있을 경우 추가
+  if (resultCode === "0000" && body.status === "cancelled") {
     const updateResult = await updateCart({
       cartIds: cartIds, // cartIds 배열 사용
       orderId: orderId,
+      stats: "결제취소",
+    });
+    if (!updateResult.success) {
+      return new Response(updateResult.message, { status: 500 });
+    }
+    return new Response("OK", {
+      status: 200,
+      headers: { "Content-Type": "text/html" },
+    });
+  } else if (resultCode === "0000" && body.status === "") {
+    // 휴대폰결제
+    const updateResult = await updateCart({
+      cartIds: cartIds, // cartIds 배열 사용
+      orderId: orderId,
+      stats: "결제완료",
     });
     console.log("updateCart2 : ", updateResult);
     if (!updateResult.success) {
@@ -76,6 +89,7 @@ export async function POST(request: Request) {
     const updateResult = await updateCart({
       cartIds: cartIds,
       orderId: orderId,
+      stats: "결제완료",
     });
     // 카트 업데이트 실패 처리
     if (!updateResult.success) {
