@@ -74,8 +74,9 @@ export async function updateCart({ cartIds, orderId, stats }: IupdateCart) {
     });
 
     const session = await getSessionFromCookies();
-    if (!session.id) return { ok: false, message: "로그인 필요" };
-    await getCachedLikeStatus(session.id);
+    if (session.id) {
+      await getCachedLikeStatus(session.id);
+    }
 
     return { success: true };
   } catch (error) {
