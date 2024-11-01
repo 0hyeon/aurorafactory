@@ -20,20 +20,27 @@ export default function PaySuccess() {
       const status = query.get("status") || "unknown";
       const vbankNumber = query.get("vbankNumber") || "unknown";
       const vbank = query.get("vbank") || "unknown";
-      const vbankExpDate = query.get("vbankExpDate") || "unknown";
+      const vbankExpDate = query.get("vbankExpDate");
 
-      const date = new Date(vbankExpDate);
-      const formattedDate = date.toLocaleDateString("ko-KR", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
+      let formattedDate = "unknown";
+      if (vbankExpDate) {
+        const date = new Date(vbankExpDate);
+        if (!isNaN(date.getTime())) {
+          // 유효한 날짜인지 체크
+          formattedDate = date.toLocaleDateString("ko-KR", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          });
+        }
+      }
+
       setStatusData({
         amount,
         status,
         vbankNumber,
         vbank,
-        vbankExpDate,
+        vbankExpDate: formattedDate,
       });
 
       // 서버에서 카트 데이터를 강제로 갱신하도록 호출
@@ -46,7 +53,6 @@ export default function PaySuccess() {
 
     return () => clearInterval(interval); // 컴포넌트 unmount 시 제거
   }, []);
-
   if (statusData === null) return <div>로딩 중...</div>;
 
   return (
