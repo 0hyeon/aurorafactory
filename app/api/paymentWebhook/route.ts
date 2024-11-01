@@ -10,21 +10,11 @@ import {
   sendTwilioVbankSuccessMsg,
 } from "@/app/(home)/lostuser/services";
 import { NextRequest } from "next/server";
-import qs, { ParsedQs } from "qs";
+
 export async function POST(request: NextRequest) {
   try {
-    const contentType = request.headers.get("Content-Type");
     const bodyText = await request.text();
-
-    let body;
-    if (contentType === "application/json") {
-      body = JSON.parse(bodyText); // JSON 형식인 경우
-    } else if (contentType === "application/x-www-form-urlencoded") {
-      body = qs.parse(bodyText); // URL 인코딩된 형식인 경우
-    } else {
-      throw new Error("Unsupported Content-Type");
-    }
-
+    const body = JSON.parse(bodyText);
     console.log("Webhook received:", body); // Incoming request body logging
 
     const {
