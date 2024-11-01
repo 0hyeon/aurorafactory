@@ -33,7 +33,7 @@ export default function PaySuccess() {
         status,
         vbankNumber,
         vbank,
-        vbankExpDate: formattedDate,
+        vbankExpDate,
       });
 
       // 서버에서 카트 데이터를 강제로 갱신하도록 호출
