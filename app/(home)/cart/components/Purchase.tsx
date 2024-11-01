@@ -78,6 +78,7 @@ export default function Purchase({
         goodsName: productNames,
         vbankHolder,
         mallReserved, // JSON 문자열로 전송
+        buyerTel: finalPhoneNumber,
         returnUrl,
         fnError: (result: any) => {
           alert(

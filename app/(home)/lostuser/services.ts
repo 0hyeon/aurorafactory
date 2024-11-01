@@ -94,7 +94,7 @@ export async function sendTwilioCalcledMsg({
     process.env.TWILIO_AUTH_TOKEN
   );
   const message = client.messages.create({
-    body: `오로라팩 ${goodsName} 주문이 최소되었습니다..`,
+    body: `오로라팩 ${goodsName} 주문이 최소되었습니다.`,
     from: process.env.TWILIO_PHONE_NUMBER!,
     to: formatPhoneNumberToE164(phone),
   });

@@ -27,6 +27,7 @@ export async function POST(request: Request) {
     goodsName,
     mallReserved,
     status,
+    buyerTel,
   } = body;
   // webhook :  {
   //   mallReserved: null,
@@ -106,7 +107,7 @@ export async function POST(request: Request) {
     }
     sendTwilioCalcledMsg({
       goodsName: goodsName,
-      phone: phoneNumber,
+      phone: buyerTel,
     }).catch((error) => {
       console.error("Twilio 메시지 전송 오류:", error);
     });
