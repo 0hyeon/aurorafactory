@@ -16,22 +16,29 @@ export default function PaySuccess() {
   useEffect(() => {
     const fetchStatus = async () => {
       const query = new URLSearchParams(window.location.search);
+
       const amount = query.get("amount") || "0";
       const status = query.get("status") || "unknown";
       const vbankNumber = query.get("vbankNumber") || "unknown";
       const vbank = query.get("vbank") || "unknown";
-      const vbankExpDate = query.get("vbankExpDate");
+      const vbankExpDate = query.get("vbankExpDate") || "unknown";
+
+      console.log("Raw vbankExpDate:", vbankExpDate); // 값 확인
 
       let formattedDate = "unknown";
-      if (vbankExpDate) {
-        const date = new Date(vbankExpDate);
+      if (vbankExpDate && vbankExpDate !== "unknown") {
+        // 공백을 +로 바꿔줍니다.
+        const formattedVbankExpDate = vbankExpDate.replace(" ", "+");
+        const date = new Date(formattedVbankExpDate);
+
         if (!isNaN(date.getTime())) {
-          // 유효한 날짜인지 체크
           formattedDate = date.toLocaleDateString("ko-KR", {
             year: "numeric",
             month: "long",
             day: "numeric",
           });
+        } else {
+          console.error("Invalid date:", vbankExpDate);
         }
       }
 
@@ -47,12 +54,11 @@ export default function PaySuccess() {
       revalidateCartCount();
     };
 
-    const interval = setInterval(fetchStatus, 5000); // 5초마다 상태 확인
-
-    fetchStatus(); // 초기 호출
-
-    return () => clearInterval(interval); // 컴포넌트 unmount 시 제거
+    const interval = setInterval(fetchStatus, 5000);
+    fetchStatus();
+    return () => clearInterval(interval);
   }, []);
+
   if (statusData === null) return <div>로딩 중...</div>;
 
   return (
@@ -72,7 +78,7 @@ export default function PaySuccess() {
             <div className="text-2xl">
               <div>은행:{statusData.vbank}</div>
               <div>계좌번호:{statusData.vbankNumber}</div>
-              <div>입금기한:{statusData.vbankExpDate}</div>
+              <div>입금기한:{statusData.vbankExpDate} 까지</div>
             </div>
           </div>
         </div>
