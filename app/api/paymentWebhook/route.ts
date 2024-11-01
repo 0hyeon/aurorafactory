@@ -28,7 +28,61 @@ export async function POST(request: Request) {
     mallReserved,
     status,
   } = body;
-
+  // webhook :  {
+  //   mallReserved: null,
+  //   issuedCashReceipt: false,
+  //   buyerTel: null,
+  //   orderId: '1730452398297070',
+  //   signature: 'aab654dad8ca6009b4f8a0c126c9de828b414d946c2d1b5eb8200d9519c279df',
+  //   cashReceipts: null,
+  //   buyerEmail: 'test@abc.com',
+  //   resultCode: '0000',
+  //   channel: 'pc',
+  //   tid: 'UT0014446m01012411011813553814',
+  //   balanceAmt: 0,
+  //   failedAt: '0',
+  //   bank: null,
+  //   payMethod: 'kakaopay',
+  //   mallUserId: null,
+  //   cellphone: null,
+  //   ediDate: '2024-11-01T18:17:31.496+0900',
+  //   currency: 'KRW',
+  //   goodsName: '0.5T 라미봉투 10*10 (흰색)',
+  //   vbank: null,
+  //   cancelledTid: 'UT0014446m01012411011813553814',
+  //   amount: 30000,
+  //   coupon: { couponAmt: 0 },
+  //   cancelledAt: '2024-11-01T18:17:31.000+0900',
+  //   useEscrow: false,
+  //   approveNo: null,
+  //   messageSource: 'nicepay',
+  //   buyerName: null,
+  //   resultMsg: '정상 처리되었습니다.',
+  //   cancels: [
+  //     {
+  //       reason: '01:',
+  //       amount: 30000,
+  //       couponAmt: 0,
+  //       cancelledAt: '2024-11-01T18:17:31.000+0900',
+  //       receiptUrl: 'https://npg.nicepay.co.kr/issue/IssueLoader.do?type=0&innerWin=Y&TID=UT0014446m01012411011813553814',
+  //       tid: 'UT0014446m01012411011813553814'
+  //     }
+  //   ],
+  //   paidAt: '2024-11-01T18:13:57.000+0900',
+  //   receiptUrl: 'https://npg.nicepay.co.kr/issue/IssueLoader.do?type=0&innerWin=Y&TID=UT0014446m01012411011813553814',
+  //   card: {
+  //     cardNum: null,
+  //     cardName: '카카오머니',
+  //     isInterestFree: false,
+  //     canPartCancel: true,
+  //     acquCardCode: '40',
+  //     cardCode: '40',
+  //     cardQuota: 0,
+  //     cardType: 'credit',
+  //     acquCardName: '카카오머니'
+  //   },
+  //   status: 'cancelled'
+  // }
   const reservedInfo =
     mallReserved && mallReserved.startsWith("{")
       ? JSON.parse(mallReserved)
@@ -39,10 +93,13 @@ export async function POST(request: Request) {
     : [];
 
   if (resultCode === "0000" && status === "cancelled") {
+    //1730451403377321, 1730452398297070
     const updateResult = await updateCancleCart({
       orderId: orderId,
       stats: "결제취소",
     });
+    console.log("updateResult : ", updateResult);
+    console.log("orderId : ", orderId);
 
     if (!updateResult.success) {
       return new Response(updateResult.message, { status: 500 });
