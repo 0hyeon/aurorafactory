@@ -21,7 +21,20 @@ export default function PaySuccess() {
       const vbankNumber = query.get("vbankNumber") || "unknown";
       const vbank = query.get("vbank") || "unknown";
       const vbankExpDate = query.get("vbankExpDate") || "unknown";
-      setStatusData({ amount, status, vbankNumber, vbank, vbankExpDate });
+
+      const date = new Date(vbankExpDate);
+      const formattedDate = date.toLocaleDateString("ko-KR", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+      setStatusData({
+        amount,
+        status,
+        vbankNumber,
+        vbank,
+        vbankExpDate: formattedDate,
+      });
 
       // 서버에서 카트 데이터를 강제로 갱신하도록 호출
       revalidateCartCount();
@@ -48,7 +61,7 @@ export default function PaySuccess() {
         <div className="text-center text-xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
           <div>
             <div className="text-3xl mb-4">
-            가상계좌 입금 완료 문자를 발송하였습니다. (5분내로발송)
+              가상계좌 입금 완료 문자를 발송하였습니다. (5분내로발송)
             </div>
             <div className="text-2xl">
               <div>은행:{statusData.vbank}</div>
