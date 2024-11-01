@@ -79,7 +79,7 @@ export async function sendTwilioVbankSuccessMsg({
     from: process.env.TWILIO_PHONE_NUMBER!,
     to: formatPhoneNumberToE164(phone),
   });
-
+  console.log("message3 : ", message);
   return;
 }
 export async function sendTwilioCalcledMsg({
