@@ -59,11 +59,9 @@ export async function POST(request: NextRequest) {
         return new Response(updateResult.message, { status: 500 });
       }
 
-      await sendTwilioCalcledMsg({ goodsName, phone: buyerTel }).catch(
-        (error) => {
-          console.error("Twilio message send error:", error);
-        }
-      );
+      sendTwilioCalcledMsg({ goodsName, phone: buyerTel }).catch((error) => {
+        console.error("Twilio message send error:", error);
+      });
 
       return new Response("OK", { status: 200 });
     } else if (resultCode === "0000" && status === "") {
@@ -79,7 +77,7 @@ export async function POST(request: NextRequest) {
         return new Response(updateResult.message, { status: 500 });
       }
 
-      await sendTwilioVbankSuccessMsg({ goodsName, phone: phoneNumber }).catch(
+      sendTwilioVbankSuccessMsg({ goodsName, phone: phoneNumber }).catch(
         (error) => {
           console.error("Twilio message send error:", error);
         }
@@ -99,7 +97,7 @@ export async function POST(request: NextRequest) {
         return new Response(updateResult.message, { status: 500 });
       }
 
-      await sendTwilioVbankMsg({
+      sendTwilioVbankMsg({
         goodsName,
         bankName: vbank.vbankName,
         accountNum: vbank.vbankNumber,
@@ -124,7 +122,7 @@ export async function POST(request: NextRequest) {
         return new Response(updateResult.message, { status: 500 });
       }
 
-      await sendTwilioVbankSuccessMsg({ goodsName, phone: phoneNumber }).catch(
+      sendTwilioVbankSuccessMsg({ goodsName, phone: phoneNumber }).catch(
         (error) => {
           console.error("Twilio message send error:", error);
         }
