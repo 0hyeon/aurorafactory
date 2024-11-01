@@ -69,7 +69,7 @@ export async function sendTwilioVbankSuccessMsg({
   goodsName: string;
   phone: string | null;
 }) {
-  console.log("sendTwilioVbankSuccessMsg : ",goodsName, phone)
+  console.log("sendTwilioVbankSuccessMsg : ", goodsName, phone);
   const client = twilio(
     process.env.TWILIO_ACCOUNT_SID,
     process.env.TWILIO_AUTH_TOKEN
@@ -79,7 +79,25 @@ export async function sendTwilioVbankSuccessMsg({
     from: process.env.TWILIO_PHONE_NUMBER!,
     to: formatPhoneNumberToE164(phone),
   });
-  console.log("message : ",message)
+
+  return;
+}
+export async function sendTwilioCalcledMsg({
+  goodsName,
+  phone,
+}: {
+  goodsName: string;
+  phone: string | null;
+}) {
+  const client = twilio(
+    process.env.TWILIO_ACCOUNT_SID,
+    process.env.TWILIO_AUTH_TOKEN
+  );
+  const message = client.messages.create({
+    body: `오로라팩 ${goodsName} 주문이 최소되었습니다..`,
+    from: process.env.TWILIO_PHONE_NUMBER!,
+    to: formatPhoneNumberToE164(phone),
+  });
 
   return;
 }

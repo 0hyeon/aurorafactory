@@ -6,6 +6,7 @@ import {
   updateCart,
 } from "@/app/(home)/cart/actions";
 import {
+  sendTwilioCalcledMsg,
   sendTwilioVbankMsg,
   sendTwilioVbankSuccessMsg,
 } from "@/app/(home)/lostuser/services";
@@ -17,52 +18,6 @@ export async function POST(request: Request) {
   const bodyText = await request.text();
   const body = JSON.parse(bodyText);
   console.log("webhook : ", body);
-  // webhook :  {
-  //   mallReserved: '{"phoneNumber":"01041096590","cartIds":"86"}',
-  //   issuedCashReceipt: false,
-  //   buyerTel: null,
-  //   orderId: '1730451403377321',
-  //   signature: '86d7372648956354a3f0dbff8fa2d46f98bcfbefca31615468a61f84f7180b66',
-  //   cashReceipts: null,
-  //   buyerEmail: 'test@abc.com',
-  //   resultCode: '0000',
-  //   channel: 'pc',
-  //   tid: 'UT0014446m01012411011757473946',
-  //   balanceAmt: 30000,
-  //   failedAt: '0',
-  //   bank: null,
-  //   payMethod: 'kakaopay',
-  //   mallUserId: null,
-  //   cellphone: null,
-  //   ediDate: '2024-11-01T17:57:49.991+0900',
-  //   currency: 'KRW',
-  //   goodsName: '0.5T 라미봉투 10*10 (흰색)',
-  //   vbank: null,
-  //   cancelledTid: null,
-  //   amount: 30000,
-  //   coupon: { couponAmt: 0 },
-  //   cancelledAt: '0',
-  //   useEscrow: false,
-  //   approveNo: null,
-  //   messageSource: 'nicepay',
-  //   buyerName: null,
-  //   resultMsg: '정상 처리되었습니다.',
-  //   cancels: null,
-  //   paidAt: '2024-11-01T17:57:49.000+0900',
-  //   receiptUrl: 'https://npg.nicepay.co.kr/issue/IssueLoader.do?type=0&innerWin=Y&TID=UT0014446m01012411011757473946',
-  //   card: {
-  //     cardNum: null,
-  //     cardName: '카카오머니',
-  //     isInterestFree: false,
-  //     canPartCancel: true,
-  //     acquCardCode: '40',
-  //     cardCode: '40',
-  //     cardQuota: 0,
-  //     cardType: 'credit',
-  //     acquCardName: '카카오머니'
-  //   },
-  //   status: 'paid'
-  // }
   const {
     resultCode,
     tid,
@@ -88,9 +43,16 @@ export async function POST(request: Request) {
       orderId: orderId,
       stats: "결제취소",
     });
+
     if (!updateResult.success) {
       return new Response(updateResult.message, { status: 500 });
     }
+    sendTwilioCalcledMsg({
+      goodsName: goodsName,
+      phone: phoneNumber,
+    }).catch((error) => {
+      console.error("Twilio 메시지 전송 오류:", error);
+    });
     return new Response("OK", {
       status: 200,
       headers: { "Content-Type": "text/html" },
@@ -102,7 +64,6 @@ export async function POST(request: Request) {
       orderId: orderId,
       stats: "결제완료",
     });
-    console.log("updateCart2 : ", updateResult);
     if (!updateResult.success) {
       return new Response(updateResult.message, { status: 500 });
     }
@@ -121,7 +82,14 @@ export async function POST(request: Request) {
     });
   } else if (resultCode === "0000" && status === "ready") {
     // 가상계좌 발급 후 Twilio 메시지 전송 (입금 전 로직)
-
+    const updateResult = await updateCart({
+      cartIds: cartIds, // cartIds 배열 사용
+      orderId: orderId,
+      stats: "입금대기",
+    });
+    if (!updateResult.success) {
+      return new Response(updateResult.message, { status: 500 });
+    }
     // 독립적실행
     sendTwilioVbankMsg({
       goodsName: goodsName,
