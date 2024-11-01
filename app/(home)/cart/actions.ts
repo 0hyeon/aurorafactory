@@ -98,6 +98,7 @@ export async function updateCancleCart({ orderId, stats }: IupdateCartCancle) {
       },
       data: {
         orderstat: stats,
+        orderId: null,
       },
     });
 
