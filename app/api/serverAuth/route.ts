@@ -72,20 +72,20 @@ export async function POST(request: NextRequest) {
     // serverAuth2 :  {
     //   resultCode: '0000',
     //   resultMsg: '정상 처리되었습니다.',
-    //   tid: 'UT0014446m03012410242336006598',
+    //   tid: 'UT0014446m03012411011825303868',
     //   cancelledTid: null,
-    //   orderId: '1729780546854091',
-    //   ediDate: '2024-10-24T23:36:02.894+0900',
-    //   signature: 'd767b7895f58d3bc9c648e0de1829b2a27906e5278e461904f60543a17dc93cb',
+    //   orderId: '1730453121790320',
+    //   ediDate: '2024-11-01T18:25:32.218+0900',
+    //   signature: '795c41aa714eeb418cd65f89f7fae99d763e00d16ad939869de918bc0ef5b2ac',
     //   status: 'ready',
-    //   paidAt: '2024-10-24T23:36:02.000+0900',
+    //   paidAt: '2024-11-01T18:25:32.000+0900',
     //   failedAt: '0',
     //   cancelledAt: '0',
     //   payMethod: 'vbank',
     //   amount: 30000,
     //   balanceAmt: 30000,
     //   goodsName: '0.5T 라미봉투 10*10 (흰색)',
-    //   mallReserved: '{"phoneNumber":"01041096590","cartIds":"38"}',
+    //   mallReserved: '{"phoneNumber":"01041096590","cartIds":"87"}',
     //   useEscrow: false,
     //   currency: 'KRW',
     //   channel: 'pc',
@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
     //   buyerName: null,
     //   buyerTel: null,
     //   buyerEmail: 'test@abc.com',
-    //   receiptUrl: 'https://npg.nicepay.co.kr/issue/IssueLoader.do?type=0&innerWin=Y&TID=UT0014446m03012410242336006598',
+    //   receiptUrl: 'https://npg.nicepay.co.kr/issue/IssueLoader.do?type=0&innerWin=Y&TID=UT0014446m03012411011825303868',
     //   mallUserId: null,
     //   issuedCashReceipt: false,
     //   coupon: null,
@@ -101,8 +101,8 @@ export async function POST(request: NextRequest) {
     //   vbank: {
     //     vbankCode: '004',
     //     vbankName: '국민은행',
-    //     vbankNumber: '48809073080001',
-    //     vbankExpDate: '2024-10-31T23:59:59.000+0900',
+    //     vbankNumber: '48719073335878',
+    //     vbankExpDate: '2024-11-08T23:59:59.000+0900',
     //     vbankHolder: '김영현_NICE'
     //   },
     //   bank: null,
@@ -152,10 +152,10 @@ export async function POST(request: NextRequest) {
       const redirectUrl = `${redirectBaseUrl}/paysuccess?amount=${
         amount || 0
       }&status=${responseBody.status || "unknown"}&vbank=${
-        responseBody.vbank || "unknown"
-      }&vbankNumber=${responseBody.vbankNumber || "unknown"}&vbankExpDate=${
-        responseBody.vbankExpDate || "unknown"
-      }`;
+        responseBody.vbank.vbankName || "unknown"
+      }&vbankNumber=${
+        responseBody.vbank.vbankNumber || "unknown"
+      }&vbankExpDate=${responseBody.vbank.vbankExpDate || "unknown"}`;
 
       return NextResponse.redirect(redirectUrl);
     } else {
