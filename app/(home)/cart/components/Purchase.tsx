@@ -50,9 +50,7 @@ export default function Purchase({
     const orderId = generateNumericUniqueId();
 
     const finalPhoneNumber = method === "vbank" ? phoneNumber : phone;
-    console.log("finalPhoneNumber : ", finalPhoneNumber);
     const mallReserved = JSON.stringify({
-      phoneNumber: finalPhoneNumber,
       cartIds,
     });
 

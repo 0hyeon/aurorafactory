@@ -33,7 +33,6 @@ export async function POST(request: NextRequest) {
       mallReserved && mallReserved.startsWith("{")
         ? JSON.parse(mallReserved)
         : {};
-    const phoneNumber = reservedInfo.phoneNumber || "기본 값";
     const cartIds = reservedInfo.cartIds
       ? reservedInfo.cartIds.split("-").map(Number)
       : [];
@@ -44,7 +43,7 @@ export async function POST(request: NextRequest) {
       orderId,
       amount,
       cartIds,
-      phoneNumber,
+      buyerTel,
     }); // Parsed data logging
 
     if (resultCode === "0000" && status === "cancelled") {
@@ -77,7 +76,7 @@ export async function POST(request: NextRequest) {
         return new Response(updateResult.message, { status: 500 });
       }
 
-      sendTwilioVbankSuccessMsg({ goodsName, phone: phoneNumber }).catch(
+      sendTwilioVbankSuccessMsg({ goodsName, phone: buyerTel }).catch(
         (error) => {
           console.error("Twilio message send error:", error);
         }
@@ -102,7 +101,7 @@ export async function POST(request: NextRequest) {
         bankName: vbank.vbankName,
         accountNum: vbank.vbankNumber,
         dueDate: vbank.vbankExpDate,
-        phone: phoneNumber,
+        phone: buyerTel,
         price: amount,
       }).catch((error) => {
         console.error("Twilio message send error:", error);
@@ -122,7 +121,7 @@ export async function POST(request: NextRequest) {
         return new Response(updateResult.message, { status: 500 });
       }
 
-      sendTwilioVbankSuccessMsg({ goodsName, phone: phoneNumber }).catch(
+      sendTwilioVbankSuccessMsg({ goodsName, phone: buyerTel }).catch(
         (error) => {
           console.error("Twilio message send error:", error);
         }
