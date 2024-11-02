@@ -16,7 +16,6 @@ interface IupdateCart {
 }
 interface IupdateCartCancle {
   orderId: string;
-  stats: string;
 }
 
 export async function getSessionAurora() {
@@ -88,17 +87,13 @@ export async function updateCart({ cartIds, orderId, stats }: IupdateCart) {
     };
   }
 }
-export async function updateCancleCart({ orderId, stats }: IupdateCartCancle) {
+export async function updateCancleCart({ orderId }: IupdateCartCancle) {
   revalidateCartCount();
   console.log("updateCart : 발동");
   try {
-    await db.cart.updateMany({
+    await db.cart.deleteMany({
       where: {
         orderId: orderId,
-      },
-      data: {
-        orderstat: stats,
-        orderId: null,
       },
     });
 

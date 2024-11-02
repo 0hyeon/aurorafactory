@@ -50,7 +50,6 @@ export async function POST(request: NextRequest) {
     if (resultCode === "0000" && status === "cancelled") {
       const updateResult = await updateCancleCart({
         orderId: orderId,
-        stats: "결제취소",
       });
       console.log("Cancellation update result:", updateResult);
 
