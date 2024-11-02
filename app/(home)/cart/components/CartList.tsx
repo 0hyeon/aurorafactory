@@ -1,30 +1,38 @@
 "use client";
-import { Cart, productOption, Product, User } from "@prisma/client";
+import {
+  Cart,
+  productOption,
+  Product,
+  User,
+  productPicture,
+} from "@prisma/client";
 import { formatToWon } from "@/lib/utils";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Purchase from "./Purchase";
 import { delCart } from "../actions";
-import { IronSession } from "iron-session";
-import { SessionContent } from "@/lib/types";
 
+interface ProductWithPicture extends Product {
+  productPicture?: productPicture | null; // productPicture를 선택적으로 추가
+}
 interface ProductOptionWithProduct extends productOption {
-  product: Product & { photo: string | null };
+  product: ProductWithPicture & { photo: string | null };
 }
 export interface CartWithProductOption {
   id: number;
   quantity: number;
   option: ProductOptionWithProduct;
   basePrice: number;
-  totalPrice: number;
+  totalPriceWithoutDelivery: number; // 배송비 제외 가격 추가
+  totalPrice: number; // 배송비 포함 가격
 }
 
 interface CartListProps {
-  data: CartWithProductOption[];
+  data: any[];
   phone: string | null;
 }
 
-const calculateTotalPrice = (
+const calculateTotalPriceWithoutDelivery = (
   basePrice: number,
   discount: string | number | null,
   plusDiscount: string | number | null,
@@ -36,15 +44,21 @@ const calculateTotalPrice = (
   return discountedPrice * quantity * quantityInOption;
 };
 
-const dicountedPrice = ({ item }: { item: any }) => {
-  const plusDiscount = Number(item.option.plusdiscount);
-  const discountPercent = Number(item.option.product.discount);
-  const objdiscount = 1 - (plusDiscount + discountPercent) / 100;
-  return item.basePrice * objdiscount;
+const calculateTotalPrice = (
+  basePrice: number,
+  discount: string | number | null,
+  plusDiscount: string | number | null,
+  quantity: number,
+  quantityInOption: number,
+  deliverPrice: number
+) => {
+  const finalDiscount = (Number(discount) || 0) + (Number(plusDiscount) || 0);
+  const discountedPrice = basePrice * (1 - finalDiscount / 100);
+  return discountedPrice * quantity * quantityInOption + deliverPrice;
 };
 
 export default function CartList({ data, phone }: CartListProps) {
-  console.log("CartList phone : ", phone);
+  console.log(data);
   const [paymentMethod, setPaymentMethod] = useState<string>("");
   const [vbankHolder, setVbankHolder] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
@@ -56,6 +70,33 @@ export default function CartList({ data, phone }: CartListProps) {
     setPurchaseData(data);
   }, [data]);
 
+  const [cart, setCart] = useState<CartWithProductOption[]>(() =>
+    data.map((item) => ({
+      ...item,
+      totalPriceWithoutDelivery: calculateTotalPriceWithoutDelivery(
+        item.basePrice,
+        item.option.product.discount,
+        item.option.plusdiscount,
+        item.quantity,
+        item.option.quantity
+      ),
+      totalPrice: calculateTotalPrice(
+        item.basePrice,
+        item.option.product.discount,
+        item.option.plusdiscount,
+        item.quantity,
+        item.option.quantity,
+        item.option.product.deliver_price
+      ),
+    }))
+  );
+  const isPurchaseDisabled = () => {
+    if (paymentMethod === "vbank") {
+      return !vbankHolder || !phoneNumber || !isPhoneNumberValid(phoneNumber);
+    }
+    return !paymentMethod;
+  };
+
   const handlePaymentMethodChange = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
@@ -63,39 +104,6 @@ export default function CartList({ data, phone }: CartListProps) {
     if (event.target.value !== "vbank") {
       setVbankHolder(""); // 가상계좌가 아닐 경우 사용자명 초기화
     }
-  };
-
-  const [cart, setCart] = useState<CartWithProductOption[]>(() =>
-    data.map((item) => ({
-      ...item,
-      totalPrice: calculateTotalPrice(
-        item.basePrice,
-        item.option.product.discount,
-        item.option.plusdiscount,
-        item.quantity,
-        item.option.quantity
-      ),
-    }))
-  );
-
-  const handleQuantityChange = (id: number, delta: number) => {
-    setCart((prevCart) =>
-      prevCart.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              quantity: item.quantity + delta,
-              totalPrice: calculateTotalPrice(
-                item.basePrice,
-                item.option.product.discount,
-                item.option.plusdiscount,
-                item.quantity + delta,
-                item.option.quantity
-              ),
-            }
-          : item
-      )
-    );
   };
 
   const handleRemoveItem = async (id: number) => {
@@ -115,25 +123,54 @@ export default function CartList({ data, phone }: CartListProps) {
     return phoneRegex.test(number);
   };
 
-  // 구매 버튼 비활성화 조건
-  const isPurchaseDisabled = () => {
-    if (paymentMethod === "vbank") {
-      return !vbankHolder || !phoneNumber || !isPhoneNumberValid(phoneNumber);
-    }
-    return !paymentMethod;
+  const handleQuantityChange = (id: number, delta: number) => {
+    setCart((prevCart) =>
+      prevCart.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              quantity: item.quantity + delta,
+              totalPriceWithoutDelivery: calculateTotalPriceWithoutDelivery(
+                item.basePrice,
+                item.option.product.discount,
+                item.option.plusdiscount,
+                item.quantity + delta,
+                item.option.quantity
+              ),
+              totalPrice: calculateTotalPrice(
+                item.basePrice,
+                item.option.product.discount,
+                item.option.plusdiscount,
+                item.quantity + delta,
+                item.option.quantity,
+                item.option.product.deliver_price
+              ),
+            }
+          : item
+      )
+    );
   };
-  const totalPrice = cart.reduce((acc, item) => acc + item.totalPrice, 0);
-  console.log("totalPrice : ", totalPrice);
+
+  const totalDeliveryPrice = cart.reduce(
+    (acc, item) => acc + item.option.product.deliver_price,
+    0
+  );
+  const totalPriceWithoutDelivery = cart.reduce(
+    (acc, item) => acc + item.totalPriceWithoutDelivery,
+    0
+  );
+  const totalPrice = totalPriceWithoutDelivery + totalDeliveryPrice;
+
   return (
     <div className="flex flex-col gap-8 max-w-[1100px] mx-auto">
       {data.length !== 0 ? (
         <>
           {cart.map((item) => (
             <div className="flex" key={item.id}>
-              <div className="relative block w-56 h-56 flex-grow-0">
+              <div className="relative block w-56 h-56 flex-grow-0 mr-6">
                 {item.option.product.photo && (
                   <Image
-                    src={`${item.option.product.photo}/public`}
+                    src={`${item.option.product.productPicture?.photo}/public`}
                     alt={item.option.product.photo}
                     fill
                     style={{ objectFit: "contain" }}
@@ -145,21 +182,30 @@ export default function CartList({ data, phone }: CartListProps) {
                   <div className="flex flex-row justify-between w-full">
                     <div className="flex gap-12">
                       <div>
-                        <div className="font-bold text-lg">
+                        <div className="font-bold text-lg mb-4">
                           상품명: {item.option.product.title}
                         </div>
                         <div className="flex">
-                          가격:
-                          <span className="flex gap-2">
-                            <span className="line-through">
+                          개당가격:
+                          <span className="flex gap-2 items-center">
+                            <span className="line-through text-lg">
                               {formatToWon(item.option.product.price)}
                             </span>
-                            {formatToWon(dicountedPrice({ item }))}원
+                            <span className="font-bold text-lg">
+                              {formatToWon(
+                                item.option.product.price -
+                                  Number(item.option.product.discount)
+                              )}
+                              원
+                            </span>
                           </span>
                         </div>
+                        <div>옵션수량: {item.option.quantity}</div>
                         <div>색상: {item.option.color}</div>
                         <div>구매수량: {item.quantity}</div>
-                        <div>옵션수량: {item.option.quantity}</div>
+                        <div className="my-4 font-bold text-lg">
+                          가격: {formatToWon(item.totalPrice)}원
+                        </div>
                       </div>
                     </div>
                     <div className="flex items-center justify-center px-10 gap-12">
@@ -171,7 +217,7 @@ export default function CartList({ data, phone }: CartListProps) {
                         >
                           -
                         </button>
-                        <span className="mx-4">{item.quantity}</span>
+                        <span className="mx-4 font-bold">{item.quantity}</span>
                         <button
                           className="px-4 py-2 border border-gray-300"
                           onClick={() => handleQuantityChange(item.id, 1)}
@@ -180,11 +226,12 @@ export default function CartList({ data, phone }: CartListProps) {
                         </button>
                       </div>
                       <div className="flex items-center">
-                        가격: {formatToWon(item.totalPrice)}원
+                        배송비: {formatToWon(item.option.product.deliver_price)}
+                        원
                       </div>
                       <div>
                         <button
-                          className="px-4 py-2  border border-gray-300 bg-black text-white"
+                          className="px-4 py-2 border border-gray-300 bg-black text-white"
                           onClick={() => handleRemoveItem(item.id)}
                         >
                           X
@@ -196,11 +243,10 @@ export default function CartList({ data, phone }: CartListProps) {
               </div>
             </div>
           ))}
-          {/* 결제 방법 선택 드롭다운 추가 */}
-          <div className=" flex items-center justify-between">
+          <div className="flex items-center justify-between">
             <div className="">
               <div className="my-12 flex flex-col">
-                <label className=" text-lg font-bold mb-2">
+                <label className="text-lg font-bold mb-2">
                   결제 방법을 선택하세요:
                 </label>
                 <select
@@ -219,7 +265,6 @@ export default function CartList({ data, phone }: CartListProps) {
                 </select>
               </div>
               {paymentMethod === "vbank" && (
-                //입금자명 입력필드
                 <div className="mt-4">
                   <label className="text-lg font-bold mb-2">입금자명:</label>
                   <input
@@ -230,7 +275,6 @@ export default function CartList({ data, phone }: CartListProps) {
                     maxLength={40}
                     placeholder="입금자성명"
                   />
-                  {/* 핸드폰 번호 입력 필드 */}
                   <label className="text-lg font-bold mb-2">핸드폰 번호:</label>
                   <input
                     type="tel"
@@ -244,30 +288,32 @@ export default function CartList({ data, phone }: CartListProps) {
               )}
             </div>
 
-            <div className="total-price text-2xl font-semibold">
-              총 가격: {formatToWon(totalPrice)}원
+            <div>
+              <div className="my-2 text-lg">
+                <div className="flex ">
+                  상품가격: {formatToWon(totalPriceWithoutDelivery)}원
+                </div>
+                <div>배송비: {formatToWon(totalDeliveryPrice)}원</div>
+              </div>
+              <div className="total-price text-2xl font-semibold">
+                총 가격: {formatToWon(totalPrice)}원
+              </div>
             </div>
           </div>
-          {/* 가상계좌 선택 시 사용자명 입력 필드 추가 */}
           <Purchase
             data={purchaseData}
             method={paymentMethod}
-            vbankHolder={vbankHolder} // 사용자명 전달
+            vbankHolder={vbankHolder}
             totalPrice={totalPrice}
             phone={phone}
-            // disabled={
-            //   !paymentMethod || (paymentMethod === "vbank" && !vbankHolder)
-            // } // 필수 입력 체크
-            phoneNumber={phoneNumber} // 핸드폰 번호 전달
-            disabled={isPurchaseDisabled()} // 필수 입력 체크 및 유효성 검사 추가
+            phoneNumber={phoneNumber}
+            disabled={isPurchaseDisabled()}
           />
         </>
       ) : (
-        <>
-          <div className="text-center text-xl text-gray-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-            장바구니가 비었습니다.
-          </div>
-        </>
+        <div className="text-center text-xl text-gray-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+          장바구니가 비었습니다.
+        </div>
       )}
     </div>
   );

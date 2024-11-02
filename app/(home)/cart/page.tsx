@@ -39,7 +39,13 @@ export default async function CartPage() {
     cartData.map(async (el: Cart): Promise<CartWithProductOption | null> => {
       const productOption = await db.productOption.findUnique({
         where: { id: el.productOptionId },
-        include: { product: true },
+        include: {
+          product: {
+            include: {
+              productPicture: true,
+            },
+          },
+        },
       });
 
       if (!productOption) return null;

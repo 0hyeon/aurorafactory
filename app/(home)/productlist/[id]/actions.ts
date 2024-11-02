@@ -11,6 +11,7 @@ export async function getProductCategory({ category }: { category: string }) {
       },
     },
     include: {
+      productoption: true,
       productPicture: {
         select: {
           category: true,
