@@ -21,7 +21,7 @@ export async function sendTwilioMesage({
     process.env.TWILIO_ACCOUNT_SID,
     process.env.TWILIO_AUTH_TOKEN
   );
-  client.messages.create({
+  await client.messages.create({
     body: `인증번호를 입력해주세요.  ${tokenNumber}`,
     from: process.env.TWILIO_PHONE_NUMBER!,
     to: formatPhoneNumberToE164(phone),
@@ -54,7 +54,7 @@ export async function sendTwilioVbankMsg({
     process.env.TWILIO_ACCOUNT_SID,
     process.env.TWILIO_AUTH_TOKEN
   );
-  client.messages.create({
+  await client.messages.create({
     body: `${goodsName} ${bankName} ${accountNum} ${formattedDate}까지 ${price}원`,
     from: process.env.TWILIO_PHONE_NUMBER!,
     to: formatPhoneNumberToE164(phone),
@@ -74,12 +74,11 @@ export async function sendTwilioVbankSuccessMsg({
     process.env.TWILIO_ACCOUNT_SID,
     process.env.TWILIO_AUTH_TOKEN
   );
-  const message = client.messages.create({
+  await client.messages.create({
     body: `오로라팩 ${goodsName} 주문이 완료되었습니다. 감사합니다.`,
     from: process.env.TWILIO_PHONE_NUMBER!,
     to: formatPhoneNumberToE164(phone),
   });
-  console.log("message3 : ", message);
   return;
 }
 export async function sendTwilioCalcledMsg({
@@ -93,7 +92,7 @@ export async function sendTwilioCalcledMsg({
     process.env.TWILIO_ACCOUNT_SID,
     process.env.TWILIO_AUTH_TOKEN
   );
-  const message = client.messages.create({
+  await client.messages.create({
     body: `오로라팩 ${goodsName} 주문이 최소되었습니다.`,
     from: process.env.TWILIO_PHONE_NUMBER!,
     to: formatPhoneNumberToE164(phone),
