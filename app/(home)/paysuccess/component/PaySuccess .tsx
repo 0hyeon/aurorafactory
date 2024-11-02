@@ -77,6 +77,7 @@ export default function PaySuccess() {
             </div>
             <div className="text-2xl">
               <div>은행:{statusData.vbank}</div>
+              <div>입금금액:{statusData.amount}원</div>
               <div>계좌번호:{statusData.vbankNumber}</div>
               <div>입금기한:{statusData.vbankExpDate} 까지</div>
             </div>
