@@ -38,6 +38,7 @@ export async function POST(request: NextRequest) {
       : [];
 
     console.log("Parsed data:", {
+      goodsName,
       resultCode,
       status,
       orderId,
@@ -45,52 +46,6 @@ export async function POST(request: NextRequest) {
       cartIds,
       buyerTel,
     }); // Parsed data logging
-    // Webhook received: {
-    //   mallReserved: '{"cartIds":"96"}',
-    //   issuedCashReceipt: false,
-    //   buyerTel: '01041096590',
-    //   orderId: '1730507923005247',
-    //   signature: '6c2c43098df4e0a04d0ad839b541eb193931ac7d4969420e37ab86c05efc241e',
-    //   cashReceipts: null,
-    //   buyerEmail: 'test@abc.com',
-    //   resultCode: '0000',
-    //   channel: 'pc',
-    //   tid: 'UT0014446m01012411020940196498',
-    //   balanceAmt: 30000,
-    //   failedAt: '0',
-    //   bank: null,
-    //   payMethod: 'kakaopay',
-    //   mallUserId: null,
-    //   cellphone: null,
-    //   ediDate: '2024-11-02T09:40:21.313+0900',
-    //   currency: 'KRW',
-    //   goodsName: '0.5T 라미봉투 10*10 (흰색)',
-    //   vbank: null,
-    //   cancelledTid: null,
-    //   amount: 30000,
-    //   coupon: { couponAmt: 0 },
-    //   cancelledAt: '0',
-    //   useEscrow: false,
-    //   approveNo: null,
-    //   messageSource: 'nicepay',
-    //   buyerName: null,
-    //   resultMsg: '정상 처리되었습니다.',
-    //   cancels: null,
-    //   paidAt: '2024-11-02T09:40:21.000+0900',
-    //   receiptUrl: 'https://npg.nicepay.co.kr/issue/IssueLoader.do?type=0&innerWin=Y&TID=UT0014446m01012411020940196498',
-    //   card: {
-    //     cardNum: null,
-    //     cardName: '카카오머니',
-    //     isInterestFree: false,
-    //     canPartCancel: true,
-    //     acquCardCode: '40',
-    //     cardCode: '40',
-    //     cardQuota: 0,
-    //     cardType: 'credit',
-    //     acquCardName: '카카오머니'
-    //   },
-    //   status: 'paid'
-    // }
 
     if (resultCode === "0000" && status === "cancelled") {
       const updateResult = await updateCancleCart({
