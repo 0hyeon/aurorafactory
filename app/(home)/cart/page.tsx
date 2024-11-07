@@ -90,5 +90,11 @@ export default async function CartPage() {
     (item): item is CartWithProductOption => item !== null
   );
 
-  return <CartList data={validCartItems} phone={session.phone} />;
+  return (
+    <CartList
+      data={validCartItems}
+      phone={session.phone}
+      address={session.address}
+    />
+  );
 }

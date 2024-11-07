@@ -20,6 +20,7 @@ export const signIn = async (data: any) => {
   const session = await getSession(cookieStore);
   session.id = user.id;
   session.phone = user.phone;
+  session.address = user.address! + user.detailaddress!;
   await session.save();
 
   redirect("/");

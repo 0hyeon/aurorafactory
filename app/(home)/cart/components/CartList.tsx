@@ -30,6 +30,7 @@ export interface CartWithProductOption {
 interface CartListProps {
   data: any[];
   phone: string | null;
+  address: string;
 }
 
 const calculateTotalPriceWithoutDelivery = (
@@ -57,11 +58,13 @@ const calculateTotalPrice = (
   return discountedPrice * quantity * quantityInOption + deliverPrice;
 };
 
-export default function CartList({ data, phone }: CartListProps) {
-  console.log(data);
+export default function CartList({ data, phone, address }: CartListProps) {
+  console.log("address : ", address);
   const [paymentMethod, setPaymentMethod] = useState<string>("");
   const [vbankHolder, setVbankHolder] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [selectedAddress, setSelectedAddress] = useState<string>("existing"); // New state for address selection
+  const [newAddress, setNewAddress] = useState<string>(""); // New state for entering new address
 
   const [purchaseData, setPurchaseData] =
     useState<CartWithProductOption[]>(data);
@@ -90,11 +93,19 @@ export default function CartList({ data, phone }: CartListProps) {
       ),
     }))
   );
+
   const isPurchaseDisabled = () => {
+    const addressValid =
+      selectedAddress === "new" ? newAddress : selectedAddress === "existing";
     if (paymentMethod === "vbank") {
-      return !vbankHolder || !phoneNumber || !isPhoneNumberValid(phoneNumber);
+      return (
+        !vbankHolder ||
+        !phoneNumber ||
+        !isPhoneNumberValid(phoneNumber) ||
+        !addressValid
+      );
     }
-    return !paymentMethod;
+    return !paymentMethod || !addressValid;
   };
 
   const handlePaymentMethodChange = (
@@ -102,7 +113,7 @@ export default function CartList({ data, phone }: CartListProps) {
   ) => {
     setPaymentMethod(event.target.value);
     if (event.target.value !== "vbank") {
-      setVbankHolder(""); // 가상계좌가 아닐 경우 사용자명 초기화
+      setVbankHolder(""); // Reset holder name if not using virtual bank
     }
   };
 
@@ -167,80 +178,7 @@ export default function CartList({ data, phone }: CartListProps) {
         <>
           {cart.map((item) => (
             <div className="flex" key={item.id}>
-              <div className="relative block w-56 h-56 flex-grow-0 mr-6">
-                {item.option.product.photo && (
-                  <Image
-                    src={`${item.option.product.productPicture?.photo}/public`}
-                    alt={item.option.product.photo}
-                    fill
-                    style={{ objectFit: "contain" }}
-                  />
-                )}
-              </div>
-              <div className="border-b border-b-gray-500 flex-grow">
-                <div className="flex flex-col items-start justify-around h-full pl-3">
-                  <div className="flex flex-row justify-between w-full">
-                    <div className="flex gap-12">
-                      <div>
-                        <div className="font-bold text-lg mb-4">
-                          상품명: {item.option.product.title}
-                        </div>
-                        <div className="flex">
-                          개당가격:
-                          <span className="flex gap-2 items-center">
-                            <span className="line-through text-lg">
-                              {formatToWon(item.option.product.price)}
-                            </span>
-                            <span className="font-bold text-lg">
-                              {formatToWon(
-                                item.option.product.price -
-                                  Number(item.option.product.discount)
-                              )}
-                              원
-                            </span>
-                          </span>
-                        </div>
-                        <div>옵션수량: {item.option.quantity}</div>
-                        <div>색상: {item.option.color}</div>
-                        <div>구매수량: {item.quantity}</div>
-                        <div className="my-4 font-bold text-lg">
-                          가격: {formatToWon(item.totalPrice)}원
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-center px-10 gap-12">
-                      <div className="flex items-center">
-                        <button
-                          className="px-4 py-2 border border-gray-300"
-                          onClick={() => handleQuantityChange(item.id, -1)}
-                          disabled={item.quantity <= 1}
-                        >
-                          -
-                        </button>
-                        <span className="mx-4 font-bold">{item.quantity}</span>
-                        <button
-                          className="px-4 py-2 border border-gray-300"
-                          onClick={() => handleQuantityChange(item.id, 1)}
-                        >
-                          +
-                        </button>
-                      </div>
-                      <div className="flex items-center">
-                        배송비: {formatToWon(item.option.product.deliver_price)}
-                        원
-                      </div>
-                      <div>
-                        <button
-                          className="px-4 py-2 border border-gray-300 bg-black text-white"
-                          onClick={() => handleRemoveItem(item.id)}
-                        >
-                          X
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              {/* Product information and remove button */}
             </div>
           ))}
           <div className="flex items-center justify-between">
@@ -286,19 +224,53 @@ export default function CartList({ data, phone }: CartListProps) {
                   />
                 </div>
               )}
+              <div className="my-4">
+                <label className="text-lg font-bold mb-2">
+                  배송 주소 선택:
+                </label>
+                <div className="flex gap-4">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="address"
+                      value="existing"
+                      checked={selectedAddress === "existing"}
+                      onChange={() => setSelectedAddress("existing")}
+                    />
+                    기존 배송주소 사용
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="address"
+                      value="new"
+                      checked={selectedAddress === "new"}
+                      onChange={() => setSelectedAddress("new")}
+                    />
+                    새로운 배송주소 입력
+                  </label>
+                </div>
+                {selectedAddress === "new" ? (
+                  <input
+                    type="text"
+                    value={newAddress}
+                    onChange={(e) => setNewAddress(e.target.value)}
+                    className="p-2 border border-gray-300 rounded w-full mt-4"
+                    placeholder="새로운 배송 주소를 입력하세요"
+                  />
+                ) : (
+                  <input
+                    type="text"
+                    value={address || ""}
+                    readOnly
+                    onChange={(e) => setNewAddress(e.target.value)}
+                    className="p-2 border border-gray-300 rounded w-full mt-4"
+                  />
+                )}
+              </div>
             </div>
 
-            <div>
-              <div className="my-2 text-lg">
-                <div className="flex ">
-                  상품가격: {formatToWon(totalPriceWithoutDelivery)}원
-                </div>
-                <div>배송비: {formatToWon(totalDeliveryPrice)}원</div>
-              </div>
-              <div className="total-price text-2xl font-semibold">
-                총 가격: {formatToWon(totalPrice)}원
-              </div>
-            </div>
+            <div>{/* Price summary */}</div>
           </div>
           <Purchase
             data={purchaseData}

@@ -4,6 +4,8 @@ export type SessionContent = {
   id?: number;
   user_id?: number;
   phone: string | null;
+  address: string;
+  detailaddress: string;
 };
 
 export type SessionUser = {

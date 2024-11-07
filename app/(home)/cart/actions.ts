@@ -28,6 +28,7 @@ export async function getSessionAurora() {
   return {
     id: session.id, // 필요한 정보만 추출
     phone: session.phone,
+    address: session.address,
   };
 }
 
