@@ -37,3 +37,15 @@ export interface Istate {
     formErrors?: any;
   };
 }
+
+export interface IstateAddress {
+  error?: {
+    fieldErrors: {
+      address: string[];
+      postaddress: string[];
+      detailaddress: string[];
+    };
+    formErrors?: any;
+  };
+}
+

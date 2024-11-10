@@ -1,16 +1,16 @@
 import Script from "next/script";
-import { CartWithProductOption } from "./CartList";
 import { cookies } from "next/headers";
 import { IronSession } from "iron-session";
 import { SessionContent } from "@/lib/types";
 
 interface PurchaseProps {
-  data: CartWithProductOption[];
+  data: any[];
   method: string;
   vbankHolder: string; // 가상계좌 사용자명 추가
   disabled: boolean;
   phoneNumber: string;
   totalPrice: number;
+  address : string
   phone: string | null;
 }
 
@@ -21,6 +21,7 @@ export default function Purchase({
   disabled,
   phoneNumber,
   totalPrice,
+  address,
   phone,
 }: PurchaseProps) {
   // 주문 ID 생성 함수

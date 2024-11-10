@@ -110,7 +110,6 @@ export default function LogIn() {
 
   return (
     <div className="flex flex-col gap-10 py-8 px-6 max-w-[600px] mx-auto mt-20 border-[1px] border-black rounded-md">
-      <Script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js" />
       <div className="flex flex-col gap-2 font-medium">
         <h1 className="text-2xl">안녕하세요!</h1>
         <h2 className="text-xl">
