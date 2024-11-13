@@ -13,6 +13,9 @@ interface IupdateCart {
   cartIds: number[];
   orderId: string;
   stats: string;
+  name?: string;
+  phone?: string;
+  address?: string;
 }
 interface IupdateCartCancle {
   orderId: string;
@@ -59,10 +62,8 @@ export const getCachedCart = nextCache(
   }
 );
 
-export async function updateCart({ cartIds, orderId, stats }: IupdateCart) {
+export async function updateCart({ cartIds, orderId, stats,name, phone, address }: IupdateCart) {
   revalidateCartCount();
-  console.log("updateCart : 발동");
-  console.log(cartIds, orderId);
   try {
     await db.cart.updateMany({
       where: {
@@ -71,6 +72,9 @@ export async function updateCart({ cartIds, orderId, stats }: IupdateCart) {
       data: {
         orderstat: stats,
         orderId: orderId,
+        name: name,
+        phone: phone,
+        address: address,
       },
     });
 

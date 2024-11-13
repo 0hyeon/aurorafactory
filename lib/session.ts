@@ -43,7 +43,7 @@ export const saveLoginSession = async (session: any, user: SessionContent) => {
   // const session = await getSession();
   session.id = user.user_id ?? user.id;
   session.phone = user.phone ?? user.phone;
-  session.address = user.address + user.detailaddress;
+  session.address = user.address + '/' + user.detailaddress;
   await session.save(); // 정보 암호화 후 쿠키에 저장
   // SMS 로그인이라면, 인증토큰 삭제
   user.user_id && (await db.sMSToken.delete({ where: { id: user.id } }));
