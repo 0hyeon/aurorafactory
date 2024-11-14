@@ -27,11 +27,11 @@ export async function getSessionAurora() {
     cookieName: "delicious-aurorafac",
     password: process.env.COOKIE_PASSWORD!,
   });
-  console.log("getSessionAurora : ", session);
   return {
-    id: session.id, // 필요한 정보만 추출
+    id: session.id,
     phone: session.phone,
     address: session.address,
+    username: session.username,
   };
 }
 
@@ -42,7 +42,6 @@ export async function getSessionFromCookies() {
 
 // Define the function to get cart data
 async function fetchCartData(userId: string): Promise<Cart[]> {
-  console.log("fetchCartData : 실행", userId);
   return await db.cart.findMany({
     where: {
       userId: Number(userId),
@@ -62,7 +61,14 @@ export const getCachedCart = nextCache(
   }
 );
 
-export async function updateCart({ cartIds, orderId, stats,name, phone, address }: IupdateCart) {
+export async function updateCart({
+  cartIds,
+  orderId,
+  stats,
+  name,
+  phone,
+  address,
+}: IupdateCart) {
   revalidateCartCount();
   try {
     await db.cart.updateMany({

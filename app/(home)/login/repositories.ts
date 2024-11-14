@@ -9,6 +9,7 @@ export const getUserWithEmail = async (email: string) => {
       phone: true,
       address: true,
       detailaddress: true,
+      username: true,
     },
   });
   console.log(result);

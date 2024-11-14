@@ -39,11 +39,12 @@ export const getUserProfile = async (session: any) => {
 
 // // 로그인 - 사용자 정보를 암호화 후 쿠키에 저장
 export const saveLoginSession = async (session: any, user: SessionContent) => {
-  console.log("session : ", session);
+  console.log("user : ", user);
   // const session = await getSession();
   session.id = user.user_id ?? user.id;
   session.phone = user.phone ?? user.phone;
-  session.address = user.address + '/' + user.detailaddress;
+  session.address = user.address + "/" + user.detailaddress;
+  session.username = user.username;
   await session.save(); // 정보 암호화 후 쿠키에 저장
   // SMS 로그인이라면, 인증토큰 삭제
   user.user_id && (await db.sMSToken.delete({ where: { id: user.id } }));

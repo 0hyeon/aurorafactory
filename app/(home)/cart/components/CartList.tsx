@@ -5,12 +5,13 @@ import Purchase from "./Purchase";
 import { delCart } from "../actions";
 import AddressSearch from "@/components/address";
 import { formatToWon } from "@/lib/utils";
-import { OptionSchemaAddress } from "../schema";
+import { OptionSchemaAddress, OptionSchemaUser } from "../schema";
 
 interface CartListProps {
   data: any[];
   phone: string | null;
   address: string;
+  username: string;
 }
 
 interface AddressData {
@@ -42,18 +43,29 @@ const calculateTotalPrice = (
   return discountedPrice * quantity * quantityInOption + deliverPrice;
 };
 
-export default function CartList({ data, phone, address }: CartListProps) {
+export default function CartList({
+  data,
+  phone,
+  address,
+  username,
+}: CartListProps) {
+  console.log(data, phone, address, username);
   const [paymentMethod, setPaymentMethod] = useState<string>("");
   const [vbankHolder, setVbankHolder] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [selectedAddress, setSelectedAddress] = useState<string>("existing");
+  const [selectedUser, setSelectedUser] = useState<string>("existing");
+  const [newUsername, setNewUsername] = useState<string>("");
+  const [newPhone, setNewPhone] = useState<string>("");
   const [newAddress, setNewAddress] = useState<string>("");
   const [addressData, setAddressData] = useState<AddressData>({
     address: "",
     postaddress: "",
     detailaddress: "",
   });
-  const [state, setState] = useState<ValidationState>({ error: { fieldErrors: {} } });
+  const [state, setState] = useState<ValidationState>({
+    error: { fieldErrors: {} },
+  });
   const [cart, setCart] = useState<any[]>([]);
 
   useEffect(() => {
@@ -87,6 +99,18 @@ export default function CartList({ data, phone, address }: CartListProps) {
       });
     }
   }, [selectedAddress, addressData]);
+
+  useEffect(() => {
+    if (selectedUser === "new") {
+      const userValidationResult = OptionSchemaUser.safeParse({
+        username: newUsername,
+        phone: newPhone,
+      });
+      if (!userValidationResult.success) {
+        console.log(userValidationResult.error.format());
+      }
+    }
+  }, [selectedUser, newUsername, newPhone]);
 
   const isPhoneNumberValid = (number: string) => /^010\d{8}$/.test(number);
 
@@ -126,12 +150,18 @@ export default function CartList({ data, phone, address }: CartListProps) {
         addressData.address &&
         addressData.postaddress &&
         addressData.detailaddress);
+
     const paymentValid =
       paymentMethod &&
       (paymentMethod === "vbank"
         ? vbankHolder && phoneNumber && isPhoneNumberValid(phoneNumber)
         : true);
-    return !(addressValid && paymentValid);
+
+    const userValid =
+      selectedUser === "existing" ||
+      (selectedUser === "new" && newUsername && isPhoneNumberValid(newPhone));
+
+    return !(addressValid && paymentValid && userValid);
   };
 
   const totalDeliveryPrice = cart.reduce(
@@ -139,7 +169,8 @@ export default function CartList({ data, phone, address }: CartListProps) {
     0
   );
   const totalPriceWithoutDelivery = cart.reduce(
-    (acc, item) => acc + item.totalPrice - (item.option.product.deliver_price || 0),
+    (acc, item) =>
+      acc + item.totalPrice - (item.option.product.deliver_price || 0),
     0
   );
   const totalPrice = totalPriceWithoutDelivery + totalDeliveryPrice;
@@ -168,112 +199,233 @@ export default function CartList({ data, phone, address }: CartListProps) {
                 )}
               </div>
               <div className="border-b border-b-gray-500 flex-grow pl-3">
-                <div className="font-bold text-lg mb-4">{item.option.product.title}</div>
-                <div className="flex">개당가격: {formatToWon(item.basePrice)}원</div>
-                <div>구매수량: {item.quantity}</div>
-                <div>가격: {formatToWon(item.totalPrice)}원</div>
-                <button
-                  className="px-4 py-2 border border-gray-300 bg-black text-white"
-                  onClick={() => handleRemoveItem(item.id)}
-                >
-                  X
-                </button>
+                <div className="flex items-center justify-between pr-[5%]">
+                  <div>
+                    <div className="font-bold text-lg mb-[15%]">
+                      {item.option.product.title}
+                    </div>
+                    <div>개당가격: {formatToWon(item.basePrice)}원</div>
+                    <div>
+                      구매수량:
+                      {formatToWon(item.quantity * item.option.quantity)}장
+                    </div>
+                    <div>
+                      가격:
+                      {formatToWon(
+                        item.quantity * item.basePrice * item.option.quantity
+                      )}
+                      원
+                    </div>
+
+                    <div>
+                      배송비:{formatToWon(item.option.product.deliver_price)}
+                    </div>
+                    <div className="font-bold mt-5">
+                      상품가격: {formatToWon(item.totalPrice)}원
+                    </div>
+                  </div>
+                  <div>
+                    <button
+                      className="px-3 py-1 border border-gray-300 bg-black text-white"
+                      onClick={() => handleRemoveItem(item.id)}
+                    >
+                      X
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           ))}
           <div className="flex gap-10">
             <div className="my-4 w-1/2">
-            <div>
-              <label className="text-lg font-bold mb-2">
-                결제 방법을 선택하세요:
-              </label>
-              <select
-                value={paymentMethod}
-                onChange={handlePaymentMethodChange}
-                className="p-2 border border-gray-300 rounded w-full"
-              >
-                <option value="">선택하세요</option>
-                <option value="cardAndEasyPay">
-                  신용카드 (카카오페이/네이버페이/삼성페이)
-                </option>
-                <option value="vbank">가상계좌</option>
-                <option value="bank">계좌이체</option>
-                <option value="cellphone">휴대폰결제</option>
-                <option value="payco">PAYCO</option>
-              </select>
-            </div>
-            {paymentMethod === "vbank" && (
-              <div className="mt-4">
-                <label className="text-lg font-bold mb-2">입금자명:</label>
-                <input
-                  type="text"
-                  value={vbankHolder}
-                  onChange={(e) => setVbankHolder(e.target.value)}
-                  className="p-2 border border-gray-300 rounded w-full mb-10"
-                  maxLength={40}
-                  placeholder="입금자성명"
-                />
-                <label className="text-lg font-bold mb-2">핸드폰 번호:</label>
-                <input
-                  type="tel"
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
+              <div>
+                <label className="text-lg font-bold mb-2">
+                  결제 방법을 선택하세요:
+                </label>
+                <select
+                  value={paymentMethod}
+                  onChange={handlePaymentMethodChange}
                   className="p-2 border border-gray-300 rounded w-full"
-                  maxLength={11}
-                  placeholder="01012345678"
-                />
+                >
+                  <option value="">선택하세요</option>
+                  <option value="cardAndEasyPay">
+                    신용카드 (카카오페이/네이버페이/삼성페이)
+                  </option>
+                  <option value="vbank">가상계좌</option>
+                  <option value="bank">계좌이체</option>
+                  <option value="cellphone">휴대폰결제</option>
+                  <option value="payco">PAYCO</option>
+                </select>
+              </div>
+              {paymentMethod === "vbank" && (
+                <div className="mt-4">
+                  <label className="text-lg font-bold mb-2">입금자명:</label>
+                  <input
+                    type="text"
+                    value={vbankHolder}
+                    onChange={(e) => setVbankHolder(e.target.value)}
+                    className="p-2 border border-gray-300 rounded w-full mb-10"
+                    maxLength={40}
+                    placeholder="입금자성명"
+                  />
+                  <label className="text-lg font-bold mb-2">핸드폰 번호:</label>
+                  <input
+                    type="tel"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    className="p-2 border border-gray-300 rounded w-full"
+                    maxLength={11}
+                    placeholder="01012345678"
+                  />
                 </div>
               )}
             </div>
             <div className="my-4 w-1/2">
-            <div className="mb-6">
-              <label className="text-lg font-bold mb-2">배송주소 :</label>
+              <div className="mb-6">
+                <label className="text-lg font-bold mb-2">배송주소 :</label>
+                <div className="flex gap-4">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="address"
+                      value="existing"
+                      checked={selectedAddress === "existing"}
+                      onChange={() => setSelectedAddress("existing")}
+                    />
+                    기존주소 사용
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="address"
+                      value="new"
+                      checked={selectedAddress === "new"}
+                      onChange={() => setSelectedAddress("new")}
+                    />
+                    새로운주소 입력
+                  </label>
+                </div>
+              </div>
+              <div className="flex flex-col gap-5">
+                {selectedAddress === "new" ? (
+                  <AddressSearch
+                    addressData={addressData}
+                    setAddressData={setAddressData}
+                    state={state}
+                  />
+                ) : (
+                  <input
+                    type="text"
+                    value={address || ""}
+                    readOnly
+                    onChange={(e) => setNewAddress(e.target.value)}
+                    className="p-2 border border-gray-300 rounded w-full mt-4"
+                  />
+                )}
+              </div>
+            </div>
+            <div className="mt-4 w-1/2">
+              <label className="text-lg font-bold mb-2">받는 사람:</label>
               <div className="flex gap-4">
                 <label className="flex items-center gap-2">
                   <input
                     type="radio"
-                    name="address"
+                    name="username"
                     value="existing"
-                    checked={selectedAddress === "existing"}
-                    onChange={() => setSelectedAddress("existing")}
+                    checked={selectedUser === "existing"}
+                    onChange={() => setSelectedUser("existing")}
                   />
-                  기존주소 사용
+                  받는사람
                 </label>
                 <label className="flex items-center gap-2">
                   <input
                     type="radio"
-                    name="address"
+                    name="username"
                     value="new"
-                    checked={selectedAddress === "new"}
-                    onChange={() => setSelectedAddress("new")}
+                    checked={selectedUser === "new"}
+                    onChange={() => setSelectedUser("new")}
                   />
-                  새로운주소 입력
+                  새 사용자명 입력
                 </label>
               </div>
+              {selectedUser === "existing" ? (
+                <>
+                  <input
+                    type="text"
+                    value={username || ""}
+                    readOnly
+                    className="p-2 border border-gray-300 rounded w-full mt-4"
+                    placeholder="기존 사용자명"
+                  />
+                  <input
+                    type="tel"
+                    value={phone || ""}
+                    readOnly
+                    className="p-2 border border-gray-300 rounded w-full mt-4"
+                    placeholder="기존 전화번호"
+                  />
+                </>
+              ) : (
+                <>
+                  <input
+                    type="text"
+                    value={newUsername}
+                    onChange={(e) => setNewUsername(e.target.value)}
+                    className="p-2 border border-gray-300 rounded w-full mt-4"
+                    placeholder="새 사용자명을 입력하세요"
+                  />
+                  <input
+                    type="tel"
+                    value={newPhone}
+                    onChange={(e) => setNewPhone(e.target.value)}
+                    className="p-2 border border-gray-300 rounded w-full mt-4"
+                    placeholder="01012345678"
+                  />
+                </>
+              )}
             </div>
-              <div className="flex flex-col gap-5">
+          </div>
+          <div className="my-10 flex justify-around items-center gap-4 bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+            <div className="flex flex-col items-center">
+              <div className="text-gray-600 font-medium text-sm">상품가격</div>
+              <div className="text-xl font-semibold text-gray-900 mt-1">
+                {formatToWon(totalPriceWithoutDelivery)}원
+              </div>
+            </div>
 
-              {selectedAddress === "new" ? (
-                <AddressSearch addressData={addressData} setAddressData={setAddressData} state={state} />
-              ) : ( <input
-                type="text"
-                value={address || ""}
-                readOnly
-                onChange={(e) => setNewAddress(e.target.value)}
-                className="p-2 border border-gray-300 rounded w-full mt-4"
-              />)}
+            <div className="text-gray-600 font-semibold text-2xl">+</div>
+
+            <div className="flex flex-col items-center">
+              <div className="text-gray-600 font-medium text-sm">배송비</div>
+              <div className="text-xl font-semibold text-gray-900 mt-1">
+                {formatToWon(totalDeliveryPrice)}원
+              </div>
+            </div>
+
+            <div className="text-gray-600 font-semibold text-2xl">=</div>
+
+            <div className="flex flex-col items-center p-4 rounded-lg">
+              <div className="text-gray-700 font-bold text-sm">TOTAL</div>
+              <div className="text-2xl font-bold text-black mt-1">
+                {formatToWon(totalPrice)}원
               </div>
             </div>
           </div>
+
           <Purchase
             data={cart}
             method={paymentMethod}
             vbankHolder={vbankHolder}
-            address={ addressData.address + addressData.detailaddress + addressData.postaddress || ''}
+            address={
+              addressData.address +
+                addressData.detailaddress +
+                addressData.postaddress || ""
+            }
             totalPrice={totalPrice}
-            phone={phone}
+            phone={selectedUser === "existing" ? phone : newPhone}
             phoneNumber={phoneNumber}
             disabled={isPurchaseDisabled()}
+            username={selectedUser === "existing" ? username : newUsername}
           />
         </>
       ) : (

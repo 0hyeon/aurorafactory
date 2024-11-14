@@ -95,6 +95,7 @@ export default async function CartPage() {
       data={validCartItems}
       phone={session.phone}
       address={session.address}
+      username={session.username}
     />
   );
 }

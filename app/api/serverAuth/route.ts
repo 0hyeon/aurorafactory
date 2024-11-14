@@ -80,10 +80,16 @@ export async function POST(request: NextRequest) {
       const cartIds = reservedInfo.cartIds
         ? reservedInfo.cartIds.split("-").map(Number)
         : [];
+      const name = reservedInfo.username || "";
+      const phone = reservedInfo.phone || "";
+      const address = reservedInfo.address || "";
       const updateResult = await updateCart({
         cartIds: cartIds,
         orderId: responseBody.orderId,
         stats: "결제완료",
+        name,
+        phone,
+        address,
       });
 
       if (!updateResult.success) {

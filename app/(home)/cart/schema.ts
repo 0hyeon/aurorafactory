@@ -16,3 +16,14 @@ export const OptionSchemaAddress = z.object({
   detailaddress: z.string().min(1, "상세주소를 입력하세요."),
   newAddress: z.string().min(1, "새로운 배송 주소를 입력하세요."), // 새로운 주소 입력에 대한 필드 추가
 });
+
+export const OptionSchemaUser = z.object({
+  username: z
+    .string()
+    .min(1, { message: "사용자명을 입력하세요." })
+    .max(50, { message: "사용자명은 50자를 초과할 수 없습니다." }),
+  phone: z
+    .string()
+    .regex(/^010\d{8}$/, { message: "유효한 핸드폰 번호를 입력하세요." })
+    .optional(), // 기존 phone을 선택할 때도 사용 가능하도록 optional로 설정
+});

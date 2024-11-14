@@ -10,11 +10,13 @@ interface PurchaseProps {
   disabled: boolean;
   phoneNumber: string;
   totalPrice: number;
-  address : string
+  address: string;
   phone: string | null;
+  username: string;
 }
 
 export default function Purchase({
+  username,
   data,
   method,
   vbankHolder,
@@ -53,6 +55,8 @@ export default function Purchase({
     const finalPhoneNumber = method === "vbank" ? phoneNumber : phone;
     const mallReserved = JSON.stringify({
       cartIds,
+      username,
+      address,
     });
 
     if (typeof window !== "undefined") {

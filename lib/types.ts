@@ -6,6 +6,7 @@ export type SessionContent = {
   phone: string | null;
   address: string;
   detailaddress: string;
+  username: string;
 };
 
 export type SessionUser = {

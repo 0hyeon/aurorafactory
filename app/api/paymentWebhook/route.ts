@@ -37,6 +37,10 @@ export async function POST(request: NextRequest) {
       ? reservedInfo.cartIds.split("-").map(Number)
       : [];
 
+    const name = reservedInfo.username || "";
+    const phone = reservedInfo.phone || "";
+    const address = reservedInfo.address || "";
+
     console.log("Parsed data:", {
       goodsName,
       resultCode,
@@ -45,6 +49,9 @@ export async function POST(request: NextRequest) {
       amount,
       cartIds,
       buyerTel,
+      name,
+      phone,
+      address,
     }); // Parsed data logging
 
     if (resultCode === "0000" && status === "cancelled") {
@@ -69,6 +76,9 @@ export async function POST(request: NextRequest) {
         cartIds,
         orderId,
         stats: "결제완료",
+        name,
+        phone,
+        address,
       });
       console.log("Payment complete update result:", updateResult);
 
@@ -89,6 +99,9 @@ export async function POST(request: NextRequest) {
         cartIds,
         orderId,
         stats: "입금대기",
+        name,
+        phone,
+        address,
       });
       console.log("Waiting for deposit update result:", updateResult);
 
@@ -114,6 +127,9 @@ export async function POST(request: NextRequest) {
         cartIds,
         orderId,
         stats: "결제완료",
+        name,
+        phone,
+        address,
       });
       console.log("Payment successful update result:", updateResult);
 
