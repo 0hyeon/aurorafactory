@@ -23,7 +23,6 @@ export default async function TabLayout({
   // }
 
   const cartcount = await getCachedLikeStatus(session.id!);
-  console.log("cartcount : ", cartcount);
 
   async function getUser() {
     const session = await getSession(cookieStore);
@@ -51,6 +50,7 @@ export default async function TabLayout({
         {session.id ? (
           <>
             <Suspense fallback={"Hello!"}>
+              {/* @ts-expect-error Async Server Component */}
               <Username />
             </Suspense>
             <form action={logOut}>

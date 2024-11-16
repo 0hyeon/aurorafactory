@@ -39,7 +39,6 @@ export const getUserProfile = async (session: any) => {
 
 // // 로그인 - 사용자 정보를 암호화 후 쿠키에 저장
 export const saveLoginSession = async (session: any, user: SessionContent) => {
-  console.log("user : ", user);
   // const session = await getSession();
   session.id = user.user_id ?? user.id;
   session.phone = user.phone ?? user.phone;

@@ -14,9 +14,9 @@ export default function Header({ cartcount }: any) {
   return (
     <div className="max-w-[1100px] my-0 mx-auto relative">
       <div className="flex items-center justify-between">
-        <div className="">
+        <div className="cursor-pointer" onClick={() => alert("준비중입니다.")}>
           <Image
-            src={`/images/btn_halfttobak.0d0c008c.gif`}
+            src={`/images/topbanner.gif`}
             width={270}
             height={48}
             alt="eventImage"

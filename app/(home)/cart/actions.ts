@@ -101,7 +101,6 @@ export async function updateCart({
 }
 export async function updateCancleCart({ orderId, stats }: IupdateCartCancle) {
   revalidateCartCount();
-  console.log("updateCart : 발동");
   try {
     await db.cart.updateMany({
       where: {
@@ -165,7 +164,6 @@ export const getCachedProductSrc = nextCache(getProductSrc, ["product-src"], {
 });
 
 export async function revalidateCartCount() {
-  console.log("revalidateCartCount called"); // 디버깅 로그
   revalidateTag("cart-count");
   revalidateTag("cart");
 }

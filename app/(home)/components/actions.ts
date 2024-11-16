@@ -15,8 +15,6 @@ export async function fetchCartCount(id: number) {
       },
     },
   });
-  console.log("user : ", user);
-  console.log("user._count.Cart : ", user ? user._count.Cart : null);
   return user ? user._count.Cart : 0;
 }
 

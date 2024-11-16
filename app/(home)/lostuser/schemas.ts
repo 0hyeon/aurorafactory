@@ -83,7 +83,6 @@ export const passwordFindSchema = z
         id: true,
       },
     });
-    console.log("user : ", user);
     if (!user) {
       ctx.addIssue({
         code: "custom",

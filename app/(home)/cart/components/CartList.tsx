@@ -49,7 +49,6 @@ export default function CartList({
   address,
   username,
 }: CartListProps) {
-  console.log(data, phone, address, username);
   const [paymentMethod, setPaymentMethod] = useState<string>("");
   const [vbankHolder, setVbankHolder] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
