@@ -6,26 +6,18 @@ import { useState, useEffect, useReducer } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ProductType, productSchema } from "./schema";
-import { getUploadUrl, uploadProduct, uploadUpdateProduct } from "./actions";
+import {
+  getUploadUrl,
+  handleProductSubmit,
+  uploadProduct,
+  uploadUpdateProduct,
+} from "./actions";
 import Image from "next/image";
 import { CATEGORIES } from "@/lib/constants";
 import { NullableProduct } from "@/types/type";
+import { useFormState } from "react-dom";
 
-// Reducer for managing form state
-function formReducer(state: any, action: any) {
-  switch (action.type) {
-    case "START_SUBMIT":
-      return { ...state, pending: true };
-    case "END_SUBMIT":
-      return { ...state, pending: false };
-    default:
-      return state;
-  }
-}
-
-export default function AddProductCommon({ edit }: { edit?: NullableProduct }) {
-  const [state, dispatch] = useReducer(formReducer, { pending: false });
-
+export default function AddProductCommon({ edit }: { edit?: ProductType }) {
   const [uploadUrl, setUploadUrl] = useState("");
   const [preview, setPreview] = useState("");
   const [file, setFile] = useState<File | null>(null);
@@ -34,11 +26,14 @@ export default function AddProductCommon({ edit }: { edit?: NullableProduct }) {
   const [slideUploadUrl, setSlideUploadUrl] = useState<string[]>([]);
   const [slideFile, setSlideFile] = useState<File[]>([]);
 
+  // useFormState를 사용하여 서버 액션과 통합
+  const [state, dispatch] = useFormState(handleProductSubmit, null);
+
+  // useForm으로 클라이언트 유효성 검사 설정
   const {
     register,
     handleSubmit,
     setValue,
-    setError,
     formState: { errors },
   } = useForm<ProductType>({
     resolver: zodResolver(productSchema),
@@ -57,10 +52,6 @@ export default function AddProductCommon({ edit }: { edit?: NullableProduct }) {
     if (uploadResponse.success) {
       const { id, uploadURL } = uploadResponse.result;
       setUploadUrl(uploadURL);
-      setValue(
-        "photo",
-        `https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/${id}`
-      );
     }
   };
 
@@ -69,80 +60,19 @@ export default function AddProductCommon({ edit }: { edit?: NullableProduct }) {
   ) => {
     const files = event.target.files;
     if (!files || files.length === 0) return;
-    const dummyid = [];
+
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       const previewUrl = URL.createObjectURL(file);
       const uploadResponse = await getUploadUrl();
       if (uploadResponse.success) {
         const { id, uploadURL } = uploadResponse.result;
-        dummyid.push(`https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/${id}`);
-
         setPhotoPreview((prev) => [...prev, previewUrl]);
         setSlideUploadUrl((prev) => [...prev, uploadURL]);
         setSlideFile((prev) => [...prev, file]);
       }
     }
-    setValue("photos", dummyid.join(","));
   };
-
-  const onSubmit = handleSubmit(async (data) => {
-    dispatch({ type: "START_SUBMIT" });
-    if (!file && edit) {
-      // data.photo = edit.photo;
-      // const existingSlideImages = edit.productPicture
-      //   .map((image) => image.src)
-      //   .join(",");
-      // data.photos = existingSlideImages;
-    } else if (file) {
-      const formData = new FormData();
-      formData.append("file", file);
-      const response = await fetch(uploadUrl, {
-        method: "POST",
-        body: formData,
-      });
-      if (response.status !== 200) {
-        console.error("Failed to upload image");
-      }
-    }
-
-    if (slideFile.length > 0) {
-      for (let index = 0; index < slideFile.length; index++) {
-        const slideFormData = new FormData();
-        slideFormData.append("file", slideFile[index]);
-        const slideResponse = await fetch(slideUploadUrl[index], {
-          method: "POST",
-          body: slideFormData,
-        });
-        if (slideResponse.status !== 200) {
-          console.error(`Failed to upload slide image ${index}`);
-          continue;
-        }
-      }
-    }
-    const formData = new FormData();
-    formData.append("photo", data.photo);
-    formData.append("photos", data.photos);
-    formData.append("category", data.category);
-
-    if (edit) {
-      const errors = await uploadUpdateProduct(formData, edit.id);
-      if (errors) {
-        console.log("errors : ", errors);
-      } else {
-        window.location.reload();
-        alert("수정 완료");
-      }
-    } else {
-      const errors = await uploadProduct(formData);
-      if (errors) {
-        console.log("errors : ", errors);
-      } else {
-        window.location.reload();
-      }
-    }
-    dispatch({ type: "END_SUBMIT" });
-  });
 
   const deleteHandler = (index: number) => {
     setPhotoPreview((prev) => prev.filter((_, idx) => idx !== index));
@@ -152,22 +82,25 @@ export default function AddProductCommon({ edit }: { edit?: NullableProduct }) {
 
   useEffect(() => {
     if (edit) {
-      setValue("category", edit.category);
-      setPreview(`${edit.photo}/public`);
-      // if (edit.slideimages) {
-      //   if (Array.isArray(edit.slideimages)) {
-      //     setPhotoPreview(edit.slideimages.map((image) => image.src));
-      //   } else {
-      //     console.warn("Expected slideimages to be an array.");
-      //     setPhotoPreview([]);
-      //   }
-      // }
+      setPreview(edit.photo || "");
     }
-  }, [edit, setValue]);
+  }, [edit]);
 
   return (
     <div className="w-1/3 mx-auto my-10 overflow-y-auto">
-      <form onSubmit={onSubmit} className="p-5 flex flex-col gap-5">
+      <form
+        action={(formData) => {
+          formData.append("file", file as File);
+          formData.append("uploadUrl", uploadUrl);
+          formData.append("slideFiles", JSON.stringify(slideFile));
+          formData.append("slideUrls", JSON.stringify(slideUploadUrl));
+          dispatch(formData);
+        }}
+        onSubmit={handleSubmit((data) => {
+          console.log("Client validation success:", data);
+        })}
+        className="p-5 flex flex-col gap-5"
+      >
         <label
           htmlFor="photo"
           className="border-2 aspect-square flex items-center justify-center flex-col text-neutral-300 border-neutral-300 rounded-md border-dashed cursor-pointer bg-center bg-cover"
@@ -216,9 +149,9 @@ export default function AddProductCommon({ edit }: { edit?: NullableProduct }) {
           />
         </label>
 
-        {photoPreview ? (
+        {photoPreview && (
           <div className="flex flex-wrap">
-            {photoPreview.map((src: any, idx: any) => (
+            {photoPreview.map((src: string, idx: number) => (
               <span className="mr-3 relative w-1/6" key={idx}>
                 <span
                   className="cursor-pointer absolute z-10 right-[-5px] top-[-10px] bg-black text-white rounded-full w-5 h-5 flex justify-center items-center text-sm"
@@ -227,22 +160,20 @@ export default function AddProductCommon({ edit }: { edit?: NullableProduct }) {
                   X
                 </span>
                 <Image
-                  src={edit ? `${src}/public` : `${src}`}
+                  src={src}
                   className="text-gray-600 h-auto rounded-md bg-slate-300 object-cover"
                   width={800}
                   height={800}
-                  alt={edit ? `${src}/public` : `${src}`}
+                  alt="Preview"
                 />
               </span>
             ))}
           </div>
-        ) : null}
+        )}
 
         <Input
-          type="text"
-          required
-          placeholder="카테고리명"
           {...register("category")}
+          placeholder="카테고리명"
           errors={[errors.category?.message ?? ""]}
         />
 

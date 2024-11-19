@@ -1,8 +1,9 @@
 "use server";
-import { productSchema } from "./schema";
+import { productSchema, ProductType } from "./schema";
 
 import db from "@/lib/db";
 import getSessionCarrot, { getSession } from "@/lib/session";
+import { NullableProduct } from "@/types/type";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -116,4 +117,54 @@ export async function getUploadUrl() {
   const data = await response.json();
   console.log("data : ", data);
   return data;
+}
+export async function handleProductSubmit(
+  formData: FormData,
+  edit?: NullableProduct
+) {
+  const uploadFile = async (file: File, url: string) => {
+    const fileData = new FormData();
+    fileData.append("file", file);
+
+    const response = await fetch(url, {
+      method: "POST",
+      body: fileData,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to upload file to ${url}`);
+    }
+  };
+
+  // 메인 이미지 처리
+  if (formData.has("file")) {
+    const file = formData.get("file") as File;
+    const uploadUrl = formData.get("uploadUrl") as string;
+    await uploadFile(file, uploadUrl);
+    formData.append("photo", uploadUrl);
+  } else if (edit) {
+    formData.append("photo", edit.photo || "");
+  }
+
+  // 슬라이드 이미지 처리
+  const slideFiles = JSON.parse(formData.get("slideFiles") as string) as File[];
+  const slideUrls = JSON.parse(formData.get("slideUrls") as string) as string[];
+
+  for (let i = 0; i < slideFiles.length; i++) {
+    await uploadFile(slideFiles[i], slideUrls[i]);
+  }
+  formData.append("photos", slideUrls.join(","));
+
+  // 업데이트 또는 생성 처리
+  if (edit) {
+    const errors = await uploadUpdateProduct(formData, edit.id);
+    if (errors) {
+      throw new Error("Update failed");
+    }
+  } else {
+    const errors = await uploadProduct(formData);
+    if (errors) {
+      throw new Error("Create failed");
+    }
+  }
 }
