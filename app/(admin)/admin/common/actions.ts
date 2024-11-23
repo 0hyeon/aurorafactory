@@ -1,107 +1,90 @@
 "use server";
-import { productSchema, ProductType } from "./schema";
+import { productSchema } from "./schema";
 
 import db from "@/lib/db";
 import getSessionCarrot, { getSession } from "@/lib/session";
-import { NullableProduct } from "@/types/type";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
-export async function uploadUpdateProduct(
-  formData: FormData,
-  productId: number
-) {
-  const data = {
-    photos: formData.get("photos"),
-    photo: formData.get("photo"),
-    category: formData.get("category"),
-  };
-  const result = productSchema.safeParse(data);
-  if (!result.success) {
-    return result.error.flatten();
-  } else {
-    let photoUrls: string[] = [];
-    if (typeof data.photos === "string") {
-      photoUrls = data.photos.split(",");
-    }
-
-    const session = await getSessionCarrot();
-    console.log("getSessionCarrot : ", session.id);
-
-    // 제품 업데이트 쿼리 실행
-    const product = await db.productPicture.update({
-      where: {
-        id: productId, // 업데이트할 제품의 id를 where로 사용
-      },
-      data: {
-        photo: result.data.photo,
-        category: result.data.category,
-        slideimages: {
-          // 슬라이드 이미지도 업데이트
-          connectOrCreate: photoUrls.map((src: any) => {
-            return {
-              where: { src: src },
-              create: { src: src },
-            };
-          }),
-        },
-      },
-      select: {
-        id: true,
-      },
-    });
-    console.log("update  : ", product);
-    revalidateTag("products");
-    revalidateTag("product-detail");
-    redirect(`/products/${product.id}`);
-    return product; // 성공 시 업데이트된 제품 반환
-  }
-}
 export async function uploadProduct(formData: FormData) {
-  console.log("formData : ", formData);
-  const data = {
-    photos: formData.get("photos"),
-    photo: formData.get("photo"),
-    category: formData.get("category"),
-  };
-  const result = productSchema.safeParse(data);
+  const photo = formData.get("photo") as File | null;
+  const photos = formData.getAll("photos") as File[];
+  const category = formData.get("category")?.toString() || "Default Category";
 
-  if (!result.success) {
-    return result.error.flatten();
-  } else {
-    // const session = await getSession();
-    // if (session.id) {
-    let photoUrls: string[] = [];
+  // Cloudflare 업로드 URL을 미리 요청하고 파일 업로드
+  const uploadedPhotoUrl = photo ? await uploadFileWithPreparedUrl(photo) : "";
 
-    if (typeof data.photos === "string") {
-      photoUrls = data.photos.split(",");
-    }
-    const session = await getSessionCarrot();
-    console.log("getSessionCarrot : ", session.id);
+  const uploadedSlideUrls = await Promise.all(
+    photos.map((file) => uploadFileWithPreparedUrl(file))
+  );
 
-    const product = await db.productPicture.create({
-      data: {
-        photo: result.data.photo,
-        category: result.data.category,
-        slideimages: {
-          connectOrCreate: photoUrls.map((src: any) => {
-            return {
-              where: { src: src },
-              create: { src: src },
-            };
-          }),
-        },
+  // 데이터베이스 저장
+  const product = await db.productPicture.create({
+    data: {
+      photo: uploadedPhotoUrl,
+      category,
+      slideimages: {
+        connectOrCreate: uploadedSlideUrls.map((url) => ({
+          where: { src: url },
+          create: { src: url },
+        })),
       },
-      select: {
-        id: true,
+    },
+  });
+
+  return product;
+}
+export async function uploadUpdateProduct(formData: FormData) {
+  const id = parseInt(formData.get("id")?.toString() || "", 10);
+  const photo = formData.get("photo") as File | null;
+  const photos = formData.getAll("photos") as File[];
+  const category = formData.get("category")?.toString() || "Default Category";
+
+  // Cloudflare 업로드 URL을 미리 요청하고 파일 업로드
+  const uploadedPhotoUrl = photo ? await uploadFileWithPreparedUrl(photo) : "";
+
+  const uploadedSlideUrls = await Promise.all(
+    photos.map((file) => uploadFileWithPreparedUrl(file))
+  );
+
+  // 데이터베이스 업데이트
+  const updatedProduct = await db.productPicture.update({
+    where: { id },
+    data: {
+      photo: uploadedPhotoUrl || undefined,
+      category,
+      slideimages: {
+        connectOrCreate: uploadedSlideUrls.map((url) => ({
+          where: { src: url },
+          create: { src: url },
+        })),
       },
-    });
-    revalidateTag("products");
-    revalidateTag("product-detail");
-    redirect(`/products/${product.id}`);
-    //redirect("/products")
-    // }
+    },
+  });
+
+  return updatedProduct;
+}
+async function uploadFileWithPreparedUrl(file: File): Promise<string> {
+  // 업로드 URL 요청
+  const { result } = await getUploadUrl();
+  const { uploadURL } = result;
+
+  // FormData에 파일 추가
+  const formData = new FormData();
+  formData.append("file", file);
+
+  // 파일 업로드
+  const uploadResponse = await fetch(uploadURL, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!uploadResponse.ok) {
+    throw new Error("Failed to upload file to Cloudflare.");
   }
+
+  const uploadResult = await uploadResponse.json();
+  return uploadResult.result.variants[0]; // 업로드된 URL 반환
 }
 
 export async function getUploadUrl() {
@@ -117,54 +100,4 @@ export async function getUploadUrl() {
   const data = await response.json();
   console.log("data : ", data);
   return data;
-}
-export async function handleProductSubmit(
-  formData: FormData,
-  edit?: NullableProduct
-) {
-  const uploadFile = async (file: File, url: string) => {
-    const fileData = new FormData();
-    fileData.append("file", file);
-
-    const response = await fetch(url, {
-      method: "POST",
-      body: fileData,
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to upload file to ${url}`);
-    }
-  };
-
-  // 메인 이미지 처리
-  if (formData.has("file")) {
-    const file = formData.get("file") as File;
-    const uploadUrl = formData.get("uploadUrl") as string;
-    await uploadFile(file, uploadUrl);
-    formData.append("photo", uploadUrl);
-  } else if (edit) {
-    formData.append("photo", edit.photo || "");
-  }
-
-  // 슬라이드 이미지 처리
-  const slideFiles = JSON.parse(formData.get("slideFiles") as string) as File[];
-  const slideUrls = JSON.parse(formData.get("slideUrls") as string) as string[];
-
-  for (let i = 0; i < slideFiles.length; i++) {
-    await uploadFile(slideFiles[i], slideUrls[i]);
-  }
-  formData.append("photos", slideUrls.join(","));
-
-  // 업데이트 또는 생성 처리
-  if (edit) {
-    const errors = await uploadUpdateProduct(formData, edit.id);
-    if (errors) {
-      throw new Error("Update failed");
-    }
-  } else {
-    const errors = await uploadProduct(formData);
-    if (errors) {
-      throw new Error("Create failed");
-    }
-  }
 }

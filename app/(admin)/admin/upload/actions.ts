@@ -21,6 +21,7 @@ export async function uploadUpdateProduct(
     description: formData.get("description"),
     productPictureId: Number(formData.get("productPictureId")),
   };
+  console.log("data : ", data);
   const result = productSchema.safeParse(data);
   if (!result.success) {
     return result.error.flatten();
@@ -73,6 +74,7 @@ export async function uploadProduct(formData: FormData) {
     discount: formData.get("discount"),
     category: formData.get("category"),
     description: formData.get("description"),
+    productPictureId: Number(formData.get("productPictureId")),
   };
   const result = productSchema.safeParse(data);
 
@@ -89,40 +91,31 @@ export async function uploadProduct(formData: FormData) {
     const session = await getSessionCarrot();
     console.log("getSessionCarrot : ", session.id);
 
-    // const product = await db.product.create({
-    //   data: {
-    //     title: result.data.title,
-    //     description: result.data.description,
-    //     price: result.data.price,
-    //     // photo: result.data.photo,
-    //     category: result.data.category,
-    //     discount: result.data.discount,
-    //     user: {
-    //       connect: {
-    //         id: session.id,
-    //       },
-    //     },
-    //     productPicture: {
-    //       slideImage: {
-    //         connectOrCreate: photoUrls.map((src: any) => {
-    //           return {
-    //             where: { src: src },
-    //             create: { src: src },
-    //           };
-    //         }),
-    //       },
-    //     },
-    //   },
-    //   select: {
-    //     id: true,
-    //   },
-    // });
-    // revalidateTag("products");
-    // revalidateTag("product-detail");
-    // redirect(`/products/${product.id}`);
+    const product = await db.product.create({
+      data: {
+        title: result.data.title,
+        description: result.data.description,
+        price: result.data.price,
+        category: result.data.category,
+        discount: result.data.discount,
+        user: {
+          connect: {
+            id: session.id,
+          },
+        },
+        productPicture: {
+          connect: { id: result.data.productPictureId },
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+    revalidateTag("products");
+    revalidateTag("product-detail");
+    redirect(`/products/${product.id}`);
 
-    //redirect("/products")
-    // }
+    redirect("/products");
   }
 }
 
