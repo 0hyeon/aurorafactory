@@ -2,6 +2,7 @@
 const nextConfig = {
   experimental: {
     nextScriptWorkers: true,
+    serverActions: true,
   },
   images: {
     remotePatterns: [

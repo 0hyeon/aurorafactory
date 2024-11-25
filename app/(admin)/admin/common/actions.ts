@@ -13,7 +13,6 @@ export async function uploadProduct(formData: FormData) {
 
   // Cloudflare 업로드 URL을 미리 요청하고 파일 업로드
   const uploadedPhotoUrl = photo ? await uploadFileWithPreparedUrl(photo) : "";
-
   const uploadedSlideUrls = await Promise.all(
     photos.map((file) => uploadFileWithPreparedUrl(file))
   );
@@ -83,8 +82,10 @@ async function uploadFileWithPreparedUrl(file: File): Promise<string> {
     throw new Error("Failed to upload file to Cloudflare.");
   }
 
-  const uploadResult = await uploadResponse.json();
-  return uploadResult.result.variants[0]; // 업로드된 URL 반환
+  const { result: resultJson } = await uploadResponse.json();
+  const { id } = resultJson;
+  console.log("id : ", id);
+  return `https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/${id}`;
 }
 
 export async function getUploadUrl() {

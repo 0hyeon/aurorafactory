@@ -78,7 +78,7 @@ export default function AddOptionDetailpage({
             {product?.productoption && (
               <Image
                 src={`${product.photo}/public`}
-                alt={product.photo}
+                alt={product.photo || ""}
                 fill
                 style={{ objectFit: "contain" }}
               />

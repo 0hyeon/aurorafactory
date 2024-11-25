@@ -14,8 +14,8 @@ export const productSchema = z.object({
     required_error: "Price is required",
   }),
   discount: z.coerce.string().optional(),
-  productPictureId: z.number({
-    required_error: "productPictureId is required",
+  productPictureId: z.string({
+    required_error: "Price is required",
   }),
 });
 

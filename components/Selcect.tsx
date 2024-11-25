@@ -1,48 +1,50 @@
-// Select Component
-import React from "react";
+import React, { ForwardedRef, forwardRef } from "react";
 
-interface SelectProps {
-  data: string[];
-  name: string;
-  register: any; // The type can be more specific if desired
-  errors: any;
-  defaultValue?: string; // 기본값을 위한 defaultValue 추가
-  onChange?: React.ChangeEventHandler<HTMLSelectElement>;
-}
+type SelectProps = {
+  data: { id: number; category: string }[]; // 옵션 데이터 (id와 category 포함)
+  value: string | number; // 선택된 값 (string | number 허용)
+  errors?: string | string[] | undefined; // 에러 메시지 (string | string[] | undefined)
+  onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void; // onChange 핸들러
+};
 
-function Select({
-  data,
-  name,
-  register,
-  errors,
-  defaultValue,
-  onChange,
-}: SelectProps) {
+const _Select = (
+  { data, value, errors, onChange, ...rest }: SelectProps,
+  ref: ForwardedRef<HTMLSelectElement>
+) => {
   return (
-    <div>
+    <div className="flex flex-col gap-2">
       <select
-        className="w-full border border-[#ddd] py-2 px-1 rounded"
-        {...register(name)}
-        defaultValue={defaultValue || ""} // 기본 선택값 설정
+        ref={ref}
+        value={value || ""} // 기본값을 빈 문자열로 처리
         onChange={onChange} // onChange 핸들러 연결
+        className={`bg-transparent rounded-md w-full h-10 outline-none ring-1 focus:ring-4 transition ring-neutral-200 focus:ring-orange-500 border-none placeholder:text-neutral-400 disabled:bg-slate-300 dark:disabled:bg-slate-600 disabled:cursor-not-allowed pl-3 ${
+          errors ? "ring-red-500 focus:ring-red-500" : ""
+        }`}
+        {...rest}
       >
-        {/* 기본 선택값이 없을 경우를 대비한 빈 옵션 */}
-        <option value="" disabled={!defaultValue}>
-          {defaultValue
-            ? defaultValue
-            : "-- 카테고리를 선택해주세요 (사진적용) --"}
+        {/* 기본값 옵션 */}
+        <option value="" disabled>
+          -- 옵션을 선택해주세요 --
         </option>
-        {data.map((option, idx) => (
-          <option key={idx} value={option}>
-            {option}
+        {/* 실제 데이터 옵션 */}
+        {data.map((option) => (
+          <option key={option.id} value={option.id}>
+            {option.category}
           </option>
         ))}
       </select>
-      {errors[name]?.message && (
-        <p className="text-red-500 text-xs mt-1">{errors[name].message}</p>
-      )}
+      {/* 에러 메시지 출력 */}
+      {Array.isArray(errors) ? (
+        errors.map((err, idx) => (
+          <span key={idx} className="text-red-500 font-medium">
+            {err}
+          </span>
+        ))
+      ) : errors ? (
+        <span className="text-red-500 font-medium">{errors}</span>
+      ) : null}
     </div>
   );
-}
+};
 
-export default Select;
+export default forwardRef(_Select);

@@ -3,7 +3,7 @@
 import Button from "@/components/button";
 import Input from "@/components/input";
 import { PhotoIcon } from "@heroicons/react/24/solid";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { NullableProduct } from "@/types/type";
 import { uploadProduct, uploadUpdateProduct } from "./actions";
@@ -61,7 +61,6 @@ export default function AddProductCommon({ edit }: { edit?: NullableProduct }) {
 
     const newFiles = Array.from(files);
     setSlideFile((prev) => [...prev, ...newFiles]);
-
     const newPreviews = newFiles.map((file) => URL.createObjectURL(file));
     setPhotoPreview((prev) => [...prev, ...newPreviews]);
   };

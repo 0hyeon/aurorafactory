@@ -15,7 +15,7 @@ export default async function AddOptionList() {
               <div className="relative block w-28 h-28">
                 <Image
                   src={`${el.photo}/public`}
-                  alt={el.photo}
+                  alt={el.photo || ""}
                   fill
                   style={{ objectFit: "contain" }}
                 />

@@ -162,7 +162,7 @@ ${company}에 회원가입 해주셔서
     userid: process.env.ALIGO_USER_ID ?? "",
     senderkey: process.env.SENDER_KEY ?? "",
     tpl_code: SIGN_UP_TEMPLATES,
-    sender: "010-4109-6590" ?? "",
+    sender: "010-4109-6590",
     receiver_1: process.env.ADMIN_PHONE_NUMBER ?? "",
     subject: "회원가입완료 안내",
     message_1: msg,

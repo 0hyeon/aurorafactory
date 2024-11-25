@@ -20,6 +20,7 @@ interface CartButtonProps {
 }
 
 const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
+  console.log("product : ", product);
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
   const [quantity, setQuantity] = useState<number>(1);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
@@ -208,6 +209,8 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
                 ? "/images/BpSangsaePage.jpg"
                 : product.productPicture.category === "에어캡봉투"
                 ? "/images/aircapDetail.jpg"
+                : product.productPicture.category === "test2"
+                ? "/images/BpSangsaePage.jpg"
                 : ""
             }
             alt="상세페이지"
@@ -221,6 +224,8 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
                 ? "/images/BpSangsaePage.jpg"
                 : product.productPicture.category === "에어캡봉투"
                 ? "/images/aircapDetail.jpg"
+                : product.productPicture.category === "test2"
+                ? "/images/BpSangsaePage.jpg"
                 : ""
             }
           />
