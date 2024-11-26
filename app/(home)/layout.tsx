@@ -50,7 +50,6 @@ export default async function TabLayout({
         {session.id ? (
           <>
             <Suspense fallback={"Hello!"}>
-              {/* @ts-expect-error Async Server Component */}
               <Username />
             </Suspense>
             <form action={logOut}>
