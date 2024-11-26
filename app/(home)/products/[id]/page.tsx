@@ -87,6 +87,7 @@ export default async function ProductDetail({
 }: {
   params: { id: string };
 }) {
+  // await new Promise((resolve) => setTimeout(resolve, 3600000));
   const id = Number(params.id);
   if (isNaN(id)) {
     return notFound();
@@ -103,5 +104,6 @@ export default async function ProductDetail({
     revalidateTag("product-title");
   };
   revalidateTag("products");
+
   return <ProductDetailClient product={product} params={id} />;
 }

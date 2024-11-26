@@ -25,6 +25,8 @@ interface CartWithProductOption {
 }
 
 export default async function CartPage() {
+  // await new Promise((resolve) => setTimeout(resolve, 3600000));
+
   const session = await getSessionAurora();
   const cartData: Cart[] = session.id
     ? await getCachedCart(String(session.id))
