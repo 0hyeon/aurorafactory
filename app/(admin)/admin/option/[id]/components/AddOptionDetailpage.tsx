@@ -58,33 +58,55 @@ export default function AddOptionDetailpage({
     await onSubmit();
   };
   return (
-    <div className="w-1/2 mx-auto my-10">
-      <div className="flex flex-row items-center justify-between gap-5">
-        {/* 상품옵션리스트 */}
-        <div>
-          {product?.productoption &&
-            product.productoption.map((el: any, index: number) => (
-              <div key={index} className="flex gap-10">
-                <span>수량 : {el.quantity}</span>
-                <span>색상 : {el.color}</span>
-                <span>추가할인율 : {el.plusdiscount}%</span>
-              </div>
-            ))}
+    <div className="w-2/3 mx-auto my-10 p-8 bg-gray-50 shadow-lg rounded-md">
+      <h1 className="text-2xl font-bold text-gray-800 mb-6">상품 옵션 관리</h1>
+      <div className="flex flex-row items-start justify-between gap-10">
+        {/* 상품 옵션 리스트 */}
+        <div className="flex-1">
+          <h2 className="text-lg font-semibold text-gray-700 mb-4">
+            옵션 리스트
+          </h2>
+          <div className="space-y-4">
+            {product?.productoption &&
+              product.productoption.map((el: any, index: number) => (
+                <div
+                  key={index}
+                  className="flex gap-6 p-4 bg-white shadow-sm rounded-lg border border-gray-200"
+                >
+                  <span className="text-gray-600">수량: {el.quantity}</span>
+                  <span className="text-gray-600">색상: {el.color}</span>
+                  <span className="text-gray-600">
+                    추가 할인율: {el.plusdiscount}%
+                  </span>
+                </div>
+              ))}
+          </div>
         </div>
 
-        <div>
-          <Button onClick={() => toModifyBtn(product?.id)} text="상품수정" />
-          <div className="relative block w-28 h-28">
-            {product?.productoption && (
+        {/* 상품 정보와 옵션 추가 */}
+        <div className="flex-1">
+          <div className="relative block w-96 h-96 mb-6">
+            {product?.productPicture?.photo ? (
               <Image
-                src={`${product.photo}/public`}
-                alt={product.photo || ""}
+                src={`${product.productPicture.photo}/public`}
+                alt={product.productPicture.photo || ""}
                 fill
+                className="rounded-md"
                 style={{ objectFit: "contain" }}
               />
+            ) : (
+              <div className="flex items-center justify-center w-full h-full bg-gray-200 rounded-md">
+                <span className="text-gray-500">이미지 없음</span>
+              </div>
             )}
           </div>
-          <form onSubmit={onValid} className="p-5 flex flex-col gap-5">
+          <div className="flex items-center justify-between mb-6">
+            <Button onClick={() => toModifyBtn(product?.id)} text="상품 수정" />
+          </div>
+          <form
+            onSubmit={onValid}
+            className="p-6 bg-white rounded-lg shadow-md space-y-4"
+          >
             <Input
               required
               placeholder="수량"
@@ -92,6 +114,7 @@ export default function AddOptionDetailpage({
               {...register("quantity")}
               name="quantity"
               errors={[errors.quantity?.message ?? ""]}
+              className="border-gray-300 focus:ring-2 focus:ring-indigo-500"
             />
             <Input
               type="text"
@@ -100,6 +123,7 @@ export default function AddOptionDetailpage({
               {...register("color")}
               name="color"
               errors={[errors.color?.message ?? ""]}
+              className="border-gray-300 focus:ring-2 focus:ring-indigo-500"
             />
             <Input
               type="number"
@@ -108,6 +132,7 @@ export default function AddOptionDetailpage({
               {...register("plusdiscount")}
               name="plusdiscount"
               errors={[errors.plusdiscount?.message ?? ""]}
+              className="border-gray-300 focus:ring-2 focus:ring-indigo-500"
             />
             <Button text="작성 완료" type="submit" />
           </form>

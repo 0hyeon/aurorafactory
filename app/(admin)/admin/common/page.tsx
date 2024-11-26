@@ -7,12 +7,13 @@ import { useState } from "react";
 import Image from "next/image";
 import { NullableProduct } from "@/types/type";
 import { uploadProduct, uploadUpdateProduct } from "./actions";
-
+import { useFormStatus } from "react-dom";
 export default function AddProductCommon({ edit }: { edit?: NullableProduct }) {
   const [preview, setPreview] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string[]>([]);
   const [slideFile, setSlideFile] = useState<File[]>([]);
+  const { pending } = useFormStatus();
 
   const prepareFormData = async () => {
     const formData = new FormData();
@@ -69,9 +70,16 @@ export default function AddProductCommon({ edit }: { edit?: NullableProduct }) {
     setPhotoPreview((prev) => prev.filter((_, idx) => idx !== index));
     setSlideFile((prev) => prev.filter((_, idx) => idx !== index));
   };
-
   return (
-    <div className="w-1/3 mx-auto my-10 overflow-y-auto">
+    <div className="w-1/3 mx-auto my-10 overflow-y-auto relative">
+      {pending && (
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white rounded-lg p-5 text-center shadow-lg">
+            <div className="loader mb-4"></div>
+            <p className="text-gray-700">진행 중입니다...</p>
+          </div>
+        </div>
+      )}
       <form
         action={async () => {
           const formData = await prepareFormData();

@@ -4,7 +4,7 @@
 import { NullableProduct } from "@/types/type";
 import { getCachedProduct } from "../../option/[id]/actions";
 import AddProductCommon from "../../common/page";
-
+import AddProduct from "../../upload/page";
 export default async function OptionDetailPage({
   params,
 }: {
@@ -13,6 +13,6 @@ export default async function OptionDetailPage({
   const product = await getCachedProduct(+params.id);
   return (
     // <AddOptionDetailpage params={params} product={product as NullableProduct} />
-    <AddProductCommon edit={product as NullableProduct} />
+    <AddProduct edit={product as NullableProduct} />
   );
 }

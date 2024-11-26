@@ -61,8 +61,6 @@ async function getProduct(id: number) {
     },
   });
 
-  console.log("Fetched Product: ", product); // 디버깅을 위한 로그 추가
-
   return product;
 }
 async function delProductOption(id: number) {

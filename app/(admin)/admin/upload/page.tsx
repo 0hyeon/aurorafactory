@@ -9,7 +9,9 @@ import { useForm } from "react-hook-form";
 import { useFormState } from "react-dom";
 import { OptionType } from "../option/[id]/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-export default function AddProduct() {
+import { NullableProduct } from "@/types/type";
+export default function AddProduct({ edit }: { edit?: NullableProduct }) {
+  console.log("edit  :", edit);
   const [state, dispatch] = useFormState(uploadProduct, null);
   const [categoryData, setCategoryData] = useState<
     { id: number; category: string }[]
@@ -34,9 +36,16 @@ export default function AddProduct() {
         console.error("Failed to fetch categories:", error);
       }
     };
-
+    if (edit) {
+      setValue("title", edit.title || "");
+      setValue("price", edit.price || 0);
+      setValue("description", edit.description || "");
+      setValue("category", edit.category || "");
+      setValue("discount", edit.discount || "");
+      setValue("productPictureId", String(edit.productPictureId) || "");
+    }
     fetchCategories();
-  }, []);
+  }, [edit, setValue]);
 
   return (
     <div className="w-1/3 mx-auto my-10 overflow-y-auto">

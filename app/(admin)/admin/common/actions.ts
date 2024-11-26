@@ -18,7 +18,7 @@ export async function uploadProduct(formData: FormData) {
   );
 
   // 데이터베이스 저장
-  const product = await db.productPicture.create({
+  await db.productPicture.create({
     data: {
       photo: uploadedPhotoUrl,
       category,
@@ -30,8 +30,7 @@ export async function uploadProduct(formData: FormData) {
       },
     },
   });
-
-  return product;
+  redirect(`/admin/common`);
 }
 export async function uploadUpdateProduct(formData: FormData) {
   const id = parseInt(formData.get("id")?.toString() || "", 10);
@@ -47,7 +46,7 @@ export async function uploadUpdateProduct(formData: FormData) {
   );
 
   // 데이터베이스 업데이트
-  const updatedProduct = await db.productPicture.update({
+  await db.productPicture.update({
     where: { id },
     data: {
       photo: uploadedPhotoUrl || undefined,
@@ -60,8 +59,7 @@ export async function uploadUpdateProduct(formData: FormData) {
       },
     },
   });
-
-  return updatedProduct;
+  redirect(`/admin/common`);
 }
 async function uploadFileWithPreparedUrl(file: File): Promise<string> {
   // 업로드 URL 요청
