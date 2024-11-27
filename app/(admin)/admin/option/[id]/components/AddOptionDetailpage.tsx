@@ -5,7 +5,7 @@ import Input from "@/components/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { OptionType, OptionSchema } from "../schema";
-import { uploadProductOption } from "../actions";
+import { uploadProductOption, delProductOption } from "../actions";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Cart, Product, User, productOption } from "@prisma/client";
@@ -18,6 +18,7 @@ export default function AddOptionDetailpage({
   product: NullableProduct; // product 타입을 명확히 지정
   params: { id: string };
 }) {
+  console.log(product);
   const {
     register,
     handleSubmit,
@@ -57,6 +58,9 @@ export default function AddOptionDetailpage({
     e.preventDefault();
     await onSubmit();
   };
+  const delEvent = async (id: number) => {
+    await delProductOption(id);
+  };
   return (
     <div className="w-2/3 mx-auto my-10 p-8 bg-gray-50 shadow-lg rounded-md">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">상품 옵션 관리</h1>
@@ -71,13 +75,23 @@ export default function AddOptionDetailpage({
               product.productoption.map((el: any, index: number) => (
                 <div
                   key={index}
-                  className="flex gap-6 p-4 bg-white shadow-sm rounded-lg border border-gray-200"
+                  className="cursor-pointer flex gap-6 p-4 bg-white shadow-sm rounded-lg border border-gray-200 items-center"
                 >
                   <span className="text-gray-600">수량: {el.quantity}</span>
                   <span className="text-gray-600">색상: {el.color}</span>
                   <span className="text-gray-600">
                     추가 할인율: {el.plusdiscount}%
                   </span>
+                  <span className="text-gray-600">
+                    배송비: {el.deliver_price}
+                  </span>
+                  {/* 삭제 버튼 */}
+                  <button
+                    onClick={() => delEvent(el.id)}
+                    className="ml-auto px-4 py-2 text-sm font-medium text-red-600 bg-red-100 rounded-md hover:bg-red-200 focus:outline-none"
+                  >
+                    삭제
+                  </button>
                 </div>
               ))}
           </div>

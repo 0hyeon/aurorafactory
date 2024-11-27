@@ -63,12 +63,15 @@ async function getProduct(id: number) {
 
   return product;
 }
-async function delProductOption(id: number) {
-  const product = db.productOption.findUnique({
+
+export async function delProductOption(id: number) {
+  console.log("delProductOption id : ", id);
+  const product = db.productOption.delete({
     where: {
       id,
     },
   });
+  console.log("delete : ", product);
   return product;
 }
 export const getCachedProduct = nextCache(getProduct, ["product-detail"], {

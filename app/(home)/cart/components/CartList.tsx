@@ -77,7 +77,7 @@ export default function CartList({
           Number(item.option.plusdiscount) || 0,
           item.quantity,
           item.option.quantity,
-          item.option.product.deliver_price || 0
+          item.option.deliver_price || 0
         ),
       }))
     );
@@ -134,7 +134,7 @@ export default function CartList({
                 Number(item.option.plusdiscount) || 0,
                 item.quantity + delta,
                 item.option.quantity,
-                item.option.product.deliver_price || 0
+                item.option.deliver_price || 0
               ),
             }
           : item
@@ -164,12 +164,11 @@ export default function CartList({
   };
 
   const totalDeliveryPrice = cart.reduce(
-    (acc, item) => acc + (item.option.product.deliver_price || 0),
+    (acc, item) => acc + (item.option.deliver_price || 0),
     0
   );
   const totalPriceWithoutDelivery = cart.reduce(
-    (acc, item) =>
-      acc + item.totalPrice - (item.option.product.deliver_price || 0),
+    (acc, item) => acc + item.totalPrice - (item.option.deliver_price || 0),
     0
   );
   const totalPrice = totalPriceWithoutDelivery + totalDeliveryPrice;
@@ -217,7 +216,8 @@ export default function CartList({
                     </div>
 
                     <div>
-                      배송비:{formatToWon(item.option.product.deliver_price)}
+                      배송비:
+                      {formatToWon(item.option.deliver_price)}
                     </div>
                     <div className="font-bold mt-5">
                       상품가격: {formatToWon(item.totalPrice)}원

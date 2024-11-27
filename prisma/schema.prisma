@@ -80,6 +80,7 @@ model productOption {
   quantity     Int
   color        String?
   plusdiscount Int
+  deliver_price Float    @default(0)
   created_at   DateTime @default(now())
   updated_at   DateTime @updatedAt
   cart         Cart[]
