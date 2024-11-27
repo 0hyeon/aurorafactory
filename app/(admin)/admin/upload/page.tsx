@@ -3,7 +3,7 @@ import Button from "@/components/button";
 import Input from "@/components/input";
 import { useState, useEffect } from "react";
 import { ProductType, productSchema } from "./schema";
-import { getCategory, uploadProduct } from "./actions";
+import { getCategory, uploadProduct, uploadUpdateProduct } from "./actions";
 import Select from "@/components/Selcect";
 import { useForm } from "react-hook-form";
 import { useFormState } from "react-dom";
@@ -11,8 +11,10 @@ import { OptionType } from "../option/[id]/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { NullableProduct } from "@/types/type";
 export default function AddProduct({ edit }: { edit?: NullableProduct }) {
-  console.log("edit  :", edit);
-  const [state, dispatch] = useFormState(uploadProduct, null);
+  const [state, dispatch] = useFormState(
+    edit ? uploadUpdateProduct : uploadProduct,
+    null
+  );
   const [categoryData, setCategoryData] = useState<
     { id: number; category: string }[]
   >([]);
@@ -37,6 +39,7 @@ export default function AddProduct({ edit }: { edit?: NullableProduct }) {
       }
     };
     if (edit) {
+      setValue("id", edit?.id);
       setValue("title", edit.title || "");
       setValue("price", edit.price || 0);
       setValue("description", edit.description || "");
@@ -50,6 +53,7 @@ export default function AddProduct({ edit }: { edit?: NullableProduct }) {
   return (
     <div className="w-1/3 mx-auto my-10 overflow-y-auto">
       <form action={dispatch} className="p-5 flex flex-col gap-5">
+        <Input type="hidden" {...register("id")} />
         <Input
           required
           placeholder="제목"

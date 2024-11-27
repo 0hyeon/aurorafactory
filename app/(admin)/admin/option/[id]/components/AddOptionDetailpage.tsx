@@ -85,7 +85,7 @@ export default function AddOptionDetailpage({
 
         {/* 상품 정보와 옵션 추가 */}
         <div className="flex-1">
-          <div className="relative block w-96 h-96 mb-6">
+          <div className="relative block w-full h-96 max-h-[500px] mb-6">
             {product?.productPicture?.photo ? (
               <Image
                 src={`${product.productPicture.photo}/public`}

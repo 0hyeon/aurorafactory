@@ -11,8 +11,6 @@ export async function getCategory() {
 }
 
 export async function uploadProduct(prevState: any, formData: FormData) {
-  console.log("prevState : ", prevState);
-  console.log("formData : ", formData);
   const data = {
     title: formData.get("title"),
     price: formData.get("price"),
@@ -58,27 +56,26 @@ export async function uploadProduct(prevState: any, formData: FormData) {
     redirect(`/products/${product.id}`);
   }
 }
-export async function uploadUpdateProduct(
-  formData: FormData,
-  productId: number
-) {
+export async function uploadUpdateProduct(prevState: any, formData: FormData) {
+  console.log("formData.get('id') : ", formData.get("id"));
+  console.log("formData.get('title') : ", formData.get("title"));
   const data = {
+    id: Number(formData.get("id")),
     title: formData.get("title"),
     price: formData.get("price"),
     discount: formData.get("discount"),
     category: formData.get("category"),
     description: formData.get("description"),
-    productPictureId: Number(formData.get("productPictureId")),
+    productPictureId: formData.get("productPictureId"),
   };
-
   const result = productSchema.safeParse(data);
-
+  console.log("result : ", result.error);
   if (!result.success) {
     return result.error.flatten();
   } else {
     const session = await getSessionCarrot();
-    await db.product.update({
-      where: { id: productId },
+    const udpate = await db.product.update({
+      where: { id: Number(data.id) },
       data: {
         title: result.data.title,
         description: result.data.description,
@@ -95,7 +92,7 @@ export async function uploadUpdateProduct(
         },
       },
     });
-
+    console.log("udpate : ", udpate);
     revalidateTag("products");
     revalidateTag("product-detail");
     redirect(`/admin/option`);
