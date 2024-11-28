@@ -5,11 +5,16 @@ import Input from "@/components/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { OptionType, OptionSchema } from "../schema";
-import { uploadProductOption, delProductOption } from "../actions";
+import {
+  uploadProductOption,
+  delProductOption,
+  getCachedProduct,
+} from "../actions";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Cart, Product, User, productOption } from "@prisma/client";
 import { NullableProduct } from "@/types/type";
+import { getProduct } from "@/app/(home)/products/[id]/page";
 
 export default function AddOptionDetailpage({
   product,
@@ -58,8 +63,15 @@ export default function AddOptionDetailpage({
     e.preventDefault();
     await onSubmit();
   };
-  const delEvent = async (id: number) => {
-    await delProductOption(id);
+  const delEvent = async ({
+    id,
+    redirectId,
+  }: {
+    id: number;
+    redirectId: number;
+  }) => {
+    await delProductOption({ id, redirectId });
+    return alert("삭제완료");
   };
   return (
     <div className="w-2/3 mx-auto my-10 p-8 bg-gray-50 shadow-lg rounded-md">
@@ -75,7 +87,7 @@ export default function AddOptionDetailpage({
               product.productoption.map((el: any, index: number) => (
                 <div
                   key={index}
-                  className="cursor-pointer flex gap-6 p-4 bg-white shadow-sm rounded-lg border border-gray-200 items-center"
+                  className="flex gap-6 p-4 bg-white shadow-sm rounded-lg border border-gray-200 items-center"
                 >
                   <span className="text-gray-600">수량: {el.quantity}</span>
                   <span className="text-gray-600">색상: {el.color}</span>
@@ -87,7 +99,9 @@ export default function AddOptionDetailpage({
                   </span>
                   {/* 삭제 버튼 */}
                   <button
-                    onClick={() => delEvent(el.id)}
+                    onClick={() =>
+                      delEvent({ id: el.id, redirectId: product.id })
+                    }
                     className="ml-auto px-4 py-2 text-sm font-medium text-red-600 bg-red-100 rounded-md hover:bg-red-200 focus:outline-none"
                   >
                     삭제

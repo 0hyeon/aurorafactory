@@ -36,6 +36,7 @@ export async function uploadProductOption(formData: FormData) {
       },
     });
     revalidateTag("product-detail");
+    revalidateTag("products");
     redirect("/admin/option");
     return null;
   }
@@ -64,14 +65,22 @@ async function getProduct(id: number) {
   return product;
 }
 
-export async function delProductOption(id: number) {
-  console.log("delProductOption id : ", id);
+export async function delProductOption({
+  id,
+  redirectId,
+}: {
+  id: number;
+  redirectId: number;
+}) {
+  console.log("id : ", id);
+  console.log("redirectId : ", redirectId);
   const product = db.productOption.delete({
     where: {
       id,
     },
   });
-  console.log("delete : ", product);
+  revalidateTag("product-detail");
+  revalidateTag("products");
   return product;
 }
 export const getCachedProduct = nextCache(getProduct, ["product-detail"], {
