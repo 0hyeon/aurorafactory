@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { Cart, Product, User, productOption } from "@prisma/client";
 import { NullableProduct } from "@/types/type";
 import { getProduct } from "@/app/(home)/products/[id]/page";
+import ProductBox from "./ProductBox";
 
 export default function AddOptionDetailpage({
   product,
@@ -74,10 +75,10 @@ export default function AddOptionDetailpage({
     return alert("삭제완료");
   };
   return (
-    <div className="w-2/3 mx-auto my-10 p-8 bg-gray-50 shadow-lg rounded-md">
+    <div className="w-full lg:w-2/3 mx-auto my-10 p-8 bg-gray-50 shadow-lg rounded-md">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">상품 옵션 관리</h1>
-      <div className="flex flex-row items-start justify-between gap-10">
-        {/* 상품 옵션 리스트 */}
+      <div className="flex flex-col lg:flex-row gap-10">
+        {/* 왼쪽: 상품 옵션 리스트 */}
         <div className="flex-1">
           <h2 className="text-lg font-semibold text-gray-700 mb-4">
             옵션 리스트
@@ -111,59 +112,51 @@ export default function AddOptionDetailpage({
           </div>
         </div>
 
-        {/* 상품 정보와 옵션 추가 */}
-        <div className="flex-1">
-          <div className="relative block w-full h-96 max-h-[500px] mb-6">
-            {product?.productPicture?.photo ? (
-              <Image
-                src={`${product.productPicture.photo}/public`}
-                alt={product.productPicture.photo || ""}
-                fill
-                className="rounded-md"
-                style={{ objectFit: "contain" }}
+        {/* 오른쪽: 상품 정보 및 옵션 추가 */}
+        <div className="flex flex-col lg:flex-row gap-10">
+          {/* 왼쪽: ProductBox */}
+          <div className="flex-1">
+            <ProductBox el={product} />
+          </div>
+
+          {/* 오른쪽: 폼 영역 */}
+          <div className="flex-1">
+            {/* 상품 수정 버튼 */}
+            <div className="flex items-center justify-between mb-6">
+              <Button
+                onClick={() => toModifyBtn(product?.id)}
+                text="상품 수정"
               />
-            ) : (
-              <div className="flex items-center justify-center w-full h-full bg-gray-200 rounded-md">
-                <span className="text-gray-500">이미지 없음</span>
-              </div>
-            )}
+            </div>
+
+            {/* 폼 */}
+            <form
+              onSubmit={(e) => e.preventDefault()}
+              className="p-6 bg-white rounded-lg shadow-md space-y-4"
+            >
+              <Input
+                required
+                placeholder="수량"
+                type="number"
+                {...register("quantity")}
+                className="border-gray-300 focus:ring-2 focus:ring-indigo-500 w-full"
+              />
+              <Input
+                required
+                placeholder="색상"
+                {...register("color")}
+                className="border-gray-300 focus:ring-2 focus:ring-indigo-500 w-full"
+              />
+              <Input
+                required
+                placeholder="추가할인율"
+                type="number"
+                {...register("plusdiscount")}
+                className="border-gray-300 focus:ring-2 focus:ring-indigo-500 w-full"
+              />
+              <Button text="작성 완료" type="submit" />
+            </form>
           </div>
-          <div className="flex items-center justify-between mb-6">
-            <Button onClick={() => toModifyBtn(product?.id)} text="상품 수정" />
-          </div>
-          <form
-            onSubmit={onValid}
-            className="p-6 bg-white rounded-lg shadow-md space-y-4"
-          >
-            <Input
-              required
-              placeholder="수량"
-              type="number"
-              {...register("quantity")}
-              name="quantity"
-              errors={[errors.quantity?.message ?? ""]}
-              className="border-gray-300 focus:ring-2 focus:ring-indigo-500"
-            />
-            <Input
-              type="text"
-              required
-              placeholder="색상"
-              {...register("color")}
-              name="color"
-              errors={[errors.color?.message ?? ""]}
-              className="border-gray-300 focus:ring-2 focus:ring-indigo-500"
-            />
-            <Input
-              type="number"
-              required
-              placeholder="추가할인율"
-              {...register("plusdiscount")}
-              name="plusdiscount"
-              errors={[errors.plusdiscount?.message ?? ""]}
-              className="border-gray-300 focus:ring-2 focus:ring-indigo-500"
-            />
-            <Button text="작성 완료" type="submit" />
-          </form>
         </div>
       </div>
     </div>
