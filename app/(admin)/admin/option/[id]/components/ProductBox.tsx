@@ -1,8 +1,15 @@
+import Button from "@/components/button";
 import { NullableProduct } from "@/types/type";
 import Image from "next/image";
 import React from "react";
 
-const ProductBox = ({ el }: { el: NullableProduct }) => {
+const ProductBox = ({
+  el,
+  onModifyClick,
+}: {
+  el: NullableProduct;
+  onModifyClick: (id: number | undefined) => void;
+}) => {
   return (
     <div className="max-w-sm mx-auto bg-white rounded-lg shadow-md overflow-hidden">
       {/* 이미지 영역 */}
@@ -12,8 +19,7 @@ const ProductBox = ({ el }: { el: NullableProduct }) => {
             src={`${el.productPicture.photo}/public`}
             alt={el.productPicture.photo || ""}
             fill
-            className="object-cover rounded-t-lg"
-            style={{ objectFit: "cover" }}
+            className="object-contain rounded-t-lg"
           />
         ) : (
           <div className="flex items-center justify-center w-full h-full bg-gray-200 rounded-t-lg">
@@ -44,6 +50,9 @@ const ProductBox = ({ el }: { el: NullableProduct }) => {
         {/* 카테고리 */}
         <div className="mt-2 text-sm text-gray-500">
           카테고리: {el?.category || "카테고리 정보 없음"}
+        </div>
+        <div className="mt-5 flex items-center justify-between mb-6">
+          <Button onClick={() => onModifyClick(el?.id)} text="상품 수정" />
         </div>
       </div>
     </div>

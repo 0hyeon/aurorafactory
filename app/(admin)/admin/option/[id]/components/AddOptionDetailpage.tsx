@@ -116,19 +116,13 @@ export default function AddOptionDetailpage({
         <div className="flex flex-col lg:flex-row gap-10">
           {/* 왼쪽: ProductBox */}
           <div className="flex-1">
-            <ProductBox el={product} />
+            {/* <ProductBox el={product} /> */}
+            <ProductBox el={product} onModifyClick={(id) => toModifyBtn(id)} />
+            {/* 상품 수정 버튼 */}
           </div>
 
           {/* 오른쪽: 폼 영역 */}
           <div className="flex-1">
-            {/* 상품 수정 버튼 */}
-            <div className="flex items-center justify-between mb-6">
-              <Button
-                onClick={() => toModifyBtn(product?.id)}
-                text="상품 수정"
-              />
-            </div>
-
             {/* 폼 */}
             <form
               onSubmit={(e) => e.preventDefault()}
