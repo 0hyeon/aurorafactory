@@ -18,7 +18,7 @@ export default async function Home() {
     <>
       <main>
         <Slide />
-        <div className="max-w-[1000px] mx-auto my-0">
+        <div className="max-w-[1000px] mx-auto my-0 px-4 sm:px-6 lg:px-8">
           <SlideSmall />
           {/* <Best data={slideData} /> */}
           <BestItem data={items} subtitle="all" title="전체상품" />
