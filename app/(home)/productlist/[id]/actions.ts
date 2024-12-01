@@ -46,7 +46,19 @@ export const mappingSubDesc = (title: string): string => {
     라미봉투: "가성비ㆍ탁월한",
     에어캡봉투: "완충효과 100%",
     보냉봉투: "온도유지",
+    undefined: "",
   };
 
   return mapping[title] || "default";
+};
+export const mappingtitle = (item: string): string => {
+  const mapping: Mapping = {
+    라미봉투: "lame",
+    에어캡봉투: "aircap",
+    보냉봉투: "eunbak",
+    undefined: "all",
+    전체상품: "all",
+  };
+
+  return mapping[item];
 };

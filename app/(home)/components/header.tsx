@@ -8,9 +8,20 @@ import Nav from "./nav";
 
 export default function Header({ cartcount }: any) {
   const [isActive, setIsActive] = useState(false);
-
+  const [isMobile, setIsMobile] = useState(false);
   // fetchCartCount 함수 정의
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
 
+    handleResize(); // 초기값 설정
+    window.addEventListener("resize", handleResize); // 창 크기 변경 이벤트 등록
+
+    return () => {
+      window.removeEventListener("resize", handleResize); // 이벤트 제거
+    };
+  }, []);
   return (
     <div className="max-w-[1100px] my-0 mx-auto relative">
       <div className="flex items-center justify-between">
@@ -57,51 +68,77 @@ export default function Header({ cartcount }: any) {
           </Link>
         </motion.div>
       </div>
-      <div className="flex justify-between pb-4 text-[#111]">
-        {/* Menu */}
-        {/* <div
-          onClick={() => {
-            setIsActive(!isActive);
-          }}
-          className="flex items-center justify-center gap-2 cursor-pointer"
-        >
-          <div className="relative">
-            <motion.p
-              variants={opacity}
-              animate={!isActive ? "open" : "closed"}
-            >
-              Menu
-            </motion.p>
-            <motion.p
-              variants={opacity}
-              className="absolute opacity-0 top-0"
-              animate={isActive ? "open" : "closed"}
-            >
-              Close
-            </motion.p>
+      <div className="flex justify-between pb-4 text-[#111] mt-2 mr-2">
+        {isMobile ? (
+          <div
+            onClick={() => setIsActive(!isActive)}
+            className="flex items-center justify-center cursor-pointer"
+          >
+            <div className="relative w-8 h-6 ml-3">
+              {/* 첫 번째 바 */}
+              <motion.div
+                initial={false}
+                animate={
+                  isActive ? { rotate: 45, y: 9.5 } : { rotate: 0, y: 0 }
+                }
+                className="absolute top-0 left-0 w-8 h-0.5 bg-black rounded"
+                transition={{ duration: 0.3 }}
+              />
+              {/* 두 번째 바 */}
+              <motion.div
+                initial={false}
+                animate={isActive ? { opacity: 0 } : { opacity: 1 }}
+                className="absolute top-2.5 left-0 w-8 h-0.5 bg-black rounded"
+                transition={{ duration: 0.3 }}
+              />
+              {/* 세 번째 바 */}
+              <motion.div
+                initial={false}
+                animate={
+                  isActive ? { rotate: -45, y: -9.5 } : { rotate: 0, y: 0 }
+                }
+                className="absolute top-5 left-0 w-8 h-0.5 bg-black rounded"
+                transition={{ duration: 0.3 }}
+              />
+            </div>
           </div>
-        </div> */}
-        <div>
-          <Link href={"/productlist/lame"}>라미봉투</Link>
-        </div>
-        <div>
-          <Link href={"/productlist/eunbak"}>보냉봉투</Link>
-        </div>
-        <div>
-          <Link href={"/productlist/aircap"}>에어캡봉투</Link>
-        </div>
-        <div className="cursor-pointer" onClick={() => alert("준비중입니다.")}>
-          발포시트지
-        </div>
-        <div className="cursor-pointer" onClick={() => alert("준비중입니다.")}>
-          이벤트/혜택
-        </div>
-        <div className="cursor-pointer" onClick={() => alert("준비중입니다.")}>
-          커뮤니티
-        </div>
-        <div className="cursor-pointer" onClick={() => alert("준비중입니다.")}>
-          고객센터
-        </div>
+        ) : (
+          <>
+            <div>
+              <Link href={"/productlist/lame"}>라미봉투</Link>
+            </div>
+            <div>
+              <Link href={"/productlist/eunbak"}>보냉봉투</Link>
+            </div>
+            <div>
+              <Link href={"/productlist/aircap"}>에어캡봉투</Link>
+            </div>
+            <div
+              className="cursor-pointer"
+              onClick={() => alert("준비중입니다.")}
+            >
+              발포시트지
+            </div>
+            <div
+              className="cursor-pointer"
+              onClick={() => alert("준비중입니다.")}
+            >
+              이벤트/혜택
+            </div>
+            <div
+              className="cursor-pointer"
+              onClick={() => alert("준비중입니다.")}
+            >
+              커뮤니티
+            </div>
+            <div
+              className="cursor-pointer"
+              onClick={() => alert("준비중입니다.")}
+            >
+              고객센터
+            </div>
+          </>
+        )}
       </div>
       <AnimatePresence mode="wait">{isActive && <Nav />}</AnimatePresence>
     </div>

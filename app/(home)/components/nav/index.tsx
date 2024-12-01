@@ -1,6 +1,6 @@
 "use client";
 // import styles from "./style.module.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { height } from "../anim";
 import Body from "./Body";
@@ -33,6 +33,11 @@ const links = [
     href: "/contact",
     src: "contact.png",
   },
+  {
+    title: "라미봉투",
+    href: "/productlist/lame",
+    src: "contact.png",
+  },
 ];
 
 export default function Nav() {
@@ -40,14 +45,27 @@ export default function Nav() {
     isActive: false,
     index: 0,
   });
+  const [isMobile, setIsMobile] = useState(false);
+  // fetchCartCount 함수 정의
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
 
+    handleResize(); // 초기값 설정
+    window.addEventListener("resize", handleResize); // 창 크기 변경 이벤트 등록
+
+    return () => {
+      window.removeEventListener("resize", handleResize); // 이벤트 제거
+    };
+  }, []);
   return (
     <motion.div
       variants={height}
       initial="initial"
       animate="enter"
       exit="exit"
-      className="flex justify-between absolute z-10 bg-white"
+      className="flex justify-between absolute z-10 bg-white pb-16"
     >
       <div
         className="
@@ -62,11 +80,13 @@ export default function Nav() {
         />
         {/* <Footer /> */}
       </div>
-      <Image
-        src={links[selectedLink.index].src}
-        isActive={selectedLink.isActive}
-        alt="image"
-      />
+      {!isMobile && (
+        <Image
+          src={links[selectedLink.index].src}
+          isActive={selectedLink.isActive}
+          alt="image"
+        />
+      )}
     </motion.div>
   );
 }

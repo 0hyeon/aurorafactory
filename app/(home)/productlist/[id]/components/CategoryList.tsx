@@ -12,6 +12,8 @@ const CategoryList = ({
   itemsCategory: IProduct[];
   category: string;
 }) => {
+  console.log("itemsCategory : ", itemsCategory);
+  console.log("category : ", category);
   const tabBase =
     "w-28 p-2 text-base cursor-pointer flex justify-center items-center h-full relative text-center leading-tight transition-all duration-200";
 
@@ -58,10 +60,14 @@ const CategoryList = ({
         )}
         <div className="flex gap-3 items-end">
           <h3 className="text-black text-3xl font-bold">
-            {mappingSubtitle(category)}
+            {mappingSubtitle(category) === undefined
+              ? "전체보기"
+              : mappingSubtitle(category)}
           </h3>
           <h1 className=" text-[#999] text-lg font-medium">
-            {mappingSubDesc(mappingSubtitle(category))}
+            {mappingSubDesc(mappingSubtitle(category)) === "default"
+              ? ""
+              : mappingSubDesc(mappingSubtitle(category))}
           </h1>
         </div>
       </div>
