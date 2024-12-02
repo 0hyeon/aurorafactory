@@ -44,11 +44,13 @@ export default function Slide() {
       id: 1,
       text: "오로라팩",
       src: "/images/main_banner5.jpg",
+      mobileSrc: "/images/mobile_banner1.png",
     },
     {
       id: 2,
       text: "오로라팩",
       src: "/images/main_banner1.png",
+      mobileSrc: "/images/mobile_banner2.jpg",
     },
   ];
   return (
@@ -72,7 +74,7 @@ export default function Slide() {
             <div className="relative w-full h-[240px] md:h-[360px]">
               <Image
                 alt={String(slide.id)}
-                src={isMobile ? slide.src : slide.src}
+                src={isMobile ? slide.mobileSrc : slide.src}
                 fill
                 style={{ objectFit: "cover" }}
               />
@@ -82,7 +84,7 @@ export default function Slide() {
       </Swiper>
       <div className="relative w-full max-w-[1000px] mx-auto font-normal">
         {/* 네비게이션 컨트롤 */}
-        <div className="absolute z-[1] flex right-0 md:right-4 left-0 md:left-[inherit] bottom-4 mx-auto md:mx-0 text-white rounded-[100px] w-[90px] md:w-[110px] py-2 text-sm md:text-base justify-around items-center bg-[rgba(0,0,0,0.5)]">
+        <div className="absolute z-[1] flex right-0 md:right-4 left-0 md:left-[inherit] bottom-4 mx-auto md:mx-0 text-white rounded-[100px] w-[70px] md:w-[110px] py-1 md:py-2 text-sm md:text-base justify-around items-center bg-[rgba(0,0,0,0.5)]">
           <div
             className="w-6 h-6 md:w-8 md:h-8 cursor-pointer bg-no-repeat bg-center bg-cover"
             style={{ backgroundImage: "url('/images/left.png')" }}

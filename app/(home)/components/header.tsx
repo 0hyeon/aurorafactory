@@ -68,7 +68,7 @@ export default function Header({ cartcount }: any) {
           </Link>
         </motion.div>
       </div>
-      <div className="flex justify-between pb-4 text-[#111] mt-2 mr-2">
+      <div className="flex justify-end  text-[#111] mt-3 mr-2">
         {isMobile ? (
           <div
             onClick={() => setIsActive(!isActive)}
@@ -78,26 +78,24 @@ export default function Header({ cartcount }: any) {
               {/* 첫 번째 바 */}
               <motion.div
                 initial={false}
-                animate={
-                  isActive ? { rotate: 45, y: 9.5 } : { rotate: 0, y: 0 }
-                }
-                className="absolute top-0 left-0 w-8 h-0.5 bg-black rounded"
+                animate={isActive ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}
+                className="absolute top-0 left-0 w-7 h-[2px] bg-gray-600 rounded"
                 transition={{ duration: 0.3 }}
               />
               {/* 두 번째 바 */}
               <motion.div
                 initial={false}
                 animate={isActive ? { opacity: 0 } : { opacity: 1 }}
-                className="absolute top-2.5 left-0 w-8 h-0.5 bg-black rounded"
+                className="absolute top-2 left-0 w-7 h-[2px] bg-gray-600 rounded"
                 transition={{ duration: 0.3 }}
               />
               {/* 세 번째 바 */}
               <motion.div
                 initial={false}
                 animate={
-                  isActive ? { rotate: -45, y: -9.5 } : { rotate: 0, y: 0 }
+                  isActive ? { rotate: -45, y: -8 } : { rotate: 0, y: 0 }
                 }
-                className="absolute top-5 left-0 w-8 h-0.5 bg-black rounded"
+                className="absolute top-4 left-0 w-7 h-[2px] bg-gray-600 rounded"
                 transition={{ duration: 0.3 }}
               />
             </div>
