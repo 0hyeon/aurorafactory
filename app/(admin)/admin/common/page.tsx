@@ -8,7 +8,7 @@ import Image from "next/image";
 import { NullableProduct } from "@/types/type";
 import { uploadProduct, uploadUpdateProduct } from "./actions";
 import { useFormStatus } from "react-dom";
-export default function AddProductCommon({ edit }: { edit?: NullableProduct }) {
+export default function AddProductCommon() {
   const [preview, setPreview] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string[]>([]);
@@ -39,9 +39,9 @@ export default function AddProductCommon({ edit }: { edit?: NullableProduct }) {
     }
 
     // `edit` 객체가 있다면 ID 추가
-    if (edit) {
-      formData.append("id", String(edit.id));
-    }
+    // if (edit) {
+    //   formData.append("id", String(edit.id));
+    // }
 
     return formData;
   };
@@ -83,11 +83,12 @@ export default function AddProductCommon({ edit }: { edit?: NullableProduct }) {
       <form
         action={async () => {
           const formData = await prepareFormData();
-          if (edit) {
-            await uploadUpdateProduct(formData); // 서버 액션 호출
-          } else {
-            await uploadProduct(formData); // 서버 액션 호출
-          }
+          // if (edit) {
+          //   await uploadUpdateProduct(formData); // 서버 액션 호출
+          // }
+          // else {
+          await uploadProduct(formData); // 서버 액션 호출
+          // }
         }}
       >
         <label
@@ -152,11 +153,13 @@ export default function AddProductCommon({ edit }: { edit?: NullableProduct }) {
           type="text"
           required
           placeholder="카테고리명"
-          defaultValue={edit?.category || ""}
+          // defaultValue={edit?.category || ""}
+          defaultValue={""}
           name="category"
         />
 
-        <Button text={edit ? "수정 완료" : "작성 완료"} type="submit" />
+        {/* <Button text={edit ? "수정 완료" : "작성 완료"} type="submit" /> */}
+        <Button text={"수정 완료"} type="submit" />
       </form>
     </div>
   );
