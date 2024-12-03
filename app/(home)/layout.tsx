@@ -73,9 +73,7 @@ export default async function TabLayout({
       <Header cartcount={cartcount || 0} />
 
       {/* 메인 컨텐츠 */}
-      <main className="w-full max-w-[1100px] mx-auto pt-[15px] pb-[60px]">
-        {children}
-      </main>
+      <main className="w-full mx-auto pt-[15px] pb-[60px]">{children}</main>
     </div>
   );
 }

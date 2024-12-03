@@ -3,21 +3,21 @@ const Footer = () => {
   return (
     <>
       <div className="max-w-5xl mx-auto py-5 felx flex-col gap-5">
-        <ul className="flex p-0 m-0 mb-6">
+        <ul className="md:text-base text-sm cursor-pointer flex p-0 m-0 mb-6 items-center justify-center">
           <li className="list-none border-none pl-0 ml-0">회사소개</li>
-          <li className="list-none border-l border-black ml-4 pl-4">
+          <li className="list-none border-l border-black md:ml-4 md:pl-4 ml-1 pl-1">
             개인정보처리방침
           </li>
-          <li className="list-none border-l border-black ml-4 pl-4">
+          <li className="list-none border-l border-black md:ml-4 md:pl-4 ml-1 pl-1">
             이용약관
           </li>
-          <li className="list-none border-l border-black ml-4 pl-4">
+          <li className="list-none border-l border-black md:ml-4 md:pl-4 ml-1 pl-1">
             선결제이용약관
           </li>
         </ul>
-        <div className="flex">
+        <div className="flex md:block md:items-center items-center md:justify-center justify-center">
           <div>
-            <ul>
+            <ul className="md:p-0 px-2 text-sm md:text-base">
               <li>주식회사 오로라팩 대표 : 김길수</li>
               <li>주소 : 안성시 보개면 오두리 161</li>
               <li>

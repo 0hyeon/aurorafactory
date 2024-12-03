@@ -72,7 +72,7 @@ export default function Header({ cartcount }: any) {
           </Link>
         </motion.div>
       </div>
-      <div className="flex justify-end  text-[#111] mt-3 mr-2">
+      <div className="flex justify-end md:justify-around  text-[#111] mt-3 mr-2">
         {isMobile ? (
           <div
             onClick={() => setIsActive(!isActive)}
