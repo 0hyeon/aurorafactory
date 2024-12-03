@@ -20,11 +20,10 @@ const Youtube: React.FC<YoutubeProps> = ({ url }) => {
   }
 
   return (
-    <div className="relative w-full h-auto py-20 pointer-events-none">
+    <div className="relative w-full overflow-hidden pb-[56.25%] pointer-events-none">
       <iframe
-        width="1000"
-        height="500"
-        src="https://www.youtube.com/embed/EwqRj6SHNxg?autoplay=1&controls=0&modestbranding=1&mute=1&loop=1&playlist=EwqRj6SHNxg"
+        className="absolute top-0 left-0 w-full h-full"
+        src={`https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&modestbranding=1&mute=1&loop=1&playlist=${videoId}`}
         title="YouTube video player"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         referrerPolicy="strict-origin-when-cross-origin"

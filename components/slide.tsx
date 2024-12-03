@@ -11,18 +11,17 @@ export default function Slide() {
   const [swiperIndex, setSwiperIndex] = useState(0); //페이지네이션
   const [swiper, setSwiper] = useState<SwiperClass>(); //슬라이드
   const [isMobile, setIsMobile] = useState(false); // 모바일 여부 확인
+
   useEffect(() => {
-    // 브라우저 환경에서만 실행
+    // 화면 크기를 감지하여 모바일 여부를 설정
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
+      setIsMobile(window.innerWidth <= 768); // 768px 이하를 모바일로 간주
     };
 
     handleResize(); // 초기값 설정
-    window.addEventListener("resize", handleResize); // 창 크기 변경 이벤트 등록
+    window.addEventListener("resize", handleResize); // 화면 크기 변경 감지
 
-    return () => {
-      window.removeEventListener("resize", handleResize); // 이벤트 제거
-    };
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
   const handlePrev = () => {
     swiper?.slidePrev();
@@ -71,14 +70,31 @@ export default function Slide() {
       >
         {slideData.map((slide) => (
           <SwiperSlide key={slide.id}>
-            <div className="relative w-full h-[240px] md:h-[360px]">
-              <Image
-                alt={String(slide.id)}
-                src={isMobile ? slide.mobileSrc : slide.src}
-                fill
-                style={{ objectFit: "cover" }}
-              />
-            </div>
+            {isMobile ? (
+              // 모바일일 때 레이아웃
+              <div className="relative w-full aspect-[375/314] flex justify-center items-center bg-gray-100">
+                <Image
+                  alt={String(slide.id)}
+                  src={slide.mobileSrc}
+                  fill
+                  style={{
+                    objectFit: "contain",
+                  }}
+                />
+              </div>
+            ) : (
+              // PC일 때 레이아웃
+              <div className="relative w-full h-[240px] md:h-[360px]">
+                <Image
+                  alt={String(slide.id)}
+                  src={slide.src}
+                  fill
+                  style={{
+                    objectFit: "cover",
+                  }}
+                />
+              </div>
+            )}
           </SwiperSlide>
         ))}
       </Swiper>

@@ -24,8 +24,11 @@ export default function Header({ cartcount }: any) {
   }, []);
   return (
     <div className="max-w-[1100px] my-0 mx-auto relative">
-      <div className="flex items-center justify-between">
-        <div className="cursor-pointer" onClick={() => alert("준비중입니다.")}>
+      <div className="flex items-center justify-center md:justify-between ">
+        <div
+          className="cursor-pointer hidden md:block"
+          onClick={() => alert("준비중입니다.")}
+        >
           <Image
             src={`/images/topbanner.gif`}
             width={270}
@@ -33,18 +36,19 @@ export default function Header({ cartcount }: any) {
             alt="eventImage"
           />
         </div>
-        <Link href="/">
+        <Link href="/" className="">
           <Image
             src={`/images/aurora_logo.jpg`}
-            width={300}
-            height={100}
             alt="logoImage"
+            width={300} // 기본 원본 비율 제공
+            height={100} // 기본 원본 비율 제공
+            className="w-[180px] md:w-[300px] h-auto"
           />
         </Link>
         <motion.div
           variants={opacity}
           animate={!isActive ? "open" : "closed"}
-          className="w-[270px] flex flex-col justify-center items-end"
+          className="pr-2 md:pr-0 md:w-[270px] flex flex-col justify-center items-end md:static absolute right-1"
         >
           <Link href={"/cart"}>
             <div className="flex gap-[10px]">
@@ -63,7 +67,7 @@ export default function Header({ cartcount }: any) {
                   strokeLinejoin="round"
                 ></path>
               </svg>
-              <p>Cart({cartcount ? cartcount : 0})</p>
+              <p className="text-sm">Cart({cartcount ? cartcount : 0})</p>
             </div>
           </Link>
         </motion.div>

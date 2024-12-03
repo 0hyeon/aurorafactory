@@ -45,8 +45,9 @@ export default async function TabLayout({
   }
 
   return (
-    <div>
-      <div className="h-auto pt-4 gap-4 flex items-center justify-end text-[12px] max-w-[1100px] mx-auto my-0">
+    <div className="w-full">
+      {/* 상단 바 */}
+      <div className="pr-2 md:pr-0 h-auto py-2 md:p-4 border-b gap-4 flex items-center justify-end text-[12px] max-w-[1100px] mx-auto">
         {session.id ? (
           <>
             <Suspense fallback={"Hello!"}>
@@ -67,12 +68,14 @@ export default async function TabLayout({
           </>
         )}
       </div>
+
+      {/* 헤더 */}
       <Header cartcount={cartcount || 0} />
-      <div className="w-full max-w-[100%] mx-auto">
-        <div className="pt-[15px] pb-[60px] max-w-[100%] mx-auto">
-          {children}
-        </div>
-      </div>
+
+      {/* 메인 컨텐츠 */}
+      <main className="w-full max-w-[1100px] mx-auto pt-[15px] pb-[60px]">
+        {children}
+      </main>
     </div>
   );
 }
