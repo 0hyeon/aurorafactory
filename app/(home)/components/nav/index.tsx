@@ -65,14 +65,9 @@ export default function Nav() {
       initial="initial"
       animate="enter"
       exit="exit"
-      className="flex justify-between absolute z-10 bg-white pb-16"
+      className="w-full top-0 flex h-full justify-between absolute z-[5] bg-white pb-16"
     >
-      <div
-        className="
-            flex
-            flex-col
-            justify-between"
-      >
+      <div className="flex flex-col justify-between w-full">
         <Body
           links={links}
           selectedLink={selectedLink}

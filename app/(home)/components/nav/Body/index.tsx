@@ -32,20 +32,13 @@ export default function Body({
   };
 
   return (
-    <div className="flex flex-wrap mt-[40px] pl-10">
+    <div className="h-[100vh] gap-5 flex items-center flex-col mt-[70px] md:mt-[40px]">
       {links.map((link: { title: string; href: string }, index: number) => {
         const { title, href } = link;
         return (
           <Link key={`l_${index}`} href={href}>
             <motion.p
-              className="
-              m-0
-              flex
-              overflow-hidden
-              text-4xl
-              pr-[30px]
-              pt-[10px]
-              "
+              className="m-0 flex overflow-hidden text-2xl"
               onMouseOver={() => {
                 setSelectedLink({ isActive: true, index });
               }}

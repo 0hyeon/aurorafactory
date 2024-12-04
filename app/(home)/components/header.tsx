@@ -24,7 +24,7 @@ export default function Header({ cartcount }: any) {
   }, []);
   return (
     <div className="max-w-[1100px] my-0 mx-auto relative">
-      <div className="flex items-center justify-center md:justify-between ">
+      <div className="z-20 relative bg-white md:bg-inherit flex items-center justify-center md:justify-between ">
         <div
           className="cursor-pointer hidden md:block"
           onClick={() => alert("준비중입니다.")}
@@ -72,7 +72,7 @@ export default function Header({ cartcount }: any) {
           </Link>
         </motion.div>
       </div>
-      <div className="flex justify-end md:justify-around  text-[#111] mt-3 mr-2">
+      <div className="relative z-10 md:z-0 flex justify-end md:justify-around  text-[#111] mt-3 mr-2">
         {isMobile ? (
           <div
             onClick={() => setIsActive(!isActive)}
