@@ -6,6 +6,7 @@ import { height } from "../anim";
 import Body from "./Body";
 import Footer from "./Footer";
 import Image from "./Image";
+import Link from "next/link";
 
 const links = [
   {
@@ -40,7 +41,7 @@ const links = [
   },
 ];
 
-export default function Nav() {
+export default function Nav({ cartcount = 0 }: { cartcount: number }) {
   const [selectedLink, setSelectedLink] = useState({
     isActive: false,
     index: 0,
@@ -72,6 +73,7 @@ export default function Nav() {
           links={links}
           selectedLink={selectedLink}
           setSelectedLink={setSelectedLink}
+          cartcount={cartcount}
         />
         {/* <Footer /> */}
       </div>
