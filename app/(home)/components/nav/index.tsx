@@ -41,7 +41,7 @@ const links = [
   },
 ];
 
-export default function Nav({ cartcount = 0 }: { cartcount: number }) {
+export default function Nav({ cartcount = 0 }: { cartcount?: number }) {
   const [selectedLink, setSelectedLink] = useState({
     isActive: false,
     index: 0,
