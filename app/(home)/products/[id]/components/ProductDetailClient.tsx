@@ -91,29 +91,33 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
   };
   return (
     <>
-      <div className="flex gap-[50px] max-w-[1100px] mx-auto border-b border-[#999] pb-14">
-        <div className="w-[500px]">
+      <div className="flex flex-col md:flex-row gap-5 md:gap-[50px] max-w-[1100px] mx-auto border-b border-[#999] pb-10 md:pb-14">
+        {/* 슬라이드 이미지 */}
+        <div className="w-full md:w-[500px]">
           <div className="relative aspect-square">
             <Slide data={product} />
           </div>
         </div>
-        <div className="w-[550px]">
+        {/* 상품 정보 */}
+        <div className="w-full md:w-[550px]">
           <div className="p-5">
-            <div className="pb-[18px] px-[5px] border-b border-[#d5dbdc]">
-              <h1 className="text-3xl font-medium tracking-[-.06em]">
+            {/* 상품 제목 */}
+            <div className="pb-[12px] md:pb-[18px] px-[5px] border-b border-[#d5dbdc]">
+              <h1 className="text-2xl md:text-3xl font-medium tracking-[-.06em]">
                 {product.title}
               </h1>
             </div>
-            <div className="pt-3 pb-[18px] px-[5px] border-b border-[#d5dbdc]">
-              <div className="flex items-center gap-2">
+            {/* 가격 및 카테고리 */}
+            <div className="pt-3 pb-[12px] md:pb-[18px] px-[5px] border-b border-[#d5dbdc]">
+              <div className="flex flex-col md:flex-row items-start md:items-center gap-2">
                 <div className="font-medium text-sm line-through text-gray-500">
                   {formatToWon(product.price)}원
                 </div>
-                <div className="font-semibold text-xl text-orange-600">
+                <div className="font-semibold text-lg md:text-xl text-orange-600">
                   {product.discount ? `${product.discount}%` : ""}
                 </div>
               </div>
-              <div className="font-extrabold text-xl">
+              <div className="font-extrabold text-lg md:text-xl">
                 {formatToWon(
                   product.discount
                     ? product.price * (1 - Number(product.discount) / 100)
@@ -121,12 +125,16 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
                 )}
                 원
               </div>
-              <div className="text-base pt-3 flex items-center gap-2">
+              <div className="text-sm md:text-base pt-3 flex flex-col md:flex-row items-start md:items-center gap-2">
                 {product.category}
-                <div className="text-sm">원산지: 국내산</div>
+                <div className="text-xs md:text-sm">원산지: 국내산</div>
               </div>
             </div>
-            <div className="py-[28px] text-base">{product.description}</div>
+            {/* 설명 */}
+            <div className="py-5 md:py-[28px] text-sm md:text-base">
+              {product.description}
+            </div>
+            {/* 옵션 선택 */}
             <div className="pb-[18px] px-[5px] border-b border-[#d5dbdc]">
               <SelectComponent
                 options={product.productoption}
@@ -137,7 +145,7 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
                 selectedOptions={selectedOptions}
               />
             </div>
-
+            {/* 선택된 옵션 */}
             {selectedOptions.length > 0 && (
               <>
                 <div className="mt-4">
@@ -146,10 +154,10 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
                     {selectedOptions.map((option, index) => (
                       <div
                         key={index}
-                        className="flex items-center justify-between"
+                        className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-0"
                       >
                         <div>{option.optionDetails}</div>
-                        <div className="flex items-center mt-4">
+                        <div className="flex items-center mt-2 md:mt-4">
                           <button
                             className="px-2 py-1 border border-gray-300"
                             onClick={() => handleQuantityChange(option.id, -1)}
@@ -157,7 +165,9 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
                           >
                             -
                           </button>
-                          <span className="mx-4">{option.quantity}</span>
+                          <span className="mx-2 md:mx-4">
+                            {option.quantity}
+                          </span>
                           <button
                             className="px-2 py-1 border border-gray-300"
                             onClick={() => handleQuantityChange(option.id, 1)}
@@ -165,7 +175,7 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
                             +
                           </button>
                           <button
-                            className="ml-4 px-2 py-1 border border-gray-300 text-red-600"
+                            className="ml-2 md:ml-4 px-2 py-1 border border-gray-300 text-red-600"
                             onClick={() => handleRemoveOption(option.id)}
                           >
                             x
@@ -174,13 +184,14 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
                       </div>
                     ))}
                   </div>
-                  <div className="mt-4 font-extrabold text-xl">
+                  <div className="mt-4 font-extrabold text-lg md:text-xl">
                     총 가격: {formatToWon(getTotalPrice())}원
                   </div>
                 </div>
               </>
             )}
-            <div className="pt-10 flex *:w-1/2 gap-2">
+            {/* 버튼들 */}
+            <div className="pt-6 md:pt-10 flex flex-col md:flex-row w-full md:w-1/2 gap-2">
               {params && (
                 <CartButton
                   options={selectedOptions}
@@ -199,7 +210,8 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
           </div>
         </div>
       </div>
-      <div className="relative block w-[40%] mx-auto aspect-[1/10] overflow-hidden">
+      {/* 이미지 */}
+      <div className="relative block w-full md:w-[40%] mx-auto aspect-[1/10] overflow-hidden">
         {product && product.productPicture?.category && (
           <Image
             src={

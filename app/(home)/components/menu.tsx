@@ -39,7 +39,9 @@ export default function Menu() {
         <div>커뮤니티</div>
         <div>고객센터</div>
       </div>
-      <AnimatePresence mode="wait">{isActive && <Nav />}</AnimatePresence>
+      <AnimatePresence mode="wait">
+        {isActive && <Nav setIsActive={setIsActive} />}
+      </AnimatePresence>
     </>
   );
 }

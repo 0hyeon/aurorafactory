@@ -74,7 +74,7 @@ const CategoryList = ({
 
       {mappingSubtitle(category) === "라미봉투" ||
       mappingSubtitle(category) === "보냉봉투" ? (
-        <div className="grid grid-cols-3 gap-4 w-11/12 mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 w-11/12 mx-auto">
           {itemsCategory &&
             itemsCategory
               .filter((el) => el.category === method)
@@ -116,7 +116,7 @@ const CategoryList = ({
               ))}
         </div>
       ) : (
-        <div className="grid grid-cols-3 gap-4 w-11/12 mx-auto">
+        <div className="grid md:grid-cols-3 grid-cols-2 gap-4 w-11/12 mx-auto">
           {itemsCategory &&
             itemsCategory.map((el) => (
               <Link
