@@ -74,7 +74,7 @@ export default function Header({ cartcount }: any) {
           </motion.div>
         )}
       </div>
-      <div className="z-10 md:z-0 flex justify-end md:justify-around  text-[#111] mt-5 mr-2 md:static absolute top-0">
+      <div className="z-50 md:z-0 flex justify-end md:justify-around  text-[#111]  mr-2 md:static absolute top-[50%] right-0 -translate-y-1/2 md:-translate-y-0">
         {isMobile ? (
           <div
             onClick={() => setIsActive(!isActive)}
@@ -145,7 +145,7 @@ export default function Header({ cartcount }: any) {
         )}
       </div>
       <AnimatePresence mode="wait">
-        {isActive && <Nav cartcount={cartcount} />}
+        {isActive && <Nav cartcount={cartcount} setIsActive={setIsActive} />}
       </AnimatePresence>
     </div>
   );

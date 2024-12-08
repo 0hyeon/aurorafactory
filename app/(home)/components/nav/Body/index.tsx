@@ -8,11 +8,13 @@ export default function Body({
   selectedLink,
   setSelectedLink,
   cartcount,
+  setIsActive,
 }: {
   links: any;
   selectedLink: any;
   setSelectedLink: any;
   cartcount: number;
+  setIsActive: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const getChars = (word: string) => {
     let chars: any[] = [];
@@ -41,9 +43,9 @@ export default function Body({
         initial="initial"
         animate="enter"
         exit="exit"
-        className="mt-[80px] border-t py-3 border-b w-full"
+        className="mt-[55px] border-t py-3 border-b w-full"
       >
-        <Link href={"/cart"}>
+        <Link href={"/cart"} onClick={() => setIsActive(false)}>
           <div className="flex gap-[10px] justify-end pr-6">
             <svg
               width="19"
@@ -67,7 +69,11 @@ export default function Body({
       {links.map((link: { title: string; href: string }, index: number) => {
         const { title, href } = link;
         return (
-          <Link key={`l_${index}`} href={href}>
+          <Link
+            key={`l_${index}`}
+            href={href}
+            onClick={() => setIsActive(false)}
+          >
             <motion.p
               className="m-0 flex overflow-hidden text-2xl"
               onMouseOver={() => {

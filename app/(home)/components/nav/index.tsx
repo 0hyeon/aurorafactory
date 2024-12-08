@@ -41,7 +41,13 @@ const links = [
   },
 ];
 
-export default function Nav({ cartcount = 0 }: { cartcount?: number }) {
+export default function Nav({
+  cartcount = 0,
+  setIsActive,
+}: {
+  cartcount?: number;
+  setIsActive: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const [selectedLink, setSelectedLink] = useState({
     isActive: false,
     index: 0,
@@ -74,6 +80,7 @@ export default function Nav({ cartcount = 0 }: { cartcount?: number }) {
           selectedLink={selectedLink}
           setSelectedLink={setSelectedLink}
           cartcount={cartcount}
+          setIsActive={setIsActive}
         />
         {/* <Footer /> */}
       </div>
