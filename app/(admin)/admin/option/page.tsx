@@ -6,7 +6,7 @@ import Link from "next/link";
 export default async function AddOptionList() {
   const product = await getCachedProducts();
   revalidateTag("products");
-
+  console.log("product : ", product);
   return (
     <div className="flex w-11/12 flex-wrap gap-8 mx-auto p-14 bg-gray-50 rounded-lg shadow-lg">
       {product &&
@@ -32,12 +32,15 @@ export default async function AddOptionList() {
                 )}
               </div>
               <div className="text-center">
-                <h3 className="text-lg font-semibold text-gray-800 truncate">
+                <h3 className="text-sm font-semibold text-gray-800">
                   {el.title}
                 </h3>
                 <p className="text-sm text-gray-600 mb-1">{el.category}</p>
-                <p className="text-lg font-bold text-gray-900">
+                <p className="text-sm font-bold text-gray-900">
                   {el.price ? `${el.price.toLocaleString()}원` : "가격 없음"}
+                </p>
+                <p className="text-sm font-bold text-gray-900">
+                  옵션 : {el._count.productoption}개
                 </p>
               </div>
             </Link>

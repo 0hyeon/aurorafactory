@@ -99,15 +99,15 @@ export default function Purchase({
   return (
     <>
       <Script src="https://pay.nicepay.co.kr/v1/js/" strategy="lazyOnload" />
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center md:pb-0 pb-6">
         <button
           onClick={disabled ? undefined : serverAuth}
           disabled={disabled}
-          className={`w-1/3 p-3 ${
+          className={`w-full md:w-1/3 p-3  ${
             disabled
               ? "bg-gray-200 text-gray-400"
-              : "bg-white text-blue-400 hover:bg-blue-400 hover:text-white"
-          } rounded-md border-gray-400 border font-semibold text-base hover:border-blue-400 duration-300`}
+              : "bg-white text-blue-600 hover:bg-blue-600 hover:text-white"
+          } rounded-md border-gray-400 border font-semibold text-base hover:border-blue-600 duration-300`}
         >
           구매하기
         </button>

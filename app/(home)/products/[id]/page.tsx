@@ -72,6 +72,11 @@ export async function getProducts() {
           slideimages: true,
         },
       },
+      _count: {
+        select: {
+          productoption: true,
+        },
+      },
     },
   });
   return product;
