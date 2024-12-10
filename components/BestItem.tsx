@@ -87,14 +87,12 @@ export default function BestItem({ data, title, subtitle }: NullableProduct) {
         onActiveIndexChange={(e) => setSwiperIndex(e.realIndex)}
         onSwiper={(e) => setSwiper(e)}
       >
-        {data?.map((slide: any) => (
+        {data?.map((slide: any, index: number) => (
           <SwiperSlide
             key={slide.id}
             className="flex justify-center"
             style={{
-              width: isMobile
-                ? `calc((100% - ${20 * 2}px) / 2)` // 간격을 고려해 슬라이드 크기 계산
-                : "auto",
+              width: isMobile ? "50%" : "auto", // 모바일: 슬라이드 50% 크기
             }}
           >
             <Link
@@ -105,7 +103,7 @@ export default function BestItem({ data, title, subtitle }: NullableProduct) {
               <div
                 className={`relative ${
                   isMobile
-                    ? "w-[calc((100vw-60px)/2)] h-[calc((100vw-60px)/2)]" // 모바일: 정사각형
+                    ? "w-[calc(50vw-55px)] h-[calc(50vw-55px)]" // 모바일: 정사각형 비율
                     : "w-[260px] h-[260px]" // 데스크탑: 고정 크기
                 }`}
               >
