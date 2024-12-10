@@ -135,7 +135,7 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
               {product.description}
             </div>
             {/* 옵션 선택 */}
-            <div className="pb-[18px] px-[5px] border-b border-[#d5dbdc]">
+            <div className="pb-[18px] md:px-[5px] border-b border-[#d5dbdc]">
               <SelectComponent
                 options={product.productoption}
                 price={product.price}

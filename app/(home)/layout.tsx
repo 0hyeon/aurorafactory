@@ -75,7 +75,7 @@ export default async function TabLayout({
       </div>
 
       {/* 메인 컨텐츠 */}
-      <main className="w-full mx-auto pt-[95px]  md:pt-[15px]  md:pb-[60px]">
+      <main className="w-full mx-auto md:px-0 px-[6%] pt-[95px]  md:pt-[15px]  md:pb-[60px]">
         {children}
       </main>
     </div>

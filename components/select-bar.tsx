@@ -108,7 +108,7 @@ const SelectComponent = ({
       <select
         id="product-options"
         name="product-options"
-        className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        className="mt-1 block w-full p-4 md:py-2 md:px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         onChange={handleSelect}
         value="" // 선택된 값은 state로 관리
       >
