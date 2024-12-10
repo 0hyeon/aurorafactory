@@ -84,7 +84,7 @@ const CategoryList = ({
                   style={{ textDecoration: "none", color: "unset" }}
                   key={el.id}
                 >
-                  <div className="p-4">
+                  <div className="md:p-4">
                     <div className="relative block w-full aspect-[12/12] flex-grow-0">
                       {el.productPicture?.photo && (
                         <Image
@@ -108,7 +108,7 @@ const CategoryList = ({
                         {Number(el.price)}원
                       </span>
                     </div>
-                    <div className="text-center mt-6 text-sm text-[#333]">
+                    <div className="text-center my-3 text-sm text-[#333]">
                       (리뷰 0개)
                     </div>
                   </div>

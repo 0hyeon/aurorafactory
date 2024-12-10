@@ -191,7 +191,7 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
               </>
             )}
             {/* 버튼들 */}
-            <div className="pt-6 md:pt-10 flex flex-col md:flex-row w-full md:w-1/2 gap-2">
+            <div className="pt-6 md:pt-10 flex flex-col w-full gap-2">
               {params && (
                 <CartButton
                   options={selectedOptions}
@@ -199,13 +199,13 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
                   text={"장바구니담기"}
                 />
               )}
-              {params && (
+              {/* {params && (
                 <CartButton
                   options={selectedOptions}
                   cartId={params}
                   text={"구매하기"}
                 />
-              )}
+              )} */}
             </div>
           </div>
         </div>

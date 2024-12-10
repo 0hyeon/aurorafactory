@@ -25,7 +25,7 @@ export default function Slide({ data }: { data: any }) {
     clickable: true,
     renderBullet: function (index: number, className: string) {
       return (
-        '<span class="!w-5 !h-5 !bg-black border-2 border-[#ddd] navi-wrap ' +
+        '<span class="!w-3 !h-3 md:!w-5 md:!h-5 !bg-white border-2 border-[#909090] navi-wrap ' +
         className +
         '">' +
         // (index + 1) +
@@ -55,7 +55,7 @@ export default function Slide({ data }: { data: any }) {
           setSwiper(e);
         }}
       >
-        {data.productPicture.photo && (
+        {/* {data.productPicture.photo && (
           <SwiperSlide key="main-photo">
             <div className="relative w-[500px] h-[500px]">
               <Image
@@ -68,12 +68,12 @@ export default function Slide({ data }: { data: any }) {
               />
             </div>
           </SwiperSlide>
-        )}
+        )} */}
         {data &&
           data.productPicture.slideimages.map((slide: any) => (
             <div key={slide.id} className="">
               <SwiperSlide key={slide.id}>
-                <div className="relative w-[500px] h-[500px]">
+                <div className="relative w-[100%] aspect-square md:w-[500px] md:h-[500px] flex-shrink-0">
                   <Image
                     alt={String(slide.id)}
                     src={`${slide.src}/public`}

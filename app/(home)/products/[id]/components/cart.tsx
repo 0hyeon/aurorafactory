@@ -75,7 +75,7 @@ const CartButton = ({ options, cartId, text }: CartButtonProps) => {
     <div>
       <button
         onClick={handleAddToCart}
-        className={`w-full p-4 bg-white hover:bg-blue-400 hover:text-white text-blue-400 rounded-md border-gray-400 border font-semibold text-base hover:border-blue-400 duration-300 ${
+        className={`w-full p-4 bg-white hover:bg-blue-600 hover:text-white text-blue-600 rounded-md border-gray-400 border font-semibold text-base hover:border-blue-600 duration-300 ${
           isCartAdded ? "opacity-50 cursor-not-allowed" : ""
         }`}
         // disabled={isCartAdded} // 클릭 후 버튼을 비활성화
@@ -99,7 +99,7 @@ const CartButton = ({ options, cartId, text }: CartButtonProps) => {
                   닫기
                 </button>
                 <Link href="/cart">
-                  <button className="p-3 text-base bg-blue-400 text-white rounded min-w-20">
+                  <button className="p-3 text-base bg-blue-600 text-white rounded min-w-20">
                     구매하기 바로가기
                   </button>
                 </Link>
