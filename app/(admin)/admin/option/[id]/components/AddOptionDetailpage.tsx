@@ -16,6 +16,7 @@ import { Cart, Product, User, productOption } from "@prisma/client";
 import { NullableProduct } from "@/types/type";
 import { getProduct } from "@/app/(home)/products/[id]/page";
 import ProductBox from "./ProductBox";
+import { useFormState } from "react-dom";
 
 export default function AddOptionDetailpage({
   product,
@@ -24,7 +25,8 @@ export default function AddOptionDetailpage({
   product: NullableProduct; // product 타입을 명확히 지정
   params: { id: string };
 }) {
-  console.log(product);
+  console.log("product : ", product);
+  console.log("params : ", params.id);
   const {
     register,
     handleSubmit,
@@ -37,20 +39,23 @@ export default function AddOptionDetailpage({
       connectProductId: params.id, // 기본 값으로 설정
     },
   });
-  const onSubmit = handleSubmit(async (data) => {
-    const formData = new FormData();
-    formData.append("quantity", data.quantity + "");
-    formData.append("color", data.color);
-    formData.append("plusdiscount", data.plusdiscount + "");
-    formData.append("connectProductId", data.connectProductId + "");
+  const [state, dispatch] = useFormState(uploadProductOption, null);
 
-    const errors = await uploadProductOption(formData);
-    if (errors) {
-      console.log("errors : ", errors);
-    } else {
-      window.location.reload();
-    }
-  });
+  // const onSubmit = handleSubmit(async (data) => {
+  //   const formData = new FormData();
+  //   formData.append("quantity", data.quantity + "");
+  //   formData.append("color", data.color);
+  //   formData.append("plusdiscount", data.plusdiscount + "");
+  //   formData.append("connectProductId", data.connectProductId + "");
+  //   formData.append("deliver_price", data.deliver_price + "");
+
+  //   const errors = await uploadProductOption(formData);
+  //   if (errors) {
+  //     console.log("errors : ", errors);
+  //   } else {
+  //     window.location.reload();
+  //   }
+  // });
   const router = useRouter();
 
   const toModifyBtn = (n: number | undefined) => {
@@ -60,10 +65,10 @@ export default function AddOptionDetailpage({
       alert("수정할수없는 상품입니다.");
     }
   };
-  const onValid = async (e: any) => {
-    e.preventDefault();
-    await onSubmit();
-  };
+  // const onValid = async (e: any) => {
+  //   e.preventDefault();
+  //   await onSubmit();
+  // };
   const delEvent = async ({
     id,
     redirectId,
@@ -125,21 +130,28 @@ export default function AddOptionDetailpage({
           <div className="flex-1">
             {/* 폼 */}
             <form
-              onSubmit={(e) => e.preventDefault()}
+              action={dispatch}
               className="p-6 bg-white rounded-lg shadow-md space-y-4"
             >
+              <Input
+                type="hidden"
+                {...register("connectProductId")}
+                value={params.id}
+              />
               <Input
                 required
                 placeholder="수량"
                 type="number"
                 {...register("quantity")}
                 className="border-gray-300 focus:ring-2 focus:ring-indigo-500 w-full"
+                errors={state?.fieldErrors.quantity}
               />
               <Input
                 required
                 placeholder="색상"
                 {...register("color")}
                 className="border-gray-300 focus:ring-2 focus:ring-indigo-500 w-full"
+                errors={state?.fieldErrors.color}
               />
               <Input
                 required
@@ -147,6 +159,15 @@ export default function AddOptionDetailpage({
                 type="number"
                 {...register("plusdiscount")}
                 className="border-gray-300 focus:ring-2 focus:ring-indigo-500 w-full"
+                errors={state?.fieldErrors.plusdiscount}
+              />
+              <Input
+                required
+                placeholder="배송비"
+                type="number"
+                {...register("deliver_price")}
+                className="border-gray-300 focus:ring-2 focus:ring-indigo-500 w-full"
+                errors={state?.fieldErrors.deliver_price}
               />
               <Button text="작성 완료" type="submit" />
             </form>

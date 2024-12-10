@@ -13,6 +13,9 @@ export const OptionSchema = z.object({
   connectProductId: z.string({
     required_error: "connectProductId is required",
   }),
+  deliver_price: z.string({
+    required_error: "deliver_price is required",
+  }),
 });
 
 export type OptionType = z.infer<typeof OptionSchema>;

@@ -4,14 +4,17 @@ import { OptionSchema } from "./schema";
 import db from "@/lib/db";
 import { unstable_cache as nextCache, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
-export async function uploadProductOption(formData: FormData) {
+export async function uploadProductOption(prevState: any, formData: FormData) {
   console.log("formData : ", formData);
+  console.log("prevState : ", prevState);
   const data = {
     color: formData.get("color"),
     quantity: formData.get("quantity"),
     plusdiscount: formData.get("plusdiscount"),
     connectProductId: formData.get("connectProductId"),
+    deliver_price: formData.get("deliver_price"),
   };
+  console.log("data : ", data);
   const result = OptionSchema.safeParse(data);
   console.log("result : ", result);
   if (!result.success) {
@@ -19,12 +22,12 @@ export async function uploadProductOption(formData: FormData) {
   } else {
     // const session = await getSession();
     // if (session.id) {
-
     const productOption = await db.productOption.create({
       data: {
         quantity: +result.data.quantity,
         color: result.data.color,
         plusdiscount: +result.data.plusdiscount,
+        deliver_price: +result.data.deliver_price,
         product: {
           connect: {
             id: Number(result.data.connectProductId),
@@ -37,7 +40,7 @@ export async function uploadProductOption(formData: FormData) {
     });
     revalidateTag("product-detail");
     revalidateTag("products");
-    redirect("/admin/option");
+    redirect(`/admin/option/${data.connectProductId}`);
     return null;
   }
 }

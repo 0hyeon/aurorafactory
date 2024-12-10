@@ -186,7 +186,7 @@ export default function CartList({
         <>
           {cart.map((item) => (
             <div className="flex" key={item.id}>
-              <div className="relative block w-56 h-56 flex-grow-0 mr-6">
+              <div className="relative block w-[calc(50vw-30px)] h-[calc(50vw-30px)] md:w-56 md:h-56 flex-grow-0 md:mr-6">
                 {item.option.product.productPicture?.photo && (
                   <Image
                     src={`${item.option.product.productPicture.photo}/public`}
@@ -198,16 +198,18 @@ export default function CartList({
               </div>
               <div className="border-b border-b-gray-500 flex-grow pl-3">
                 <div className="flex items-center justify-between pr-[5%]">
-                  <div>
-                    <div className="font-bold text-lg mb-[15%]">
+                  <div className="">
+                    <div className="font-bold md:text-lg text-sm md:mb-[15%]">
                       {item.option.product.title}
                     </div>
-                    <div>개당가격: {formatToWon(item.basePrice)}원</div>
-                    <div>
+                    <div className="md:text-base text-[12px] ">
+                      개당가격: {formatToWon(item.basePrice)}원
+                    </div>
+                    <div className="md:text-base text-[12px] ">
                       구매수량:
                       {formatToWon(item.quantity * item.option.quantity)}장
                     </div>
-                    <div>
+                    <div className="md:text-base text-[12px] ">
                       가격:
                       {formatToWon(
                         item.quantity * item.basePrice * item.option.quantity
@@ -215,17 +217,17 @@ export default function CartList({
                       원
                     </div>
 
-                    <div>
+                    <div className="md:text-base text-[12px] ">
                       배송비:
                       {formatToWon(item.option.deliver_price)}
                     </div>
-                    <div className="font-bold mt-5">
-                      상품가격: {formatToWon(item.totalPrice)}원
+                    <div className="font-bold mt-5 md:text-base text-sm">
+                      {formatToWon(item.totalPrice)}원
                     </div>
                   </div>
                   <div>
                     <button
-                      className="px-3 py-1 border border-gray-300 bg-black text-white"
+                      className="px-[6px] py-[0px] md:px-3 md:py-1 border border-gray-300 bg-black text-white"
                       onClick={() => handleRemoveItem(item.id)}
                     >
                       X
