@@ -157,9 +157,9 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
                         className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-0"
                       >
                         <div>{option.optionDetails}</div>
-                        <div className="flex items-center mt-2 md:mt-4">
+                        <div className="flex items-center mt-2 md:mt-0">
                           <button
-                            className="px-2 py-1 border border-gray-300"
+                            className="w-[40px] h-[40px] md:w-[30px] md:h-[30px] border border-gray-300"
                             onClick={() => handleQuantityChange(option.id, -1)}
                             disabled={option.quantity <= 1}
                           >
@@ -169,13 +169,13 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
                             {option.quantity}
                           </span>
                           <button
-                            className="px-2 py-1 border border-gray-300"
+                            className="w-[40px] h-[40px] md:w-[30px] md:h-[30px] border border-gray-300"
                             onClick={() => handleQuantityChange(option.id, 1)}
                           >
                             +
                           </button>
                           <button
-                            className="ml-2 md:ml-4 px-2 py-1 border border-gray-300 text-red-600"
+                            className="ml-2 md:ml-4 w-[40px] h-[40px] md:w-[30px] md:h-[30px] border border-gray-300 text-red-600"
                             onClick={() => handleRemoveOption(option.id)}
                           >
                             x
