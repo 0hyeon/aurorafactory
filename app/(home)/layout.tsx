@@ -54,6 +54,9 @@ export default async function TabLayout({
               <Suspense fallback={"Hello!"}>
                 <Username />
               </Suspense>
+              <div>
+                <Link href="/mypage">마이페이지</Link>
+              </div>
               <form action={logOut}>
                 <button type="submit">로그아웃</button>
               </form>
