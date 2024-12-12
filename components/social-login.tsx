@@ -19,7 +19,8 @@ export default function SocialLogin() {
           </svg>
           <span>Continue with Github</span>
         </Link> */}
-        <Link
+        {/* TODO:카카오로그인 */}
+        {/* <Link
           className="primary-btn flex h-10 items-center justify-center gap-3"
           href="/sms"
         >
@@ -27,7 +28,7 @@ export default function SocialLogin() {
             <ChatBubbleOvalLeftEllipsisIcon className="h-6 w-6" />
           </span>
           <span>Continue with SMS</span>
-        </Link>
+        </Link> */}
         <div className="flex justify-center items-center divide-x divide-slate-200 *:p-4">
           <Link
             className="primary-btn flex h-10 items-center justify-center gap-3 border-gray-300"

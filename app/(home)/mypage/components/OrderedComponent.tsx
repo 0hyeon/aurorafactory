@@ -15,7 +15,8 @@ export interface ExtendedCart extends Cart {
 }
 
 const OrderedComponent = ({ data }: { data: ExtendedCart[] }) => {
-  console.log(data);
+  
+  // TODO:리뷰링크와 리뷰관련 스키마,ACTION 구현하기
   return (
     <div className="p-5 max-w-4xl mx-auto">
       <h2 className="text-center text-xl font-bold mb-5">결제 완료된 내역</h2>
@@ -42,19 +43,19 @@ const OrderedComponent = ({ data }: { data: ExtendedCart[] }) => {
                 {/* 주문 상세 정보 */}
                 <div className="flex-1 text-sm">
                   <p>
-                    <span className="font-semibold">상품 이름:</span>{" "}
+                    <span className="font-semibold">상품 이름:</span>
                     {order.product?.title}
                   </p>
                   <p>
-                    <span className="font-semibold">카테 고리:</span>{" "}
+                    <span className="font-semibold">카테 고리:</span>
                     {order.product?.category}
                   </p>
                   <p>
-                    <span className="font-semibold">가격:</span>{" "}
+                    <span className="font-semibold">가격:</span>
                     {order.product?.price}
                   </p>
                   <p>
-                    <span className="font-semibold">업데이트 날짜:</span>{" "}
+                    <span className="font-semibold">업데이트 날짜:</span>
                     {new Date(order.updatedAt).toLocaleString()}
                   </p>
                 </div>
