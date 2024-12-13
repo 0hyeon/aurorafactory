@@ -180,6 +180,8 @@ export default function CartList({
       setVbankHolder(""); // 가상계좌가 아닐 경우 사용자명 초기화
     }
   };
+
+  console.log("cart : ",cart)
   return (
     <div className="flex flex-col gap-8 max-w-[1100px] mx-auto">
       {cart.length > 0 ? (

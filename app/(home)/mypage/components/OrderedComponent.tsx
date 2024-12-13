@@ -28,7 +28,7 @@ const OrderedComponent = ({ data }: { data: ExtendedCart[] }) => {
         <div className="flex flex-col gap-5">
           {data.map((order) => (
             <Link key={order.id} href={`products/${order.productId}`}>
-              <div className="border rounded-lg p-4 shadow-md flex flex-wrap md:flex-nowrap gap-4 items-center">
+              <div className="border rounded-lg p-4 shadow-md flex flex-wrap md:flex-nowrap gap-2 md:gap-4 items-center">
                 {/* 상품 이미지 */}
                 <Image
                   alt={order.product?.productPicture?.photo || "Product Image"}
@@ -42,6 +42,9 @@ const OrderedComponent = ({ data }: { data: ExtendedCart[] }) => {
                 />
                 {/* 주문 상세 정보 */}
                 <div className="flex-1 text-sm">
+                  <div className="text-center p-3">
+                    <span className="bg-blue-700 text-white p-1 rounded">결제완료</span>
+                  </div>
                   <p>
                     <span className="font-semibold">상품 이름:</span>
                     {order.product?.title}
