@@ -13,6 +13,7 @@ export async function uploadProductOption(prevState: any, formData: FormData) {
     plusdiscount: formData.get("plusdiscount"),
     connectProductId: formData.get("connectProductId"),
     deliver_price: formData.get("deliver_price"),
+    plusPrice: formData.get("plusPrice"),
   };
   console.log("data : ", data);
   const result = OptionSchema.safeParse(data);
@@ -28,6 +29,7 @@ export async function uploadProductOption(prevState: any, formData: FormData) {
         color: result.data.color,
         plusdiscount: +result.data.plusdiscount,
         deliver_price: +result.data.deliver_price,
+        plusPrice: +result.data.plusPrice,
         product: {
           connect: {
             id: Number(result.data.connectProductId),

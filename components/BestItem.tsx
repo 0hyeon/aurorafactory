@@ -116,8 +116,12 @@ export default function BestItem({ data, title, subtitle }: NullableProduct) {
                 />
               </div>
               {/* 텍스트 영역 */}
-              <div className={`pt-3 ${isMobile ? "text-sm" : ""}`}>
-                <div>{slide.title}</div>
+              <div
+                className={`w-full pt-3 ${
+                  isMobile ? "text-sm" : "min-w-[260px]"
+                }`}
+              >
+                <div className="w-full">{slide.title}</div>
                 <div className="flex pt-[10px] items-center">
                   {/* 기존 가격 */}
                   <div

@@ -12,6 +12,5 @@ export const getUserWithEmail = async (email: string) => {
       username: true,
     },
   });
-  console.log(result);
   return result;
 };

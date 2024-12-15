@@ -101,6 +101,9 @@ export default function AddOptionDetailpage({
                     추가 할인율: {el.plusdiscount}%
                   </span>
                   <span className="text-gray-600">
+                    추가 금액: {el.plusPrice}원
+                  </span>
+                  <span className="text-gray-600">
                     배송비: {el.deliver_price}
                   </span>
                   {/* 삭제 버튼 */}
@@ -160,6 +163,14 @@ export default function AddOptionDetailpage({
                 {...register("plusdiscount")}
                 className="border-gray-300 focus:ring-2 focus:ring-indigo-500 w-full"
                 errors={state?.fieldErrors.plusdiscount}
+              />
+              <Input
+                required
+                placeholder="추가비용"
+                type="number"
+                {...register("plusPrice")}
+                className="border-gray-300 focus:ring-2 focus:ring-indigo-500 w-full"
+                errors={state?.fieldErrors.plusPrice}
               />
               <Input
                 required

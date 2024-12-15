@@ -29,30 +29,36 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
     (
       optionDetails: string,
       price: string,
+      plusPrice: number, // 추가된 plusPrice 매개변수
       pdOptionId: number,
       dummycount: number
     ) => {
       if (isNaN(pdOptionId)) {
         return;
       }
+
       setSelectedOptions((prevOptions) => {
-        const isOptionAlreadySelected = prevOptions.some(
+        // 이미 선택된 옵션이 있는지 확인
+        const existingOptionIndex = prevOptions.findIndex(
           (option) => option.id === pdOptionId
         );
-        if (isOptionAlreadySelected) {
+
+        if (existingOptionIndex >= 0) {
           setAlertMessage("이미 선택된 옵션입니다.");
-          return prevOptions;
+          return prevOptions; // 기존 상태 유지
         }
-        return [
-          ...prevOptions,
-          {
-            optionDetails,
-            price,
-            id: pdOptionId,
-            quantity: 1, //초기세팅
-            dummycount: dummycount,
-          },
-        ];
+
+        // 새로운 옵션 추가
+        const newOption = {
+          optionDetails,
+          price,
+          plusPrice, // 추가 금액
+          id: pdOptionId,
+          quantity: 1, // 초기 수량
+          dummycount: dummycount,
+        };
+
+        return [...prevOptions, newOption];
       });
     },
     []
@@ -82,13 +88,14 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
   };
 
   const getTotalPrice = () => {
+    console.log("selectedOptions : ", selectedOptions);
     return selectedOptions.reduce((total, option) => {
-      // price를 먼저 숫자로 변환합니다.
-      const optionPrice = parseFloat(option.price);
-      // 각 옵션에 대해 quantity 및 dummycount를 곱합니다.
+      const optionPrice = Number(option.price.replace(/,/g, ""));
       return total + optionPrice * option.quantity * option.dummycount;
     }, 0);
   };
+
+  console.log("selectedOptions : ", selectedOptions);
   return (
     <>
       <div className="flex flex-col md:flex-row gap-5 md:gap-[50px] max-w-[1100px] mx-auto border-b border-[#999] pb-10 md:pb-14">
@@ -137,7 +144,7 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
             {/* 옵션 선택 */}
             <div className="pb-[18px] md:px-[5px] border-b border-[#d5dbdc]">
               <SelectComponent
-                options={product.productoption}
+                options={product.productoption || []} // undefined인 경우 빈 배열로 대체
                 price={product.price}
                 discount={Number(product.discount) || 0}
                 quantity={quantity}
@@ -157,25 +164,29 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
                         className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-0"
                       >
                         <div>{option.optionDetails}</div>
-                        <div className="flex items-center mt-2 md:mt-0">
+                        <div className="flex items-center mt-2 md:mt-0 w-full justify-between md:justify-end">
+                          <div>
+                            <button
+                              className="w-[34px] h-[34px] rounded md:w-[30px] md:h-[30px] border border-gray-300"
+                              onClick={() =>
+                                handleQuantityChange(option.id, -1)
+                              }
+                              disabled={option.quantity <= 1}
+                            >
+                              -
+                            </button>
+                            <span className="mx-2 md:mx-4">
+                              {option.quantity}
+                            </span>
+                            <button
+                              className="w-[34px] h-[34px] rounded md:w-[30px] md:h-[30px] border border-gray-300"
+                              onClick={() => handleQuantityChange(option.id, 1)}
+                            >
+                              +
+                            </button>
+                          </div>
                           <button
-                            className="w-[40px] h-[40px] md:w-[30px] md:h-[30px] border border-gray-300"
-                            onClick={() => handleQuantityChange(option.id, -1)}
-                            disabled={option.quantity <= 1}
-                          >
-                            -
-                          </button>
-                          <span className="mx-2 md:mx-4">
-                            {option.quantity}
-                          </span>
-                          <button
-                            className="w-[40px] h-[40px] md:w-[30px] md:h-[30px] border border-gray-300"
-                            onClick={() => handleQuantityChange(option.id, 1)}
-                          >
-                            +
-                          </button>
-                          <button
-                            className="ml-2 md:ml-4 w-[40px] h-[40px] md:w-[30px] md:h-[30px] border border-gray-300 text-red-600"
+                            className="ml-4 w-[34px] h-[34px] rounded md:w-[30px] md:h-[30px] border border-gray-300 text-red-600"
                             onClick={() => handleRemoveOption(option.id)}
                           >
                             x

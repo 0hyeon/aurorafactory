@@ -77,13 +77,14 @@ model productOption {
   product   Product @relation(fields: [productId], references: [id])
   productId Int
 
-  quantity     Int
-  color        String?
-  plusdiscount Int
+  quantity      Int
+  color         String?
+  plusdiscount  Int
+  plusPrice     Int      @default(0)
   deliver_price Float    @default(0)
-  created_at   DateTime @default(now())
-  updated_at   DateTime @updatedAt
-  cart         Cart[]
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  cart          Cart[]
 
   @@index([productId])
 }

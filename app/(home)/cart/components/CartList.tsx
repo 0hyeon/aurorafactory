@@ -6,9 +6,11 @@ import { delCart } from "../actions";
 import AddressSearch from "@/components/address";
 import { formatToWon } from "@/lib/utils";
 import { OptionSchemaAddress, OptionSchemaUser } from "../schema";
+import { CartWithProductOption } from "../page";
+import Link from "next/link";
 
 interface CartListProps {
-  data: any[];
+  data: CartWithProductOption[];
   phone: string | null;
   address: string;
   username: string;
@@ -32,15 +34,21 @@ interface ValidationState {
 
 const calculateTotalPrice = (
   basePrice: number,
+  plusPrice: number,
   discount: number,
   plusDiscount: number,
   quantity: number,
   quantityInOption: number,
   deliverPrice: number = 0
 ) => {
-  const finalDiscount = discount + plusDiscount;
-  const discountedPrice = basePrice * (1 - finalDiscount / 100);
-  return discountedPrice * quantity * quantityInOption + deliverPrice;
+  const totalPricePerUnit = (basePrice + plusPrice) * ((100 - discount) / 100);
+  return (
+    totalPricePerUnit *
+    quantity *
+    quantityInOption *
+    ((100 - plusDiscount) / 100)
+  );
+  // return discountedPrice * quantity * quantityInOption + deliverPrice;
 };
 
 export default function CartList({
@@ -66,18 +74,18 @@ export default function CartList({
     error: { fieldErrors: {} },
   });
   const [cart, setCart] = useState<any[]>([]);
-
   useEffect(() => {
     setCart(
       data.map((item) => ({
         ...item,
         totalPrice: calculateTotalPrice(
           item.basePrice,
-          Number(item.option.product.discount) || 0,
-          Number(item.option.plusdiscount) || 0,
+          Number(item.option.plusPrice) || 0, // 추가 금액
+          Number(item.option.product.discount) || 0, // 기본 할인율
+          Number(item.option.plusdiscount) || 0, // 추가 할인율
           item.quantity,
           item.option.quantity,
-          item.option.deliver_price || 0
+          item.option.deliver_price || 0 // 배송비
         ),
       }))
     );
@@ -123,22 +131,31 @@ export default function CartList({
 
   const handleQuantityChange = (id: number, delta: number) => {
     setCart((prevCart) =>
-      prevCart.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              quantity: item.quantity + delta,
-              totalPrice: calculateTotalPrice(
-                item.basePrice,
-                Number(item.option.product.discount) || 0,
-                Number(item.option.plusdiscount) || 0,
-                item.quantity + delta,
-                item.option.quantity,
-                item.option.deliver_price || 0
-              ),
-            }
-          : item
-      )
+      prevCart.map((item) => {
+        if (item.id === id) {
+          // 수량 업데이트
+          const newQuantity = Math.max(item.quantity + delta, 1); // 최소 수량 1 유지
+
+          // 총 가격 계산
+          const newTotalPrice = calculateTotalPrice(
+            item.basePrice,
+            Number(item.option.plusPrice) || 0, // 추가 금액
+            Number(item.option.product.discount) || 0, // 기본 할인율
+            Number(item.option.plusdiscount) || 0, // 추가 할인율
+            newQuantity, // 업데이트된 수량
+            item.option.quantity,
+            item.option.deliver_price || 0 // 배송비
+          );
+
+          // 수정된 아이템 반환
+          return {
+            ...item,
+            quantity: newQuantity,
+            totalPrice: newTotalPrice,
+          };
+        }
+        return item; // 다른 아이템은 변경하지 않음
+      })
     );
   };
 
@@ -164,14 +181,27 @@ export default function CartList({
   };
 
   const totalDeliveryPrice = cart.reduce(
+    //total deliver_price
     (acc, item) => acc + (item.option.deliver_price || 0),
     0
   );
-  const totalPriceWithoutDelivery = cart.reduce(
-    (acc, item) => acc + item.totalPrice - (item.option.deliver_price || 0),
+  const maxDeliveryPrice = cart.reduce(
+    //max deliver_price
+    (max, item) => Math.max(max, item.option.deliver_price || 0),
     0
   );
-  const totalPrice = totalPriceWithoutDelivery + totalDeliveryPrice;
+  //배송비고려한
+  // const totalPriceWithoutDelivery = cart.reduce(
+  //   (acc, item) => acc + item.totalPrice - (item.option.deliver_price || 0),
+  //   0
+  // );
+  const totalPriceWithoutDelivery = cart.reduce(
+    (acc, item) => acc + item.totalPrice,
+    0
+  );
+  // const totalPrice = totalPriceWithoutDelivery + totalDeliveryPrice;
+  //배송비고려한
+  const totalPrice = totalPriceWithoutDelivery + maxDeliveryPrice;
   const handlePaymentMethodChange = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
@@ -180,51 +210,71 @@ export default function CartList({
       setVbankHolder(""); // 가상계좌가 아닐 경우 사용자명 초기화
     }
   };
-
-  console.log("cart : ",cart)
   return (
-    <div className="flex flex-col gap-8 max-w-[1100px] mx-auto">
+    <div className="flex flex-col gap-8 max-w-[1100px] mx-auto mt-7">
       {cart.length > 0 ? (
         <>
           {cart.map((item) => (
-            <div className="border-b md:border-b-0  flex" key={item.id}>
+            <div className="border-b md:border-b-0 flex" key={item.id}>
               <div className="relative block w-[calc(65vw)] h-[calc(40vw)] md:w-56 md:h-56 flex-grow-0 md:mr-6">
-                {item.option.product.productPicture?.photo && (
-                  <Image
-                    src={`${item.option.product.productPicture.photo}/public`}
-                    alt="Product image"
-                    fill
-                    style={{ objectFit: "contain" }}
-                  />
-                )}
+                <Link href={`/products/${item.id}`}>
+                  {item.option.product.productPicture?.photo && (
+                    <Image
+                      src={`${item.option.product.productPicture.photo}/public`}
+                      alt="Product image"
+                      fill
+                      style={{ objectFit: "contain" }}
+                    />
+                  )}
+                </Link>
               </div>
               <div className="md:border-b border-b-gray-500 flex-grow md:pl-3 pl-4">
                 <div className="flex items-center justify-between pr-[5%]">
                   <div className="">
-                    <div className="font-bold md:text-lg text-sm md:mb-[15%] mb-[5%]">
+                    <div className="font-bold md:text-lg text-sm mb-[5%]">
                       {item.option.product.title}
                     </div>
                     <div className="md:text-sm text-[12px] ">
-                      개당가격: {formatToWon(item.basePrice)}원
+                      개당가격:
+                      {formatToWon(item.basePrice + item.option.plusPrice)}원
                     </div>
                     <div className="md:text-sm text-[12px] ">
                       구매수량:
-                      {formatToWon(item.quantity * item.option.quantity)}장
+                      {item.quantity * item.option.quantity}장
                     </div>
                     <div className="md:text-sm text-[12px] ">
                       가격:
                       {formatToWon(
-                        item.quantity * item.basePrice * item.option.quantity
+                        item.quantity *
+                          (item.basePrice + item.option.plusPrice) *
+                          item.option.quantity
                       )}
                       원
                     </div>
-
-                    <div className="md:text-sm text-[12px] ">
-                      배송비:
-                      {formatToWon(item.option.deliver_price)}
+                    {/* <div className="md:text-sm text-[12px] ">
+                      배송비: {formatToWon(item.option.deliver_price)}
+                    </div> */}
+                    <div className="md:text-sm text-[12px] md:mt-5 mt-2">
+                      추가할인:
+                      {item.option.plusdiscount}%
                     </div>
-                    <div className="font-bold md:mt-5 my-2 md:text-sm text-sm">
-                      {formatToWon(item.totalPrice)}원
+                    <div className="font-bold md:text-sm text-sm">
+                      {formatToWon(item.totalPrice | 0)}원
+                    </div>
+                    <div className="flex gap-2 my-3 items-center">
+                      <button
+                        onClick={() => handleQuantityChange(item.id, -1)}
+                        className="px-3 py-1 border rounded"
+                      >
+                        -
+                      </button>
+                      <span>{item.quantity}</span>
+                      <button
+                        onClick={() => handleQuantityChange(item.id, 1)}
+                        className="px-3 py-1 border rounded"
+                      >
+                        +
+                      </button>
                     </div>
                   </div>
                   <div>
@@ -239,6 +289,7 @@ export default function CartList({
               </div>
             </div>
           ))}
+          {/* 결제정보 */}
           <div className="flex md:gap-10 md:flex-row flex-col">
             <div className="my-2 md:my-4 md:w-1/2 w-full">
               <div className="flex flex-col  mb-3">
@@ -398,6 +449,7 @@ export default function CartList({
               )}
             </div>
           </div>
+          {/* 총합 및 결제 컴포넌트 */}
           <div className="md:my-10 flex justify-around items-center gap-1 md:gap-4 bg-white p-1 md:p-6 rounded-lg shadow-lg border border-gray-200">
             <div className="flex flex-col items-center">
               <div className="text-gray-600 font-medium text-sm">상품가격</div>
@@ -405,18 +457,14 @@ export default function CartList({
                 {formatToWon(totalPriceWithoutDelivery)}원
               </div>
             </div>
-
             <div className="text-gray-600 font-semibold text-2xl">+</div>
-
             <div className="flex flex-col items-center">
               <div className="text-gray-600 font-medium text-sm">배송비</div>
               <div className="text-sm md:text-xl font-semibold text-gray-900 mt-1">
-                {formatToWon(totalDeliveryPrice)}원
+                {formatToWon(maxDeliveryPrice)}원
               </div>
             </div>
-
             <div className="text-gray-600 font-semibold text-2xl">=</div>
-
             <div className="flex flex-col items-center p-2 md:p-4 rounded-lg">
               <div className="text-gray-700 font-bold text-sm">TOTAL</div>
               <div className="text-sm md:text-2xl font-bold text-black mt-1">
@@ -424,7 +472,7 @@ export default function CartList({
               </div>
             </div>
           </div>
-
+          {/* Purchase 컴포넌트로 데이터 전달 */}
           <Purchase
             data={cart}
             method={paymentMethod}

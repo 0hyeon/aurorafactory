@@ -24,9 +24,7 @@ export async function cartCreate({ quantity, cartId, optionId }: IcartCreate) {
 
   const cookieStore = cookies();
   const session = await getSession(cookieStore);
-  console.log("session : ", session); // {}
   if (session.id) {
-    console.log("getCachedLikeStatus : ", session.id);
     await getCachedLikeStatus(session.id);
   }
 

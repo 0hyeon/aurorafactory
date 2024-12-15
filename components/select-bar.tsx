@@ -1,20 +1,21 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback } from "react";
 import { formatToWon } from "@/lib/utils";
 import { productOption } from "@prisma/client";
 
 interface SelectComponentProps {
-  options: any;
+  options: productOption[];
   price: number;
   discount: number;
   quantity: number;
   onSelect: (
     optionDetails: string,
     price: string,
+    plusPrice: number,
     pdOptionId: number,
     dummycount: number
   ) => void;
-  selectedOptions: any[]; // 추가
+  selectedOptions: { id: number }[]; // 추가: 선택된 옵션의 id를 관리
 }
 
 const SelectComponent = ({
@@ -29,7 +30,10 @@ const SelectComponent = ({
     (selectedOption: any) => {
       const resultDiscount =
         Number(selectedOption.plusdiscount || 0) + discount;
-      return formatToWon(price * (1 - Number(resultDiscount) / 100) * quantity);
+      const basePriceWithPlusPrice = price + (selectedOption.plusPrice || 0); // plusPrice를 basePrice에 추가
+      return formatToWon(
+        basePriceWithPlusPrice * (1 - Number(resultDiscount) / 100) * quantity
+      );
     },
     [discount, price, quantity]
   );
@@ -38,7 +42,7 @@ const SelectComponent = ({
     (event: React.ChangeEvent<HTMLSelectElement>) => {
       const selectedValue = event.target.value;
       if (selectedValue === "") {
-        onSelect("", "", NaN, NaN);
+        onSelect("", "", NaN, NaN, NaN); // 선택되지 않은 상태 처리
         return;
       }
 
@@ -52,6 +56,7 @@ const SelectComponent = ({
 
       if (isOptionAlreadySelected) {
         alert("이미 선택된 옵션입니다.");
+        event.target.value = ""; // 선택 초기화
         return;
       }
 
@@ -62,40 +67,22 @@ const SelectComponent = ({
             ? `( 추가할인율 ${selected.plusdiscount}% ) * `
             : " * "
         } 장당 ${calculatedPrice}원
-        = ${formatToWon(selected.quantity * Number(calculatedPrice))}원
+        = ${formatToWon(
+          selected.quantity * Number(calculatedPrice.replace(/,/g, ""))
+        )}원
         `;
 
         onSelect(
           optionDetails,
           calculatedPrice,
+          selected.plusPrice || 0, // plusPrice 추가
           selected.id,
-          selected.quantity
+          selected.quantity // dummycount로 전달
         );
       }
     },
     [options, calculatePrice, onSelect, selectedOptions]
   );
-
-  // 선택된 옵션의 정보를 state로 관리
-  const [selectedOptionText, setSelectedOptionText] =
-    useState<string>("--선택--");
-
-  // selectedOptions이 변경될 때마다 선택된 옵션의 텍스트 업데이트
-  useEffect(() => {
-    if (selectedOptions.length > 0) {
-      const lastSelectedOption = selectedOptions[selectedOptions.length - 1];
-      const optionText = `${lastSelectedOption.quantity}장 ${
-        lastSelectedOption.color
-      } ${
-        lastSelectedOption.plusdiscount && lastSelectedOption.plusdiscount > 0
-          ? `( 추가할인율 ${lastSelectedOption.plusdiscount}% )`
-          : ""
-      }`;
-      setSelectedOptionText(optionText);
-    } else {
-      setSelectedOptionText("--선택--");
-    }
-  }, [selectedOptions]);
 
   return (
     <div className="mt-4">
@@ -110,7 +97,7 @@ const SelectComponent = ({
         name="product-options"
         className="mt-1 block w-full p-4 md:py-2 md:px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         onChange={handleSelect}
-        value="" // 선택된 값은 state로 관리
+        value="" // 기본값으로 선택되지 않음을 명시
       >
         <option value="" disabled>
           --옵션을 선택해주세요--
@@ -120,6 +107,10 @@ const SelectComponent = ({
             {`${option.quantity}장 ${option.color} ${
               option.plusdiscount && option.plusdiscount > 0
                 ? `( 추가할인율 ${option.plusdiscount}% )`
+                : ""
+            } ${
+              option.plusPrice > 0
+                ? `(+ 추가 가격 ${formatToWon(option.plusPrice)}원)`
                 : ""
             }`}
           </option>

@@ -10,6 +10,9 @@ export const OptionSchema = z.object({
   plusdiscount: z.string({
     required_error: "plusdiscount is required",
   }),
+  plusPrice: z.string({
+    required_error: "plusPrice is required",
+  }),
   connectProductId: z.string({
     required_error: "connectProductId is required",
   }),

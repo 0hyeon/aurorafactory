@@ -14,7 +14,7 @@ import { Cart, Product, productOption } from "@prisma/client";
 interface ProductOptionWithProduct extends productOption {
   product: Product & { photo: string | null };
 }
-interface CartWithProductOption {
+export interface CartWithProductOption {
   id: number;
   productId: number;
   productOptionId: number;
