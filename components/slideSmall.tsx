@@ -25,7 +25,7 @@ export default function SlideSmall() {
     },
   ];
   return (
-    <div className="">
+    <div className="md:block hidden">
       <Swiper
         loop={true} // 슬라이드 루프
         spaceBetween={50} // 슬라이스 사이 간격
