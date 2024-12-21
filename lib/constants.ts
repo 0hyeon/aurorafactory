@@ -1,9 +1,14 @@
 export const PASSWORD_MIN_LENGTH = 4;
+// export const PASSWORD_REGEX = new RegExp(
+//   /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$/
+// );
+// const PASSWORD_REGEX_ERROR =
+//   "비밀번호는 대﹒소문자, 하나 이상의 숫자, 특수문자를 포함해야 합니다.";
 export const PASSWORD_REGEX = new RegExp(
-  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$/
+  /^(?=.*[A-Za-z])(?=.*\d)(?=.*[#?!@$%^&*-]).{4,}$/
 );
 export const PASSWORD_REGEX_ERROR =
-  "비밀번호는 대﹒소문자, 하나 이상의 숫자, 특수문자를 포함해야 합니다.";
+  "비밀번호는 4자 이상, 영어, 숫자, 특수문자를 각각 하나 이상 포함해야 합니다.";
 
 export enum INVALID {
   TOO_SHORT = "너무 짧습니다.",

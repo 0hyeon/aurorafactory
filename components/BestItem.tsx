@@ -1,11 +1,18 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Swiper, SwiperClass, SwiperSlide } from "swiper/react";
-import { Navigation, Scrollbar, Autoplay, Pagination } from "swiper/modules";
+import {
+  Navigation,
+  Scrollbar,
+  Autoplay,
+  Pagination,
+  Grid,
+} from "swiper/modules";
 import SwiperCore from "swiper";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import "swiper/css/grid";
 import Image from "next/image";
 
 import Link from "next/link";
@@ -31,7 +38,7 @@ export default function BestItem({ data, title, subtitle }: NullableProduct) {
   const handleNext = () => {
     swiper?.slideNext();
   };
-  SwiperCore.use([Navigation, Scrollbar, Autoplay, Pagination]);
+  SwiperCore.use([Scrollbar, Autoplay, Pagination, Grid]);
   const pagination = {
     clickable: true,
     renderBullet: function (index: number, className: string) {
@@ -76,16 +83,21 @@ export default function BestItem({ data, title, subtitle }: NullableProduct) {
         </Link>
       </div>
       <Swiper
-        loop={true} // 슬라이드 루프
-        spaceBetween={isMobile ? 10 : 150} // 모바일에서 20, 데스크탑에서 150 간격
-        slidesPerView={isMobile ? 2 : 4} // 모바일에서는 2개, 데스크탑에서는 4개씩 보여줌
-        navigation={!isMobile} // 모바일에서는 네비게이션 버튼 비활성화
+        loop={data && data.length > 4} // 데이터가 충분할 때만 루프 활성화
+        spaceBetween={isMobile ? 10 : 150}
+        slidesPerView={isMobile ? 2 : 4}
+        grid={data && data.length > 0 ? { rows: 2, fill: "row" } : undefined}
         autoplay={{
           delay: 4000,
-          disableOnInteraction: false, // 사용자 상호작용시 슬라이더 일시 정지 비활성
+          disableOnInteraction: false,
         }}
         onActiveIndexChange={(e) => setSwiperIndex(e.realIndex)}
         onSwiper={(e) => setSwiper(e)}
+        modules={[Grid]}
+        // pagination={{
+        //   clickable: true,
+        // }}
+        navigation={!isMobile}
       >
         {data?.map((slide: any, index: number) => (
           <SwiperSlide
