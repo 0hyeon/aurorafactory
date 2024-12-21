@@ -1,5 +1,7 @@
 import { ChatBubbleOvalLeftEllipsisIcon } from "@heroicons/react/24/solid";
+import Image from "next/image";
 import Link from "next/link";
+import KakaoLoginButton from "./KakaoLoginButton";
 
 export default function SocialLogin() {
   return (
@@ -20,6 +22,8 @@ export default function SocialLogin() {
           <span>Continue with Github</span>
         </Link> */}
         {/* TODO:카카오로그인 */}
+        <KakaoLoginButton />
+
         {/* <Link
           className="primary-btn flex h-10 items-center justify-center gap-3"
           href="/sms"

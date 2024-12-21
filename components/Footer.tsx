@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 const Footer = () => {
   return (
@@ -5,9 +6,11 @@ const Footer = () => {
       <div className="max-w-5xl mx-auto py-5 felx flex-col gap-5">
         <ul className="md:text-base text-sm cursor-pointer flex p-0 m-0 mb-6 items-center justify-center">
           <li className="list-none border-none pl-0 ml-0">회사소개</li>
-          <li className="list-none border-l border-black md:ml-4 md:pl-4 ml-1 pl-1">
-            개인정보처리방침
-          </li>
+          <Link href="/login/privacy">
+            <li className="list-none border-l border-black md:ml-4 md:pl-4 ml-1 pl-1">
+              개인정보처리방침
+            </li>
+          </Link>
           <li className="list-none border-l border-black md:ml-4 md:pl-4 ml-1 pl-1">
             이용약관
           </li>
