@@ -39,15 +39,18 @@ export const login = async (prevState: any, formData: FormData) => {
 };
 
 export async function fetchKakaoToken(code: string) {
+  console.log("REST API Key:", process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY);
+  console.log("Redirect URI:", process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI);
+  console.log("Client Secret:", process.env.NEXT_PUBLIC_KAKAO_CLIENT_SECRET);
+
   const params = new URLSearchParams({
     grant_type: "authorization_code",
     client_id: process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY!,
-    redirect_uri: process.env.NEXT_PUBLIC_KAKAO_LOGIN_REDIRECT_URL!,
-    client_secret: process.env.NEXT_PUBLIC_KAKAO_LOGIN_CLIENT_KEY!,
+    redirect_uri: process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI!,
+    client_secret: process.env.NEXT_PUBLIC_KAKAO_CLIENT_SECRET!,
     code,
   });
-
-  console.log("Kakao Token Request Params:", params.toString());
+  console.log("Token Request Params:", params.toString());
 
   const tokenResponse = await fetch("https://kauth.kakao.com/oauth/token", {
     method: "POST",
@@ -61,9 +64,7 @@ export async function fetchKakaoToken(code: string) {
     throw new Error(errorResponse.error_description || "Failed to fetch token");
   }
 
-  const tokenData = await tokenResponse.json();
-  console.log("Kakao Token Data:", tokenData);
-  return tokenData;
+  return await tokenResponse.json();
 }
 
 export async function handleKakaoCallback(code: string) {
@@ -80,16 +81,13 @@ export async function handleKakaoCallback(code: string) {
     if (!userResponse.ok) {
       const errorData = await userResponse.json();
       console.error("Failed to fetch user info:", errorData);
-      throw new Error(errorData.msg || "Failed to fetch user info");
+      throw new Error("Failed to fetch user info");
     }
 
     const userData = await userResponse.json();
-    return {
-      accessToken: tokenData.access_token,
-      user: userData,
-    };
+    return { accessToken: tokenData.access_token, user: userData };
   } catch (error: any) {
     console.error("Kakao Callback Error:", error);
-    throw new Error(error.message || "Kakao login failed.");
+    throw new Error(error.message || "Unexpected error occurred during login");
   }
 }
