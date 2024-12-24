@@ -22,7 +22,7 @@ export default function SocialLogin() {
           <span>Continue with Github</span>
         </Link> */}
         {/* TODO:카카오로그인 */}
-        <KakaoLoginButton />
+        {/* <KakaoLoginButton /> */}
 
         {/* <Link
           className="primary-btn flex h-10 items-center justify-center gap-3"
