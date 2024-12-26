@@ -72,6 +72,7 @@ export const KakaoLoginSession = async (user: any) => {
   //     }
   // }
   console.log("KakaoLoginSession : ", user);
+  console.log("user.properties.nickname : ", user.properties.nickname);
   const cookieStore = cookies();
   const session = await getSession(cookieStore);
   session.id = user.properties.nickname;

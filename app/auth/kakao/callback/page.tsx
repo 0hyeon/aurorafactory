@@ -1,6 +1,7 @@
 "use client";
 
 import { handleKakaoCallback } from "@/app/(home)/login/actions";
+import { KakaoLoginSession } from "@/lib/session";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -17,8 +18,15 @@ export default function KakaoCallback() {
       setHasAttemptedLogin(true);
 
       try {
-        const { user, accessToken } = await handleKakaoCallback(code);
+        const result = await handleKakaoCallback(code);
+        if (!result) return;
+
+        const { user, accessToken } = result;
         document.cookie = `accessToken=${accessToken}; Path=/;`;
+        console.log("user : ", user);
+        console.log("user.properties.nickname : ", user.properties.nickname);
+
+        KakaoLoginSession(user);
         router.replace("/");
       } catch (error) {
         console.error("Login failed:", error);

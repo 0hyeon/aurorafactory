@@ -67,10 +67,16 @@ export async function fetchKakaoToken(code: string) {
   return await tokenResponse.json();
 }
 
-export async function handleKakaoCallback(code: string) {
+export async function handleKakaoCallback(
+  code: string | null
+): Promise<{ accessToken: string; user: any } | undefined> {
+  if (!code) {
+    console.error("Authorization code is missing.");
+    return undefined;
+  }
+
   try {
     const tokenData = await fetchKakaoToken(code);
-
     const userResponse = await fetch("https://kapi.kakao.com/v2/user/me", {
       method: "GET",
       headers: {
@@ -88,6 +94,16 @@ export async function handleKakaoCallback(code: string) {
     return { accessToken: tokenData.access_token, user: userData };
   } catch (error: any) {
     console.error("Kakao Callback Error:", error);
-    throw new Error(error.message || "Unexpected error occurred during login");
+
+    if (error.message.includes("authorization code not found")) {
+      // 새 인가 코드 요청
+      const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY}&redirect_uri=${process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI}`;
+      window.location.href = KAKAO_AUTH_URL;
+      return undefined;
+    } else {
+      throw new Error(
+        error.message || "Unexpected error occurred during login"
+      );
+    }
   }
 }
