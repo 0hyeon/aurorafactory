@@ -1,10 +1,12 @@
 "use server";
+import db from "@/lib/db";
 
 import bcrypt from "bcrypt";
 import { formSchema } from "./schemas";
 import { getUserWithEmail } from "./repositories";
 import getSessionCarrot, { getSession, saveLoginSession } from "@/lib/session";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export const login = async (prevState: any, formData: FormData) => {
   const data = {
@@ -107,3 +109,34 @@ export async function handleKakaoCallback(
     }
   }
 }
+export const KakaoLoginSession = async (user: any) => {
+  //   {
+  //     "id": 3844601033,
+  //     "connected_at": "2024-12-21T12:37:59Z",
+  //     "properties": {
+  //         "nickname": "김영현",
+  //         "profile_image": "http://k.kakaocdn.net/dn/vkw4h/btsKeCmOKKS/sH0Solxdc6nbIF1HbX8h61/img_640x640.jpg",
+  //         "thumbnail_image": "http://k.kakaocdn.net/dn/vkw4h/btsKeCmOKKS/sH0Solxdc6nbIF1HbX8h61/img_110x110.jpg"
+  //     },
+  //     "kakao_account": {
+  //         "profile_nickname_needs_agreement": false,
+  //         "profile_image_needs_agreement": false,
+  //         "profile": {
+  //             "nickname": "김영현",
+  //             "thumbnail_image_url": "http://k.kakaocdn.net/dn/vkw4h/btsKeCmOKKS/sH0Solxdc6nbIF1HbX8h61/img_110x110.jpg",
+  //             "profile_image_url": "http://k.kakaocdn.net/dn/vkw4h/btsKeCmOKKS/sH0Solxdc6nbIF1HbX8h61/img_640x640.jpg",
+  //             "is_default_image": false,
+  //             "is_default_nickname": false
+  //         }
+  //     }
+  // }
+
+  console.log("KakaoLoginSession : ", user);
+  console.log("user.properties.nickname : ", user.properties.nickname);
+  const cookieStore = cookies();
+  const session = await getSession(cookieStore);
+  session.id = user.properties.nickname;
+  //session.phone = user.phone;
+  await session.save();
+  redirect("/");
+};

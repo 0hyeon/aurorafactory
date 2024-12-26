@@ -14,6 +14,7 @@ import {
   initialState,
 } from "./constants";
 import { FormState, Istate } from "./types";
+import KakaoLoginButton from "@/components/KakaoLoginButton";
 
 export default function LogIn() {
   const [state, setState] = useState<Istate>(initialState);
@@ -210,6 +211,7 @@ export default function LogIn() {
                 </div>
                 <div className="w-full h-px bg-neutral-500 my-4" />
                 <Button type="submit" text="회원가입" />
+                {/* <KakaoLoginButton /> */}
               </>
             )}
           </div>
