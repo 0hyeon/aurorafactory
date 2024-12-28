@@ -21,9 +21,6 @@ export default function SocialLogin() {
           </svg>
           <span>Continue with Github</span>
         </Link> */}
-        {/* TODO:카카오로그인 */}
-        {/* <KakaoLoginButton /> */}
-
         {/* <Link
           className="primary-btn flex h-10 items-center justify-center gap-3"
           href="/sms"

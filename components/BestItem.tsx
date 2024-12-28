@@ -143,7 +143,7 @@ export default function BestItem({ data, title, subtitle }: NullableProduct) {
                         : "text-lg text-[#999] line-through pr-[10px]"
                     }`}
                   >
-                    {slide.price.toLocaleString("ko-KR")}원
+                    {Math.floor(slide.price.toLocaleString("ko-KR") * 1.1)}원
                   </div>
                   {/* 할인된 가격 */}
                   <div

@@ -7,6 +7,8 @@ import crypto from "crypto";
 import db from "@/lib/db";
 import { redirect } from "next/navigation";
 import twilio from "twilio";
+import { IKakaoUser } from "@/types/type";
+import { formatPhoneNumber } from "@/lib/utils";
 
 export const createAccount = async (
   prevState: any,
@@ -91,6 +93,7 @@ export const createAccount = async (
     }
   }
 };
+
 export async function getTokenSignUp() {
   const token = crypto.randomInt(100000, 999999).toString();
   return token;

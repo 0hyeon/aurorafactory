@@ -11,7 +11,7 @@ const Mypage = async () => {
     : [];
   console.log("orderedData : ", orderedData);
   return (
-    <div className="flex flex-col gap-10 py-8 px-6 max-w-[600px] mx-auto border-[1px] border-black rounded-md mt-5 md:mt-0">
+    <div className="flex flex-col gap-5 md:gap-10 py-8 px-6 max-w-[600px] mx-auto border-[1px] border-black rounded-md mt-5 md:mt-0">
       <OrderedComponent data={orderedData as ExtendedCart[]} />
     </div>
   );

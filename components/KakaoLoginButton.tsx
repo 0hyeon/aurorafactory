@@ -1,5 +1,6 @@
 "use client";
 
+import { ChatBubbleOvalLeftEllipsisIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -12,16 +13,22 @@ export default function KakaoLoginButton() {
   };
 
   return (
-    <div
-      className="cursor-pointer relative w-full h-16"
-      onClick={handleKakaoLogin}
-    >
-      <Image
-        fill
-        style={{ objectFit: "contain" }}
-        src={"/images/kakao_login_medium_wide.png"}
-        alt={"kakaologin"}
-      />
+    <div className="flex flex-col items-center space-y-4">
+      {/* GitHub Login */}
+      {/* <button className="w-full max-w-md px-6 py-3 bg-gray-800 text-white text-lg font-semibold rounded-lg shadow-md hover:bg-gray-900 transition duration-200">
+        Continue with GitHub
+      </button> */}
+      <div
+        className="cursor-pointer w-full max-w-md relative h-12"
+        onClick={handleKakaoLogin}
+      >
+        <Image
+          fill
+          style={{ objectFit: "contain" }}
+          src={"/images/kakao_login_medium_wide.png"}
+          alt={"Kakao Login"}
+        />
+      </div>
     </div>
   );
 }

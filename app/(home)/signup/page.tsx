@@ -211,7 +211,10 @@ export default function LogIn() {
                 </div>
                 <div className="w-full h-px bg-neutral-500 my-4" />
                 <Button type="submit" text="회원가입" />
-                {/* <KakaoLoginButton /> */}
+                <div className="w-full h-px bg-neutral-500" />
+                <div className="flex flex-col gap-3">
+                  <KakaoLoginButton />
+                </div>
               </>
             )}
           </div>
@@ -220,4 +223,3 @@ export default function LogIn() {
     </div>
   );
 }
-11;

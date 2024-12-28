@@ -65,7 +65,10 @@ export default function Best({ data }: { data: IslideData[] }) {
                     <div>{slide.text}</div>
                     <div className="flex pt-[10px] items-center">
                       <div className="text-lg text-[#999] line-through pr-[10px]">
-                        {slide.price.toLocaleString("ko-kr")}원
+                        {Math.floor(
+                          Number(slide.price.toLocaleString("ko-kr")) * 1.1
+                        )}
+                        원
                       </div>
                       <div className="text-2xl text-[#111] font-bold">
                         {DiscountPrice(slide.sale, slide.price).toLocaleString(

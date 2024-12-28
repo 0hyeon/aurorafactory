@@ -18,13 +18,13 @@ export default async function RootLayout({
 }>) {
   const cookieStore = cookies();
   const session = await getSession(cookieStore);
-
   // 만약 세션이 없으면 로그인 페이지로 리디렉션
-  const showAlert = session.id === 3;
+  const showAlert = session.phone === "01041096590";
   if (!session?.id) {
     redirect("/login");
   }
   if (!showAlert) {
+    console.log("session : ", session);
     redirect("/");
   }
   return (

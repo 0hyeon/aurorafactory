@@ -1,50 +1,50 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import {
   handleKakaoCallback,
-  KakaoLoginSession,
+  handleKakaoLoginSession,
 } from "@/app/(home)/login/actions";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 
 export default function KakaoCallback() {
   const router = useRouter();
-  const [hasAttemptedLogin, setHasAttemptedLogin] = useState(false);
-
-  const handleLoginRedirect = () => {
-    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY}&redirect_uri=${process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI}`;
-    window.location.href = KAKAO_AUTH_URL;
-  };
+  const isProcessing = useRef(false); // 중복 요청 방지 상태
 
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get("code");
-
     if (!code) {
-      handleLoginRedirect();
+      alert("인증 코드가 없습니다. 다시 로그인해주세요.");
+      router.replace("/login");
       return;
     }
 
-    if (hasAttemptedLogin) return;
+    if (isProcessing.current) return; // 이미 요청 중이면 중단
+    isProcessing.current = true;
 
-    const handleLogin = async () => {
-      setHasAttemptedLogin(true);
-
+    const processLogin = async () => {
       try {
         const result = await handleKakaoCallback(code);
-        if (!result) throw new Error("Login failed");
+        if (!result) throw new Error("Failed to handle Kakao callback");
 
-        const { user, accessToken } = result;
-        await KakaoLoginSession(user);
+        const { user } = result;
+        await handleKakaoLoginSession(user); // 세션 처리
         router.replace("/");
       } catch (error) {
-        console.error("Login failed:", error);
-        alert("인증이 만료되었습니다. 다시 로그인해주세요.");
-        handleLoginRedirect();
+        console.error("Login error:", error);
+        alert("로그인 실패. 다시 시도해주세요.");
+        router.replace("/login");
+      } finally {
+        isProcessing.current = false; // 처리 완료 후 초기화
       }
     };
 
-    handleLogin();
-  }, [hasAttemptedLogin, router]);
+    processLogin();
+  }, [router]);
 
-  return <div>로그인 처리 중...</div>;
+  return (
+    <div className="flex items-center justify-center min-h-screen">
+      <p>로그인 처리 중...</p>
+    </div>
+  );
 }

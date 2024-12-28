@@ -90,6 +90,14 @@ export default function CartList({
       }))
     );
   }, [data]);
+  useEffect(() => {
+    if (!address) {
+      setSelectedAddress("new");
+    }
+    if (!phone) {
+      setSelectedUser("new");
+    }
+  }, [address, phone]);
 
   useEffect(() => {
     if (selectedAddress === "new") {
@@ -160,6 +168,14 @@ export default function CartList({
   };
 
   const isPurchaseDisabled = () => {
+    if (
+      data === undefined &&
+      phone === undefined &&
+      address === undefined &&
+      username === undefined
+    ) {
+      return true;
+    }
     const addressValid =
       selectedAddress === "existing" ||
       (selectedAddress === "new" &&

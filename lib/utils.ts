@@ -18,3 +18,10 @@ export function formatToWon(price: number | undefined) {
 export function cls(...classnames: string[]) {
   return classnames.join(" ");
 }
+export const formatPhoneNumber = (phone: string): string => {
+  // "+82 10-4109-6590" => "01041096590"
+  return phone
+    .replace(/\s+/g, "") // 공백 제거
+    .replace(/^\+82/, "0") // 국가번호 +82를 0으로 대체
+    .replace(/-/g, ""); // 하이픈 제거
+};
