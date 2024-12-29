@@ -13,6 +13,7 @@ export default function KakaoCallback() {
 
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get("code");
+    console.log("code : ", code);
     if (!code) {
       alert("인증 코드가 없습니다. 다시 로그인해주세요.");
       router.replace("/login");
