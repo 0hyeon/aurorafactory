@@ -31,7 +31,6 @@ export const isExistUser = async (
   ctx: z.RefinementCtx,
   flag: "email" | "phone"
 ) => {
-  console.log("isExistUser");
   const user =
     flag === "email"
       ? await getUserIdWithEmail(data.email)

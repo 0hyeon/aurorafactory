@@ -7,7 +7,7 @@ import crypto from "crypto";
 import db from "@/lib/db";
 import { redirect } from "next/navigation";
 import twilio from "twilio";
-import { IKakaoUser } from "@/types/type";
+import { IKakaoUser, SendMessageParams } from "@/types/type";
 import { formatPhoneNumber } from "@/lib/utils";
 
 export const createAccount = async (
@@ -46,14 +46,21 @@ export const createAccount = async (
     const tokenNumber = await getTokenSignUp();
 
     //await sendAlimtalk({ user_name: tokenNumber });
-    const client = twilio(
-      process.env.TWILIO_ACCOUNT_SID,
-      process.env.TWILIO_AUTH_TOKEN
-    );
-    client.messages.create({
-      body: `인증번호를 입력해주세요.  ${tokenNumber}`,
-      from: process.env.TWILIO_PHONE_NUMBER!,
-      to: formatPhoneNumberToE164(data.phone),
+
+    // twilio
+    // const client = twilio(
+    //   process.env.TWILIO_ACCOUNT_SID,
+    //   process.env.TWILIO_AUTH_TOKEN
+    // );
+    // client.messages.create({
+    //   body: `인증번호를 입력해주세요.  ${tokenNumber}`,
+    //   from: process.env.TWILIO_PHONE_NUMBER!,
+    //   to: formatPhoneNumberToE164(data.phone),
+    // });
+    // aligo
+    await sendMessageAligo({
+      receiver: data.phone,
+      msg: `인증번호를 입력해주세요.  ${tokenNumber}`,
     });
 
     return {
@@ -97,4 +104,48 @@ export const createAccount = async (
 export async function getTokenSignUp() {
   const token = crypto.randomInt(100000, 999999).toString();
   return token;
+}
+
+export async function sendMessageAligo({
+  receiver,
+  msg,
+  msg_type = "SMS",
+  title = "제목없음",
+  testmode_yn = "N",
+}: {
+  receiver: string;
+  msg: string;
+  msg_type?: string;
+  title?: string;
+  testmode_yn?: string;
+}): Promise<void> {
+  const apiUrl = process.env.MESSAGE_API_URL as string;
+
+  if (!apiUrl) {
+    throw new Error("API URL is not defined in the environment variables.");
+  }
+  console.log("receiver : ", receiver);
+  try {
+    // URL에 쿼리 파라미터 추가
+    const url = new URL(apiUrl);
+    url.searchParams.append("receiver", receiver);
+    url.searchParams.append("msg", msg);
+    url.searchParams.append("msg_type", msg_type);
+    url.searchParams.append("title", title);
+    url.searchParams.append("testmode_yn", testmode_yn);
+
+    console.log("url : ", url);
+    // 요청 전송
+    const response = await fetch(url.toString(), {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to send message: ${response.statusText}`);
+    }
+  } catch (error) {
+    console.error("Error sending message:", error);
+  }
 }

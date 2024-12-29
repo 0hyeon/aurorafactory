@@ -26,11 +26,11 @@ export const getUserIdWithEmail = async (email: string) => {
 };
 
 export const getUserIdWithPhone = async (phone: string) => {
-  console.log("phone : ", phone);
   const result = await db.user.findFirst({
     where: { phone },
     select: { id: true, phone: true },
   });
+  console.log("getUserIdWithPhone : ", result);
   return result;
 };
 export async function tokenExists(token: number) {

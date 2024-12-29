@@ -1,4 +1,5 @@
 import twilio from "twilio";
+import { sendMessageAligo } from "../signup/actions";
 
 function formatPhoneNumberToE164(phone: string | null) {
   if (phone !== null && phone.startsWith("010")) {
@@ -15,18 +16,22 @@ export async function sendTwilioMesage({
   phone,
 }: {
   tokenNumber: string;
-  phone: string | null;
+  phone: string;
 }) {
-  const client = twilio(
-    process.env.TWILIO_ACCOUNT_SID,
-    process.env.TWILIO_AUTH_TOKEN
-  );
-  await client.messages.create({
-    body: `인증번호를 입력해주세요.  ${tokenNumber}`,
-    from: process.env.TWILIO_PHONE_NUMBER!,
-    to: formatPhoneNumberToE164(phone),
-  });
+  // const client = twilio(
+  //   process.env.TWILIO_ACCOUNT_SID,
+  //   process.env.TWILIO_AUTH_TOKEN
+  // );
+  // await client.messages.create({
+  //   body: `인증번호를 입력해주세요.  ${tokenNumber}`,
+  //   from: process.env.TWILIO_PHONE_NUMBER!,
+  //   to: formatPhoneNumberToE164(phone),
+  // });
 
+  await sendMessageAligo({
+    receiver: phone,
+    msg: `인증번호를 입력해주세요.  ${tokenNumber}`,
+  });
   return;
 }
 export async function sendTwilioVbankMsg({
@@ -41,7 +46,7 @@ export async function sendTwilioVbankMsg({
   bankName: string;
   accountNum: string;
   dueDate: string;
-  phone: string | null;
+  phone: string;
   price: any;
 }) {
   const date = new Date(dueDate);
@@ -50,14 +55,19 @@ export async function sendTwilioVbankMsg({
     month: "long",
     day: "numeric",
   });
-  const client = twilio(
-    process.env.TWILIO_ACCOUNT_SID,
-    process.env.TWILIO_AUTH_TOKEN
-  );
-  await client.messages.create({
-    body: `${goodsName} ${bankName} ${accountNum} ${formattedDate}까지 ${price}원`,
-    from: process.env.TWILIO_PHONE_NUMBER!,
-    to: formatPhoneNumberToE164(phone),
+  // const client = twilio(
+  //   process.env.TWILIO_ACCOUNT_SID,
+  //   process.env.TWILIO_AUTH_TOKEN
+  // );
+  // await client.messages.create({
+  //   body: `${goodsName} ${bankName} ${accountNum} ${formattedDate}까지 ${price}원`,
+  //   from: process.env.TWILIO_PHONE_NUMBER!,
+  //   to: formatPhoneNumberToE164(phone),
+  // });
+
+  await sendMessageAligo({
+    receiver: phone,
+    msg: `${goodsName} ${bankName} ${accountNum} ${formattedDate}까지 ${price}원`,
   });
 
   return;
@@ -67,18 +77,24 @@ export async function sendTwilioVbankSuccessMsg({
   phone,
 }: {
   goodsName: string;
-  phone: string | null;
+  phone: string;
 }) {
-  console.log("sendTwilioVbankSuccessMsg : ", goodsName, phone);
-  const client = twilio(
-    process.env.TWILIO_ACCOUNT_SID,
-    process.env.TWILIO_AUTH_TOKEN
-  );
-  await client.messages.create({
-    body: `오로라팩 ${goodsName} 주문이 완료되었습니다. 감사합니다.`,
-    from: process.env.TWILIO_PHONE_NUMBER!,
-    to: formatPhoneNumberToE164(phone),
+  //console.log("sendTwilioVbankSuccessMsg : ", goodsName, phone);
+  // const client = twilio(
+  //   process.env.TWILIO_ACCOUNT_SID,
+  //   process.env.TWILIO_AUTH_TOKEN
+  // );
+  // await client.messages.create({
+  //   body: `오로라팩 ${goodsName} 주문이 완료되었습니다. 감사합니다.`,
+  //   from: process.env.TWILIO_PHONE_NUMBER!,
+  //   to: formatPhoneNumberToE164(phone),
+  // });
+
+  await sendMessageAligo({
+    receiver: phone,
+    msg: `오로라팩 ${goodsName} 주문이 완료되었습니다. 감사합니다.`,
   });
+
   return;
 }
 export async function sendTwilioCalcledMsg({
@@ -86,16 +102,21 @@ export async function sendTwilioCalcledMsg({
   phone,
 }: {
   goodsName: string;
-  phone: string | null;
+  phone: string;
 }) {
-  const client = twilio(
-    process.env.TWILIO_ACCOUNT_SID,
-    process.env.TWILIO_AUTH_TOKEN
-  );
-  await client.messages.create({
-    body: `오로라팩 ${goodsName} 주문이 최소되었습니다.`,
-    from: process.env.TWILIO_PHONE_NUMBER!,
-    to: formatPhoneNumberToE164(phone),
+  // const client = twilio(
+  //   process.env.TWILIO_ACCOUNT_SID,
+  //   process.env.TWILIO_AUTH_TOKEN
+  // );
+  // await client.messages.create({
+  //   body: `오로라팩 ${goodsName} 주문이 최소되었습니다.`,
+  //   from: process.env.TWILIO_PHONE_NUMBER!,
+  //   to: formatPhoneNumberToE164(phone),
+  // });
+
+  await sendMessageAligo({
+    receiver: phone,
+    msg: `오로라팩 ${goodsName} 주문이 최소되었습니다.`,
   });
 
   return;

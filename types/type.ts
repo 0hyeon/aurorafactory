@@ -74,3 +74,10 @@ export interface IKakaoUser {
     phone_number?: string; // optional if not always present
   };
 }
+export interface SendMessageParams {
+  receiver: string;
+  msg: string;
+  msg_type?: string;
+  title?: string;
+  testmode_yn?: string;
+}

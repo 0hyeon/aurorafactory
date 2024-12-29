@@ -1,17 +1,14 @@
 "use server";
 
-import {
-  passwordFindSchema,
-  phoneSchema,
-  psswordSetSchema,
-} from "./schemas";
-import {  getUserWithPhone, updateUser } from "./repositories";
+import { passwordFindSchema, phoneSchema, psswordSetSchema } from "./schemas";
+import { getUserWithPhone, updateUser } from "./repositories";
 import db from "@/lib/db";
 import { signTokenSchema } from "../signup/schema";
 import crypto from "crypto";
 import { sendTwilioMesage } from "./services";
 import bcrypt from "bcrypt";
 import { redirect } from "next/navigation";
+import { sendMessageAligo } from "../signup/actions";
 export const lostUserPwAction = async (
   prevState: any,
   formData: FormData
@@ -83,7 +80,13 @@ export const lostUserPwAction = async (
     //await sendAlimtalk({ user_name: tokenNumber });
 
     // 문자발송 twilio
-    await sendTwilioMesage({ tokenNumber, phone: data.phone });
+    // await sendTwilioMesage({ tokenNumber, phone: data.phone });
+
+    // 문자발송 aligo
+    await sendMessageAligo({
+      receiver: data.phone,
+      msg: `인증번호를 입력해주세요.  ${tokenNumber}`,
+    });
 
     return {
       token: true,
@@ -194,7 +197,13 @@ export const lostUserIdAction = async (
     //await sendAlimtalk({ user_name: tokenNumber });
 
     // 문자발송 twilio
-    await sendTwilioMesage({ tokenNumber, phone: data.phone });
+    // await sendTwilioMesage({ tokenNumber, phone: data.phone });
+
+    // 문자발송 aligo
+    await sendMessageAligo({
+      receiver: data.phone,
+      msg: `인증번호를 입력해주세요.  ${tokenNumber}`,
+    });
 
     return {
       token: true,
