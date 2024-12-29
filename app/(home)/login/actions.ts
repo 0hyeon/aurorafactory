@@ -53,9 +53,9 @@ export async function fetchKakaoToken(code: string) {
 
   const params = new URLSearchParams({
     grant_type: "authorization_code",
-    client_id: process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY!,
-    redirect_uri: process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI!,
-    client_secret: process.env.NEXT_PUBLIC_KAKAO_CLIENT_SECRET!,
+    client_id: process.env.KAKAO_REST_API_KEY!,
+    redirect_uri: process.env.KAKAO_REDIRECT_URI!,
+    client_secret: process.env.KAKAO_CLIENT_SECRET!,
     code,
   });
 
