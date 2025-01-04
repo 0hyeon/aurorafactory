@@ -6,6 +6,9 @@ export default function LeftMenu() {
     <div className="pl-4 fixed h-[100vh] top-0 pt-[80px] w-52 bg-slate-600 text-white">
       <ul>
         <li className="p-3 cursor-pointer">
+          <Link href="/admin/payments">결제내역</Link>
+        </li>
+        <li className="p-3 cursor-pointer">
           <Link href="/admin/upload">업로드</Link>
         </li>
         <li className="p-3 cursor-pointer">
