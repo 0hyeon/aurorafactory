@@ -12,15 +12,12 @@ interface OrderedCompProps {
   initialOrdered: Order[]; // 초기 주문 데이터
 }
 
-const CustomInput = forwardRef<HTMLButtonElement, any>(
-  ({ value, onClick }, ref) => (
-    <button onClick={onClick} ref={ref}>
-      {value}
-      <CalendarIcon className="w-5 h-5 ml-2 text-gray-500" />
-    </button>
-  )
+const CustomInput = ({ value, onClick }: any) => (
+  <button onClick={onClick}>
+    {value}
+    <CalendarIcon className="w-5 h-5 ml-2 text-gray-500" />
+  </button>
 );
-
 export default function OrderedComp({ initialOrdered }: OrderedCompProps) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [filteredOrders, setFilteredOrders] = useState<Order[]>(initialOrdered);
