@@ -24,6 +24,7 @@ function OrderedComp({ initialOrdered }: any) {
       </button>
     )
   );
+  CustomInput.displayName = "CustomInput";
 
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [filteredOrders, setFilteredOrders] = useState<Order[]>(initialOrdered);
