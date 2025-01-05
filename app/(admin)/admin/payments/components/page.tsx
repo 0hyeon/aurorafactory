@@ -18,7 +18,7 @@ const CustomInput = ({ value, onClick }: any) => (
   </button>
 );
 
-export default function OrderedComp({ initialOrdered }: OrderedCompProps) {
+function OrderedComp({ initialOrdered }: OrderedCompProps) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [filteredOrders, setFilteredOrders] = useState<Order[]>(initialOrdered);
 
@@ -103,3 +103,5 @@ export default function OrderedComp({ initialOrdered }: OrderedCompProps) {
     </div>
   );
 }
+
+export default OrderedComp;
