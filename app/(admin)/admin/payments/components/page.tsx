@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, forwardRef } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { CalendarIcon } from "@heroicons/react/24/solid";
@@ -10,12 +10,21 @@ import { Order } from "@/types/type";
 // OrderedCompProps는 타입으로만 내보내기
 
 function OrderedComp({ initialOrdered }: any) {
-  const CustomInput = ({ value, onClick }: any) => (
-    <button onClick={onClick}>
-      {value}
-      <CalendarIcon className="w-5 h-5 ml-2 text-gray-500" />
-    </button>
+  // const CustomInput = ({ value, onClick }: any) => (
+  //   <button onClick={onClick}>
+  //     {value}
+  //     <CalendarIcon className="w-5 h-5 ml-2 text-gray-500" />
+  //   </button>
+  // );
+  const CustomInput = forwardRef<HTMLButtonElement, any>(
+    ({ value, onClick }, ref) => (
+      <button onClick={onClick} ref={ref}>
+        {value}
+        <CalendarIcon className="w-5 h-5 ml-2 text-gray-500" />
+      </button>
+    )
   );
+
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [filteredOrders, setFilteredOrders] = useState<Order[]>(initialOrdered);
 
