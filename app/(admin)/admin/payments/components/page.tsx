@@ -7,7 +7,8 @@ import { CalendarIcon } from "@heroicons/react/24/solid";
 import { fetchOrderedData } from "../actions";
 import { Order } from "@/types/type";
 
-interface OrderedCompProps {
+// OrderedCompProps는 타입으로만 내보내기
+export interface OrderedCompProps {
   initialOrdered: Order[]; // 초기 주문 데이터
 }
 
