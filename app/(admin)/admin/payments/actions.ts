@@ -5,7 +5,7 @@ import { Order } from "@/types/type";
 import { Cart } from "@prisma/client";
 
 // 주문 데이터를 가져오는 서버 액션
-export async function fetchOrderedData(date?: Date): Promise<Order[]> {
+export async function fetchOrderedData(date?: Date): Promise<any> {
   const filter = date
     ? {
         createdAt: {

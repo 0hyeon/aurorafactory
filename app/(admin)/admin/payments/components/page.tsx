@@ -7,14 +7,15 @@ import { CalendarIcon } from "@heroicons/react/24/solid";
 import { fetchOrderedData } from "../actions";
 import { Order } from "@/types/type";
 
-function OrderedComp({ initialOrdered }: { initialOrdered: Order[] }) {
+// OrderedCompProps는 타입으로만 내보내기
+
+function OrderedComp({ initialOrdered }: any) {
   const CustomInput = ({ value, onClick }: any) => (
     <button onClick={onClick}>
       {value}
       <CalendarIcon className="w-5 h-5 ml-2 text-gray-500" />
     </button>
   );
-
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [filteredOrders, setFilteredOrders] = useState<Order[]>(initialOrdered);
 
