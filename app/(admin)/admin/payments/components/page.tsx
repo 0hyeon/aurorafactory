@@ -1,7 +1,6 @@
-// components/OrderedComp.tsx
 "use client";
 
-import { useState, useEffect, forwardRef } from "react";
+import { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { CalendarIcon } from "@heroicons/react/24/solid";
@@ -18,6 +17,7 @@ const CustomInput = ({ value, onClick }: any) => (
     <CalendarIcon className="w-5 h-5 ml-2 text-gray-500" />
   </button>
 );
+
 export default function OrderedComp({ initialOrdered }: OrderedCompProps) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [filteredOrders, setFilteredOrders] = useState<Order[]>(initialOrdered);
@@ -40,7 +40,7 @@ export default function OrderedComp({ initialOrdered }: OrderedCompProps) {
   });
 
   return (
-    <div className="flex flex-col w-full ">
+    <div className="flex flex-col w-full">
       <div className="mb-6">
         <label htmlFor="dateFilter" className="mr-2 text-lg">
           날짜 선택:
@@ -60,7 +60,6 @@ export default function OrderedComp({ initialOrdered }: OrderedCompProps) {
           <tr className="bg-gray-100">
             <th className="border border-gray-400 p-3">주문 ID</th>
             <th className="border border-gray-400 p-3">제품</th>
-
             <th className="border border-gray-400 p-3">상태</th>
             <th className="border border-gray-400 p-3">이름</th>
             <th className="border border-gray-400 p-3">번호</th>
@@ -70,7 +69,7 @@ export default function OrderedComp({ initialOrdered }: OrderedCompProps) {
         </thead>
         <tbody>
           {sortedOrders.map((el) => (
-            <tr key={el.id} className="hover:bg-gray-50 *:text-sm">
+            <tr key={el.id} className="hover:bg-gray-50 text-sm">
               <td className="border border-gray-300 p-3">
                 {el.orderId || "정보 없음"}
               </td>
