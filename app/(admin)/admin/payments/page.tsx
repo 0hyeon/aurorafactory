@@ -13,7 +13,7 @@ export default async function AddOptionList() {
   revalidateTag("cart");
 
   return (
-    <div className="flex w-11/12 flex-wrap gap-8 mx-auto p-14 bg-gray-50 rounded-lg shadow-lg">
+    <div className="flex w-11/12 flex-wrap gap-8 mx-auto p-10 bg-gray-50 rounded-lg shadow-lg">
       <OrderedComp
         initialOrdered={initialOrdered} // 초기 데이터 전달
       />

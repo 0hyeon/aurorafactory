@@ -81,3 +81,21 @@ export interface SendMessageParams {
   title?: string;
   testmode_yn?: string;
 }
+// 예시 Order 타입 정의
+export interface Order {
+  id: number;
+  userId: number;
+  productId: number;
+  productOptionId: number;
+  quantity: number;
+  orderstat: string | null;
+  orderId: string | null;
+  name: string | null;
+  phone: string | null;
+  address: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  user: User;
+  product: Product;
+  productOption: productOption;
+}
