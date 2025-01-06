@@ -92,6 +92,12 @@ export async function POST(request: NextRequest) {
           console.error("Twilio message send error:", error);
         }
       );
+      sendTwilioVbankSuccessMsg({
+        goodsName,
+        phone: "01055426590,01026031599",
+      }).catch((error) => {
+        console.error("Twilio message send error:", error);
+      });
 
       return new Response("OK", { status: 200 });
     } else if (resultCode === "0000" && status === "ready") {
@@ -143,6 +149,12 @@ export async function POST(request: NextRequest) {
           console.error("Twilio message send error:", error);
         }
       );
+      sendTwilioVbankSuccessMsg({
+        goodsName,
+        phone: "01055426590,01026031599",
+      }).catch((error) => {
+        console.error("Twilio message send error:", error);
+      });
 
       return new Response("OK", { status: 200 });
     } else {
