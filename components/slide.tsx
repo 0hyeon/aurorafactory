@@ -42,14 +42,14 @@ export default function Slide() {
     {
       id: 1,
       text: "오로라팩",
-      src: "/images/main_banner5.jpg",
+      src: "/images/main_banner_7.png",
       mobileSrc: "/images/mobile_banner1.png",
     },
     {
       id: 2,
       text: "오로라팩",
       src: "/images/main_banner1.png",
-      mobileSrc: "/images/mobile_banner2.jpg",
+      mobileSrc: "/images/mobile_banner1.png",
     },
   ];
   return (
@@ -63,8 +63,8 @@ export default function Slide() {
           delay: 4200,
           disableOnInteraction: false,
         }}
-        onActiveIndexChange={(e) => setSwiperIndex(e.realIndex)}
-        onSwiper={(e) => {
+        onActiveIndexChange={(e: any) => setSwiperIndex(e.realIndex)}
+        onSwiper={(e: any) => {
           setSwiper(e);
         }}
       >
