@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
 
       const redirectUrl = `${
         process.env.NODE_ENV === "production"
-          ? "https://www.aurorafactory.shop"
+          ? "https://www.aurorafac.co.kr"
           : "http://localhost:3000"
       }/paysuccess?amount=${amount || 0}&status=${
         responseBody.status || "unknown"
@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
     ) {
       const redirectUrl = `${
         process.env.NODE_ENV === "production"
-          ? "https://www.aurorafactory.shop"
+          ? "https://www.aurorafac.co.kr"
           : "http://localhost:3000"
       }/paysuccess?amount=${amount || 0}&status=${
         responseBody.status || "unknown"

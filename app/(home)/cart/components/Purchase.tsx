@@ -66,7 +66,7 @@ export default function Purchase({
       // 결제 완료 후 성공 페이지로 이동하는 URL
       const returnUrl =
         process.env.NODE_ENV === "production"
-          ? `https://www.aurorafactory.shop/api/serverAuth`
+          ? `https://www.aurorafac.co.kr/api/serverAuth`
           : `http://localhost:3000/api/serverAuth`;
 
       const clientId =
