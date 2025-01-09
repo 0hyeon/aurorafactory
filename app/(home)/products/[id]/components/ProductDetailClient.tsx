@@ -29,7 +29,7 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
     (
       optionDetails: string,
       price: string,
-      plusPrice: number, // 추가된 plusPrice 매개변수
+      plusPrice: number,
       pdOptionId: number,
       dummycount: number
     ) => {
@@ -38,17 +38,15 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
       }
 
       setSelectedOptions((prevOptions) => {
-        // 이미 선택된 옵션이 있는지 확인
         const existingOptionIndex = prevOptions.findIndex(
           (option) => option.id === pdOptionId
         );
 
         if (existingOptionIndex >= 0) {
           setAlertMessage("이미 선택된 옵션입니다.");
-          return prevOptions; // 기존 상태 유지
+          return prevOptions;
         }
 
-        // 새로운 옵션 추가
         const newOption = {
           optionDetails,
           price,
@@ -222,19 +220,130 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
         </div>
       </div>
       {/* 이미지 */}
-      <div className="relative block w-full md:w-[40%] mx-auto aspect-[1/10] overflow-hidden">
-        {product && product.productPicture?.category && (
-          <Image
+      {product.productPicture?.category === "라미봉투" && (
+        <>
+          {[
+            {
+              src: "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/18818fa1-fd39-474c-ab53-555b1367f600/width=2000,height=6830,fit=cover,format=auto,quality=80,dpr=2",
+              aspectRatio: "1 / 3.42",
+              blurDataURL:
+                "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/18818fa1-fd39-474c-ab53-555b1367f600/width=10,height=10,fit=cover,format=auto",
+            },
+            {
+              src: "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/e44e6d68-9101-4e00-d899-dd71edfb1300/width=2000,height=7759,fit=cover,format=auto,quality=80,dpr=2",
+              aspectRatio: "1 / 3.88",
+              blurDataURL:
+                "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/e44e6d68-9101-4e00-d899-dd71edfb1300/width=10,height=10,fit=cover,format=auto",
+            },
+            {
+              src: "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/3d5ca4fc-1f30-4541-8e65-6e266cc35d00/width=2000,height=9029,fit=cover,format=auto,quality=80,dpr=2",
+              aspectRatio: "1 / 4.51",
+              blurDataURL:
+                "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/3d5ca4fc-1f30-4541-8e65-6e266cc35d00/width=10,height=10,fit=cover,format=auto",
+            },
+          ].map(({ src, aspectRatio, blurDataURL }, idx) => (
+            <div
+              key={idx}
+              className="relative w-full md:w-[40%] mx-auto overflow-hidden"
+              style={{
+                aspectRatio: aspectRatio,
+              }}
+            >
+              <Image
+                src={src}
+                alt="상세페이지"
+                fill
+                placeholder="blur"
+                blurDataURL={blurDataURL}
+                className="object-contain"
+                priority={idx === 0} // 첫 번째 이미지만 우선 로드
+              />
+            </div>
+          ))}
+        </>
+      )}
+
+      {product.productPicture?.category === "에어캡봉투" && (
+        <>
+          {[
+            {
+              src: "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/758cf086-c0b9-453d-2334-49d7fa3a3f00/width=2000,height=9029,fit=contain",
+              aspectRatio: "1 / 3.42", // 2000x6830 비율
+            },
+            {
+              src: "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/a978e9cc-cfaa-406c-fad0-612e542a8d00/width=2000,height=8175,fit=contain",
+              aspectRatio: "1 / 3.88", // 2000x7759 비율
+            },
+            {
+              src: "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/fe0ddff2-9ecf-40d9-3a65-3069c4c04700/width=2000,height=1902,fit=contain",
+              aspectRatio: "1 / 4.51", // 2000x9029 비율
+            },
+          ].map(({ src, aspectRatio }, idx) => (
+            <div
+              key={idx}
+              className="relative w-full md:w-[40%] mx-auto overflow-hidden"
+              style={{
+                aspectRatio: aspectRatio, // 비율을 동적으로 설정
+              }}
+            >
+              <Image
+                src={src}
+                alt="상세페이지"
+                fill
+                placeholder="blur"
+                blurDataURL={src}
+                className="object-contain"
+              />
+            </div>
+          ))}
+        </>
+      )}
+      {product.productPicture?.category === "보냉봉투" && (
+        <>
+          {[
+            {
+              src: "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/322d5e2a-5387-469a-c2a4-fec67f588a00/width=2000,height=9231,fit=contain,format=auto,quality=80",
+              aspectRatio: "2000 / 9231",
+              blurDataURL:
+                "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/322d5e2a-5387-469a-c2a4-fec67f588a00/width=10,height=10,fit=contain,format=auto",
+            },
+            {
+              src: "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/e4aefeaa-e9d2-4998-42aa-db79aed55100/width=2000,height=8182,fit=contain,format=auto,quality=80",
+              aspectRatio: "2000 / 8182",
+              blurDataURL:
+                "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/e4aefeaa-e9d2-4998-42aa-db79aed55100/width=10,height=10,fit=contain,format=auto",
+            },
+            {
+              src: "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/0dd7d91c-6e5c-4311-f23a-7b9af1605f00/width=2000,height=2772,fit=contain,format=auto,quality=80",
+              aspectRatio: "2000 / 2772",
+              blurDataURL:
+                "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/0dd7d91c-6e5c-4311-f23a-7b9af1605f00/width=10,height=10,fit=contain,format=auto",
+            },
+          ].map(({ src, aspectRatio, blurDataURL }, idx) => (
+            <div
+              key={idx}
+              className="relative w-full md:w-[40%] mx-auto overflow-hidden"
+              style={{
+                aspectRatio: aspectRatio, // 비율을 동적으로 설정
+              }}
+            >
+              <Image
+                src={src}
+                alt="상세페이지"
+                fill
+                placeholder="blur"
+                blurDataURL={blurDataURL} // 저해상도 이미지 URL
+                className="object-contain"
+                priority={idx === 0}
+              />
+            </div>
+          ))}
+        </>
+      )}
+
+      {/* <Image
             src={
-              product.productPicture.category === "보냉봉투"
-                ? "/images/BoNengDetail.jpg"
-                : product.productPicture.category === "라미봉투"
-                ? "/images/BpSangsaePage.jpg"
-                : product.productPicture.category === "에어캡봉투"
-                ? "/images/aircapDetail.jpg"
-                : product.productPicture.category === "test2"
-                ? "/images/BpSangsaePage.jpg"
-                : ""
+      
             }
             alt="상세페이지"
             fill
@@ -251,9 +360,7 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
                 ? "/images/BpSangsaePage.jpg"
                 : ""
             }
-          />
-        )}
-      </div>
+          /> */}
     </>
   );
 };

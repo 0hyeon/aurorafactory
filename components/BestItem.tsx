@@ -28,6 +28,7 @@ interface NullableProduct {
   subtitle: string;
 }
 export default function BestItem({ data, title, subtitle }: NullableProduct) {
+  console.log(data);
   const [swiperIndex, setSwiperIndex] = useState(0); //페이지네이션
   const [isMobile, setIsMobile] = useState(false); // 모바일 여부 확인
 
@@ -91,8 +92,8 @@ export default function BestItem({ data, title, subtitle }: NullableProduct) {
           delay: 4000,
           disableOnInteraction: false,
         }}
-        onActiveIndexChange={(e) => setSwiperIndex(e.realIndex)}
-        onSwiper={(e) => setSwiper(e)}
+        onActiveIndexChange={(e: any) => setSwiperIndex(e.realIndex)}
+        onSwiper={(e: any) => setSwiper(e)}
         modules={[Grid]}
         // pagination={{
         //   clickable: true,
@@ -160,6 +161,7 @@ export default function BestItem({ data, title, subtitle }: NullableProduct) {
                     원
                   </div>
                 </div>
+                <div>구매 : {slide._count.cart}</div>
               </div>
             </Link>
           </SwiperSlide>
