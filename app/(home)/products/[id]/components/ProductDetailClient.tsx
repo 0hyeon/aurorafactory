@@ -310,7 +310,7 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
           {[
             {
               src: "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/322d5e2a-5387-469a-c2a4-fec67f588a00/width=500,height=2307.75,fit=contain,format=auto,quality=80,dpr=2",
-              aspectRatio: "500 / 2707.75",
+              aspectRatio: "500 / 2307.75",
               blurDataURL:
                 "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/322d5e2a-5387-469a-c2a4-fec67f588a00/width=10,height=10,fit=contain,format=auto",
             },
