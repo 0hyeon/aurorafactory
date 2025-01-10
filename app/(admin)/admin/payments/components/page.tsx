@@ -28,7 +28,6 @@ function OrderedComp({ initialOrdered }: any) {
 
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [filteredOrders, setFilteredOrders] = useState<Order[]>(initialOrdered);
-  console.log("filteredOrders : ", filteredOrders);
   const getFilteredOrdered = async (date: Date) => {
     const filteredData = await fetchOrderedData(date);
     setFilteredOrders(filteredData);

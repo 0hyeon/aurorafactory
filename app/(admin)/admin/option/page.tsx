@@ -6,7 +6,6 @@ import Link from "next/link";
 export default async function AddOptionList() {
   const product = await getCachedProducts();
   revalidateTag("products");
-  console.log("product : ", product);
   return (
     <div className="flex w-11/12 flex-wrap gap-8 mx-auto p-14 bg-gray-50 rounded-lg shadow-lg">
       {product &&

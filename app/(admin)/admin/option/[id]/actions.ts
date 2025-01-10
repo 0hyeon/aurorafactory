@@ -5,8 +5,6 @@ import db from "@/lib/db";
 import { unstable_cache as nextCache, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 export async function uploadProductOption(prevState: any, formData: FormData) {
-  console.log("formData : ", formData);
-  console.log("prevState : ", prevState);
   const data = {
     color: formData.get("color"),
     quantity: formData.get("quantity"),
@@ -15,9 +13,7 @@ export async function uploadProductOption(prevState: any, formData: FormData) {
     deliver_price: formData.get("deliver_price"),
     plusPrice: formData.get("plusPrice"),
   };
-  console.log("data : ", data);
   const result = OptionSchema.safeParse(data);
-  console.log("result : ", result);
   if (!result.success) {
     return result.error.flatten();
   } else {
@@ -77,8 +73,6 @@ export async function delProductOption({
   id: number;
   redirectId: number;
 }) {
-  console.log("id : ", id);
-  console.log("redirectId : ", redirectId);
   const product = db.productOption.delete({
     where: {
       id,

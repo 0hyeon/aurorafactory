@@ -24,7 +24,6 @@ export default async function RootLayout({
     redirect("/login");
   }
   if (!showAlert) {
-    console.log("session : ", session);
     redirect("/");
   }
   return (

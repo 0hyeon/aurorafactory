@@ -25,8 +25,6 @@ export default function AddOptionDetailpage({
   product: NullableProduct; // product 타입을 명확히 지정
   params: { id: string };
 }) {
-  console.log("product : ", product);
-  console.log("params : ", params.id);
   const {
     register,
     handleSubmit,
