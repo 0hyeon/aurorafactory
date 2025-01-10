@@ -19,16 +19,11 @@ export async function uploadProduct(prevState: any, formData: FormData) {
     description: formData.get("description"),
     productPictureId: formData.get("productPictureId"),
   };
-  console.log("uploadProduct : ", data);
   const result = productSchema.safeParse(data);
-  console.log("result : ", result);
-  console.log("result.error : ", result.error);
   if (!result.success) {
     return result.error.flatten();
   } else {
     const session = await getSessionCarrot(); // 세션 가져오기
-    console.log("getSessionCarrot : ", session.id);
-
     const product = await db.product.create({
       data: {
         title: result.data.title,
@@ -50,15 +45,12 @@ export async function uploadProduct(prevState: any, formData: FormData) {
       },
     });
 
-    console.log("product : ", product);
     revalidateTag("products");
     revalidateTag("product-detail");
     redirect(`/products/${product.id}`);
   }
 }
 export async function uploadUpdateProduct(prevState: any, formData: FormData) {
-  console.log("formData.get('id') : ", formData.get("id"));
-  console.log("formData.get('title') : ", formData.get("title"));
   const data = {
     id: Number(formData.get("id")),
     title: formData.get("title"),
@@ -69,7 +61,6 @@ export async function uploadUpdateProduct(prevState: any, formData: FormData) {
     productPictureId: formData.get("productPictureId"),
   };
   const result = productSchema.safeParse(data);
-  console.log("result : ", result.error);
   if (!result.success) {
     return result.error.flatten();
   } else {
@@ -92,7 +83,6 @@ export async function uploadUpdateProduct(prevState: any, formData: FormData) {
         },
       },
     });
-    console.log("udpate : ", udpate);
     revalidateTag("products");
     revalidateTag("product-detail");
     redirect(`/admin/option`);

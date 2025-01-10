@@ -224,22 +224,22 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
         <>
           {[
             {
-              src: "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/18818fa1-fd39-474c-ab53-555b1367f600/width=2000,height=6830,fit=cover,format=auto,quality=80,dpr=2",
-              aspectRatio: "1 / 3.42",
+              src: "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/18818fa1-fd39-474c-ab53-555b1367f600/width=500,height=1707.5,fit=contain,format=auto,quality=80,dpr=2",
+              aspectRatio: "2000 / 6830",
               blurDataURL:
-                "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/18818fa1-fd39-474c-ab53-555b1367f600/width=10,height=10,fit=cover,format=auto",
+                "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/18818fa1-fd39-474c-ab53-555b1367f600/width=10,height=10,fit=contain,format=auto",
             },
             {
-              src: "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/e44e6d68-9101-4e00-d899-dd71edfb1300/width=2000,height=7759,fit=cover,format=auto,quality=80,dpr=2",
-              aspectRatio: "1 / 3.88",
+              src: "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/e44e6d68-9101-4e00-d899-dd71edfb1300/width=500,height=1939.75,fit=contain,format=auto,quality=80,dpr=2",
+              aspectRatio: "2000 / 7759",
               blurDataURL:
-                "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/e44e6d68-9101-4e00-d899-dd71edfb1300/width=10,height=10,fit=cover,format=auto",
+                "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/e44e6d68-9101-4e00-d899-dd71edfb1300/width=10,height=10,fit=contain,format=auto",
             },
             {
-              src: "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/3d5ca4fc-1f30-4541-8e65-6e266cc35d00/width=2000,height=9029,fit=cover,format=auto,quality=80,dpr=2",
-              aspectRatio: "1 / 4.51",
+              src: "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/3d5ca4fc-1f30-4541-8e65-6e266cc35d00/width=500,height=3722,fit=contain,format=auto,quality=10,dpr=2",
+              aspectRatio: "2000 / 3722",
               blurDataURL:
-                "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/3d5ca4fc-1f30-4541-8e65-6e266cc35d00/width=10,height=10,fit=cover,format=auto",
+                "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/3d5ca4fc-1f30-4541-8e65-6e266cc35d00/width=10,height=10,fit=contain,format=auto",
             },
           ].map(({ src, aspectRatio, blurDataURL }, idx) => (
             <div
@@ -267,18 +267,24 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
         <>
           {[
             {
-              src: "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/758cf086-c0b9-453d-2334-49d7fa3a3f00/width=2000,height=9029,fit=contain",
-              aspectRatio: "1 / 3.42", // 2000x6830 비율
+              src: "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/758cf086-c0b9-453d-2334-49d7fa3a3f00/width=500,height=2257.25,fit=contain,format=auto,quality=80,dpr=2",
+              aspectRatio: "500 / 2257.25", // 2000x6830 비율
+              blurDataURL:
+                "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/758cf086-c0b9-453d-2334-49d7fa3a3f00/width=10,height=10,fit=contain,format=auto,quality=80,dpr=2",
             },
             {
-              src: "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/a978e9cc-cfaa-406c-fad0-612e542a8d00/width=2000,height=8175,fit=contain",
-              aspectRatio: "1 / 3.88", // 2000x7759 비율
+              src: "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/a978e9cc-cfaa-406c-fad0-612e542a8d00/width=500,height=2043.75,fit=contain,format=auto,quality=80,dpr=2",
+              aspectRatio: "500 / 2043.75", // 2000x7759 비율
+              blurDataURL:
+                "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/a978e9cc-cfaa-406c-fad0-612e542a8d00/width=10,height=10,fit=contain,format=auto,quality=80,dpr=2",
             },
             {
-              src: "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/fe0ddff2-9ecf-40d9-3a65-3069c4c04700/width=2000,height=1902,fit=contain",
-              aspectRatio: "1 / 4.51", // 2000x9029 비율
+              src: "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/fe0ddff2-9ecf-40d9-3a65-3069c4c04700/width=500,height=475.5,fit=contain,format=auto,quality=80,dpr=2",
+              aspectRatio: "500 / 475.5", // 2000x9029 비율
+              blurDataURL:
+                "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/fe0ddff2-9ecf-40d9-3a65-3069c4c04700/width=10,height=10,fit=contain,format=auto,quality=80,dpr=2",
             },
-          ].map(({ src, aspectRatio }, idx) => (
+          ].map(({ src, aspectRatio, blurDataURL }, idx) => (
             <div
               key={idx}
               className="relative w-full md:w-[40%] mx-auto overflow-hidden"
@@ -291,8 +297,9 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
                 alt="상세페이지"
                 fill
                 placeholder="blur"
-                blurDataURL={src}
+                blurDataURL={blurDataURL}
                 className="object-contain"
+                priority={idx === 0}
               />
             </div>
           ))}
@@ -302,20 +309,20 @@ const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
         <>
           {[
             {
-              src: "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/322d5e2a-5387-469a-c2a4-fec67f588a00/width=2000,height=9231,fit=contain,format=auto,quality=80",
-              aspectRatio: "2000 / 9231",
+              src: "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/322d5e2a-5387-469a-c2a4-fec67f588a00/width=500,height=2307.75,fit=contain,format=auto,quality=80,dpr=2",
+              aspectRatio: "500 / 2707.75",
               blurDataURL:
                 "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/322d5e2a-5387-469a-c2a4-fec67f588a00/width=10,height=10,fit=contain,format=auto",
             },
             {
-              src: "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/e4aefeaa-e9d2-4998-42aa-db79aed55100/width=2000,height=8182,fit=contain,format=auto,quality=80",
-              aspectRatio: "2000 / 8182",
+              src: "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/e4aefeaa-e9d2-4998-42aa-db79aed55100/width=500,height=2045.5,fit=contain,format=auto,quality=80,dpr=2",
+              aspectRatio: "500 / 2045.5",
               blurDataURL:
                 "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/e4aefeaa-e9d2-4998-42aa-db79aed55100/width=10,height=10,fit=contain,format=auto",
             },
             {
-              src: "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/0dd7d91c-6e5c-4311-f23a-7b9af1605f00/width=2000,height=2772,fit=contain,format=auto,quality=80",
-              aspectRatio: "2000 / 2772",
+              src: "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/0dd7d91c-6e5c-4311-f23a-7b9af1605f00/width=500,height=680.5,fit=contain,format=auto,quality=80,dpr=2",
+              aspectRatio: "500 / 680.5",
               blurDataURL:
                 "https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/0dd7d91c-6e5c-4311-f23a-7b9af1605f00/width=10,height=10,fit=contain,format=auto",
             },

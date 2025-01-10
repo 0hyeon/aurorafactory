@@ -101,7 +101,6 @@ export default function AddProduct({ edit }: { edit?: NullableProduct }) {
               shouldValidate: true,
               shouldDirty: true,
             });
-            console.log("Selected productPictureId:", selectedId);
           }}
           errors={state?.fieldErrors?.productPictureId} // 에러 메시지 연결
         />
