@@ -8,7 +8,7 @@ export default function HashTag() {
       <ul className="flex flex-wrap gap-[10px]">
         <li className="text-base flex-[1_1_30%] md:flex-1 underline">
           <Link
-            className="p-[8px] text-[#999] text-center shadow-md bg-white rounded-[25px] font-medium md:text-base text-[13px] flex items-center justify-center"
+            className="p-[8px] text-[#000] text-center shadow-md bg-white rounded-[25px] font-medium md:text-base text-[13px] flex items-center justify-center"
             href={"/productlist/lame"}
           >
             #라미봉투
@@ -16,7 +16,7 @@ export default function HashTag() {
         </li>
         <li className="text-base flex-[1_1_30%] md:flex-1 underline">
           <Link
-            className="p-[8px] text-[#999] text-center shadow-md bg-white rounded-[25px] font-medium md:text-base text-[13px] flex items-center justify-center"
+            className="p-[8px] text-[#000] text-center shadow-md bg-white rounded-[25px] font-medium md:text-base text-[13px] flex items-center justify-center"
             href={"/productlist/aircap"}
           >
             #뽁뽁이
@@ -24,7 +24,7 @@ export default function HashTag() {
         </li>
         <li className="text-base flex-[1_1_30%] md:flex-1 underline">
           <Link
-            className="p-[8px] text-[#999] text-center shadow-md bg-white rounded-[25px] font-medium md:text-base text-[13px] flex items-center justify-center"
+            className="p-[8px] text-[#000] text-center shadow-md bg-white rounded-[25px] font-medium md:text-base text-[13px] flex items-center justify-center"
             href={"/productlist/eunbak"}
           >
             #보냉봉투
@@ -32,19 +32,19 @@ export default function HashTag() {
         </li>
         <li
           onClick={() => alert("준비중입니다.")}
-          className="flex-[1_1_30%] md:flex-1 underline p-[8px] text-[#999] text-center shadow-md bg-white rounded-[25px] font-medium md:text-base text-[13px] flex items-center justify-center cursor-pointer"
+          className="flex-[1_1_30%] md:flex-1 underline p-[8px] text-[#000] text-center shadow-md bg-white rounded-[25px] font-medium md:text-base text-[13px] flex items-center justify-center cursor-pointer"
         >
           #안전봉투
         </li>
         <li
           onClick={() => alert("준비중입니다.")}
-          className="flex-[1_1_30%] md:flex-1 underline p-[8px] text-[#999] text-center shadow-md bg-white rounded-[25px] font-medium md:text-base text-[13px] flex items-center justify-center cursor-pointer"
+          className="flex-[1_1_30%] md:flex-1 underline p-[8px] text-[#000] text-center shadow-md bg-white rounded-[25px] font-medium md:text-base text-[13px] flex items-center justify-center cursor-pointer"
         >
           #PE폼
         </li>
         <li className="text-base flex-[1_1_30%] md:flex-1 list-none underline">
           <Link
-            className="p-[8px] text-[#999] text-center shadow-md bg-white rounded-[25px] font-medium md:text-base text-[13px] flex items-center justify-center"
+            className="p-[8px] text-[#000] text-center shadow-md bg-white rounded-[25px] font-medium md:text-base text-[13px] flex items-center justify-center"
             href={"/productlist/all"}
           >
             #전체상품
