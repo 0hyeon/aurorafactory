@@ -8,6 +8,7 @@ import { notFound, redirect } from "next/navigation";
 import { Suspense } from "react";
 import { getCachedLikeStatus } from "../(admin)/actions";
 import { logOut } from "./actions";
+import KakaoChat from "./components/KakaoChat";
 
 export default async function TabLayout({
   children,
@@ -76,7 +77,7 @@ export default async function TabLayout({
         {/* 헤더 */}
         <Header cartcount={cartcount || 0} />
       </div>
-
+      <KakaoChat />
       {/* 메인 컨텐츠 */}
       <main className="w-full mx-auto md:px-0 pt-[105px]  md:pt-[15px]  md:pb-[60px]">
         {children}
