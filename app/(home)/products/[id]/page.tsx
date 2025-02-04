@@ -75,6 +75,7 @@ export async function getProducts() {
       _count: {
         select: {
           productoption: true,
+          cart: true,
         },
       },
     },

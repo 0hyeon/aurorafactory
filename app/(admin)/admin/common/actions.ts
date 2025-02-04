@@ -82,7 +82,6 @@ async function uploadFileWithPreparedUrl(file: File): Promise<string> {
 
   const { result: resultJson } = await uploadResponse.json();
   const { id } = resultJson;
-  console.log("id : ", id);
   return `https://imagedelivery.net/z_5GPN_XNUgqhNAyIaOv1A/${id}`;
 }
 
@@ -97,6 +96,5 @@ export async function getUploadUrl() {
     }
   );
   const data = await response.json();
-  console.log("data : ", data);
   return data;
 }
