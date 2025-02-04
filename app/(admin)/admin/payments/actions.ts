@@ -30,6 +30,9 @@ export async function fetchOrderedData(date?: Date): Promise<any> {
       product: true,
       productOption: true,
     },
+    orderBy: {
+      createdAt: "desc",
+    },
     take: 25,
   });
 }
