@@ -1,5 +1,5 @@
-import Link from "next/link";
-import React from "react";
+import Link from 'next/link'
+import React from 'react'
 const Footer = () => {
   return (
     <>
@@ -32,7 +32,7 @@ const Footer = () => {
                 [KOR] 이메일 : djdjdjk@hanmail.com 신규 거래 문의 :
                 010-2603-1599
               </li>
-              <li>[ENG, CHN] 이메일 : djdjdjk@hanmail.com</li>
+              <li>[ENG, CHN] 이메일 : djdjdjk@hanmail.net</li>
               <li className="mt-6 font-bold">
                 Copyright AuroraFactory co., Ltd. All right reserved.
               </li>
@@ -46,7 +46,7 @@ const Footer = () => {
         <div></div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer
