@@ -7,6 +7,7 @@ import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import Image from 'next/image'
+import Link from 'next/link'
 export default function Slide() {
   const [swiperIndex, setSwiperIndex] = useState(0) //페이지네이션
   const [swiper, setSwiper] = useState<SwiperClass>() //슬라이드
@@ -42,31 +43,26 @@ export default function Slide() {
     {
       id: 1,
       text: '오로라팩',
-      src: '/images/main_banner_7.png',
-      mobileSrc: '/images/mobile_banner2.jpeg',
+      src: '/images/main_banner_250405_1.png',
+      href: '/productlist/eunbak',
+      mobileSrc: '/images/mobile_banner_250405_1.png',
     },
     {
       id: 2,
       text: '오로라팩',
-      src: '/images/main_banner1.png',
-      mobileSrc: '/images/mobile_banner1.png',
+      src: '/images/main_banner_250405_3.png',
+      mobileSrc: '/images/mobile_banner_250405_2.png',
     },
     {
       id: 3,
       text: '오로라팩',
-      src: '/images/main_banner_250405_1.png',
-      mobileSrc: '/images/mobile_banner1.png',
+      src: '/images/main_banner_7.png',
+      mobileSrc: '/images/mobile_banner2.jpeg',
     },
     {
       id: 4,
       text: '오로라팩',
-      src: '/images/main_banner_250405_2.png',
-      mobileSrc: '/images/mobile_banner1.png',
-    },
-    {
-      id: 5,
-      text: '오로라팩',
-      src: '/images/main_banner_250405_3.png',
+      src: '/images/main_banner1.png',
       mobileSrc: '/images/mobile_banner1.png',
     },
   ]
@@ -91,36 +87,62 @@ export default function Slide() {
             {isMobile ? (
               // 모바일일 때 레이아웃
               <div className="relative w-full aspect-[375/314] flex justify-center items-center bg-gray-100">
-                <Image
-                  alt={String(slide.id)}
-                  src={slide.mobileSrc}
-                  fill
-                  style={{
-                    objectFit: 'contain',
-                  }}
-                />
+                {slide.href ? (
+                  <Link href={`${slide.href}`}>
+                    <Image
+                      alt={String(slide.id)}
+                      src={slide.mobileSrc}
+                      fill
+                      style={{
+                        objectFit: 'contain',
+                      }}
+                    />
+                  </Link>
+                ) : (
+                  <Image
+                    alt={String(slide.id)}
+                    src={slide.mobileSrc}
+                    fill
+                    style={{
+                      objectFit: 'contain',
+                    }}
+                  />
+                )}
               </div>
             ) : (
               // PC일 때 레이아웃 1920x360,16/3
               <div className="relative w-full aspect-[16/3]">
-                <Image
-                  alt={String(slide.id)}
-                  src={slide.src}
-                  fill
-                  style={{
-                    objectFit: 'cover',
-                  }}
-                />
+                {slide.href ? (
+                  <Link href={`${slide.href}`}>
+                    <Image
+                      alt={String(slide.id)}
+                      src={slide.src}
+                      fill
+                      style={{
+                        objectFit: 'cover',
+                      }}
+                    />
+                  </Link>
+                ) : (
+                  <Image
+                    alt={String(slide.id)}
+                    src={slide.src}
+                    fill
+                    style={{
+                      objectFit: 'cover',
+                    }}
+                  />
+                )}
               </div>
             )}
           </SwiperSlide>
         ))}
       </Swiper>
-      <div className="relative w-full max-w-[1000px] mx-auto font-normal">
+      <div className="relative w-full max-w-[1500px] mx-auto font-normal">
         {/* 네비게이션 컨트롤 */}
-        <div className="absolute z-[1] flex right-0 md:right-4 left-0 md:left-[inherit] bottom-4 mx-auto md:mx-0 text-white rounded-[100px] w-[70px] md:w-[110px] py-1 md:py-2 text-sm md:text-base justify-around items-center bg-[rgba(0,0,0,0.5)]">
+        <div className="absolute z-[1] flex right-0 md:right-1/2 md:translate-x-1/2 left-0 md:left-[inherit] bottom-2 mx-auto md:mx-0 text-white rounded-[100px] w-[70px] md:w-[65px] py-1 md:py-0 text-sm md:text-sm justify-around items-center bg-[rgba(0,0,0,0.5)]">
           <div
-            className="w-6 h-6 md:w-8 md:h-8 cursor-pointer bg-no-repeat bg-center bg-cover"
+            className="w-6 h-6 md:w-6 md:h-6 cursor-pointer bg-no-repeat bg-center bg-cover"
             style={{ backgroundImage: "url('/images/left.png')" }}
             onClick={handlePrev}
           ></div>
@@ -130,7 +152,7 @@ export default function Slide() {
             <span>{slideData.length}</span>
           </div>
           <div
-            className="w-6 h-6 md:w-8 md:h-8 cursor-pointer bg-no-repeat bg-center bg-cover"
+            className="w-6 h-6 md:w-6 md:h-6 cursor-pointer bg-no-repeat bg-center bg-cover"
             style={{ backgroundImage: "url('/images/right.png')" }}
             onClick={handleNext}
           ></div>
