@@ -51,6 +51,24 @@ export default function Slide() {
       src: '/images/main_banner1.png',
       mobileSrc: '/images/mobile_banner1.png',
     },
+    {
+      id: 3,
+      text: '오로라팩',
+      src: '/images/main_banner_250405_1.png',
+      mobileSrc: '/images/mobile_banner1.png',
+    },
+    {
+      id: 4,
+      text: '오로라팩',
+      src: '/images/main_banner_250405_2.png',
+      mobileSrc: '/images/mobile_banner1.png',
+    },
+    {
+      id: 5,
+      text: '오로라팩',
+      src: '/images/main_banner_250405_3.png',
+      mobileSrc: '/images/mobile_banner1.png',
+    },
   ]
   return (
     <div>
