@@ -1,11 +1,11 @@
-"use client";
+'use client'
 
-import { useState, useEffect, forwardRef } from "react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { CalendarIcon } from "@heroicons/react/24/solid";
-import { fetchOrderedData } from "../actions";
-import { Order } from "@/types/type";
+import { useState, useEffect, forwardRef } from 'react'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
+import { CalendarIcon } from '@heroicons/react/24/solid'
+import { fetchOrderedData } from '../actions'
+import { Order } from '@/types/type'
 
 // OrderedCompProps는 타입으로만 내보내기
 
@@ -23,27 +23,27 @@ function OrderedComp({ initialOrdered }: any) {
         <CalendarIcon className="w-5 h-5 ml-2 text-gray-500" />
       </button>
     )
-  );
-  CustomInput.displayName = "CustomInput";
+  )
+  CustomInput.displayName = 'CustomInput'
 
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [filteredOrders, setFilteredOrders] = useState<Order[]>(initialOrdered);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
+  const [filteredOrders, setFilteredOrders] = useState<Order[]>(initialOrdered)
   const getFilteredOrdered = async (date: Date) => {
-    const filteredData = await fetchOrderedData(date);
-    setFilteredOrders(filteredData);
-  };
+    const filteredData = await fetchOrderedData(date)
+    setFilteredOrders(filteredData)
+  }
 
   useEffect(() => {
     if (selectedDate !== null) {
-      getFilteredOrdered(selectedDate);
+      getFilteredOrdered(selectedDate)
     } else {
-      setFilteredOrders(initialOrdered);
+      setFilteredOrders(initialOrdered)
     }
-  }, [selectedDate, initialOrdered]);
+  }, [selectedDate, initialOrdered])
 
   const sortedOrders = [...filteredOrders].sort((a, b) => {
-    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-  });
+    return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+  })
 
   return (
     <div className="flex flex-col w-full">
@@ -77,38 +77,38 @@ function OrderedComp({ initialOrdered }: any) {
           {sortedOrders.map((el) => (
             <tr key={el.id} className="hover:bg-gray-50 text-sm">
               <td className="border border-gray-300 p-3">
-                {el.orderId || "정보 없음"}
+                {el.orderId || '정보 없음'}
               </td>
               <td className="border border-gray-300 p-3">
-                {(`[${el.product?.category}] ` || "") +
-                  (el.product?.title || "") +
-                  " " +
+                {(`[${el.product?.category}] ` || '') +
+                  (el.product?.title || '') +
+                  ' ' +
                   el.quantity * el.productOption?.quantity}
                 장
               </td>
               <td className="border border-gray-300 p-3">
-                {el.orderstat || "상태 없음"}
+                {el.orderstat || '상태 없음'}
               </td>
               <td className="border border-gray-300 p-3">
-                {el.user?.username || "정보 없음"}
+                {el.user?.username || '정보 없음'}
               </td>
               <td className="border border-gray-300 p-3">
-                {el.user?.phone || "정보 없음"}
+                {el.user?.phone || '정보 없음'}
               </td>
               <td className="border border-gray-300 p-3">
                 {(el.user?.address || el.address) +
-                  (el.user?.detailaddress || "") || "정보 없음"}
+                  (el.user?.detailaddress || '') || '정보 없음'}
               </td>
 
               <td className="border border-gray-300 p-3">
-                {new Date(el.createdAt).toLocaleDateString()}
+                {new Date(el.updatedAt).toLocaleDateString()}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
-  );
+  )
 }
 
-export default OrderedComp;
+export default OrderedComp
