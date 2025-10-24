@@ -7,6 +7,7 @@ import { cookies } from "next/headers";
 import { getIronSession } from "iron-session";
 import { SessionContent } from "@/lib/types";
 import { getCachedLikeStatus } from "@/app/(admin)/actions";
+import { number } from "zod";
 
 // Define types for clarity
 interface IupdateCart {
@@ -112,9 +113,13 @@ export async function updateCancleCart({ orderId, stats }: IupdateCartCancle) {
       },
     });
 
+    // const session = await getSessionFromCookies();
+    // if (!session.id) {
+    //   await getCachedLikeStatus(session.id!);
+    // }
     const session = await getSessionFromCookies();
-    if (!session.id) {
-      await getCachedLikeStatus(session.id!);
+    if (session.id) {
+      await getCachedLikeStatus(session.id);
     }
 
     return { success: true };
@@ -164,4 +169,50 @@ export const getCachedProductSrc = nextCache(getProductSrc, ["product-src"], {
 export async function revalidateCartCount() {
   revalidateTag("cart-count");
   revalidateTag("cart");
+}
+
+export type ActionResult<T = undefined> =
+  | { ok: true; data?: T }
+  | { ok: false; message: string };
+
+export async function setCartQuantity({
+  id,
+  quantity,
+}: {
+  id: number;
+  quantity: number;
+}): Promise<ActionResult<{ quantity: number }>> {
+  try {
+    const session = await getSessionFromCookies();
+    if (!session.id) {
+      return { ok: false, message: "로그인이 필요합니다." };
+    }
+
+    const target = await db.cart.findUnique({
+      where: { id },
+      select: { id: true, userId: true, quantity: true },
+    });
+    if (!target)
+      return { ok: false, message: "장바구니 항목을 찾을 수 없습니다." };
+    if (Number(target.userId) !== Number(session.id)) {
+      return { ok: false, message: "권한이 없습니다." };
+    }
+
+    // 수량 클램프 (최소1, 최대 999 등)
+    const nextQty = Number.isFinite(quantity)
+      ? Math.max(1, Math.min(Math.floor(quantity), 999))
+      : 1;
+
+    if (nextQty !== target.quantity) {
+      await db.cart.update({
+        where: { id },
+        data: { quantity: nextQty },
+      });
+      revalidateCartCount();
+    }
+    return { ok: true, data: { quantity: nextQty } };
+  } catch (e) {
+    console.error("[setCartQuantity] error:", e);
+    return { ok: false, message: "수량 저장에 실패했습니다." };
+  }
 }

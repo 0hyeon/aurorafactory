@@ -1,8 +1,8 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useTransition } from "react";
 import Image from "next/image";
 import Purchase from "./Purchase";
-import { delCart } from "../actions";
+import { delCart, setCartQuantity } from "../actions";
 import AddressSearch from "@/components/address";
 import { formatToWon } from "@/lib/utils";
 import { OptionSchemaAddress, OptionSchemaUser } from "../schema";
@@ -57,6 +57,11 @@ export default function CartList({
   address,
   username,
 }: CartListProps) {
+  // cart quntity state management
+  const [isSaving, startTransition] = useTransition();
+  const saveTimers = useRef<Record<number, ReturnType<typeof setTimeout>>>({});
+  const lastSavedQtyRef = useRef<Record<number, number>>({});
+  // payment and address state management
   const [paymentMethod, setPaymentMethod] = useState<string>("");
   const [vbankHolder, setVbankHolder] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
@@ -89,9 +94,19 @@ export default function CartList({
         ),
       }))
     );
+    //최초 랜더 시. ㅓ버 기준 수량 수냅샷 저장 (실패 시 원복용)
+    const snap: Record<number, number> = {};
+    data.forEach((it) => (snap[it.id] = it.quantity));
+    lastSavedQtyRef.current = snap;
   }, [data]);
   useEffect(() => {
-    if (!address) {
+    return () => {
+      Object.values(saveTimers.current).forEach(clearTimeout);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (address === "null/null") {
       setSelectedAddress("new");
     }
     if (!phone) {
@@ -136,33 +151,94 @@ export default function CartList({
       window.dispatchEvent(new Event("cartUpdated"));
     }
   };
+  const schedulePersistQuantity = (id: number, quantity: number) => {
+    // 동일 항목에 대한 이전 타이머가 있으면 취소
+    if (saveTimers.current[id]) clearTimeout(saveTimers.current[id]);
+    // 400ms 디바운스 후 서버 저장 (연타 방지)
+    saveTimers.current[id] = setTimeout(() => {
+      startTransition(async () => {
+        const res = await setCartQuantity({ id, quantity });
+        if (!res.ok) {
+          // 실패 시 원복
+          const prevQty = lastSavedQtyRef.current[id] ?? 1;
+          setCart((prev) =>
+            prev.map((item) => {
+              if (item.id !== id) return item;
+              const restoredTotal = calculateTotalPrice(
+                item.basePrice,
+                Number(item.option.plusPrice) || 0,
+                Number(item.option.product.discount) || 0,
+                Number(item.option.plusdiscount) || 0,
+                prevQty,
+                item.option.quantity,
+                item.option.deliver_price || 0
+              );
+              return { ...item, quantity: prevQty, totalPrice: restoredTotal };
+            })
+          );
+          alert(res.message || "수량 저장 실패");
+        } else {
+          // 성공 시 최종 수량 스냅샷 갱신
+          lastSavedQtyRef.current[id] = res.data?.quantity ?? quantity;
+          // 헤더/배지 등 업데이트 이벤트
+          window.dispatchEvent(new Event("cartUpdated"));
+        }
+      });
+    }, 400);
+  };
+  // const handleQuantityChange = (id: number, delta: number) => {
+  //   setCart((prevCart) =>
+  //     prevCart.map((item) => {
+  //       if (item.id === id) {
+  //         // 수량 업데이트
+  //         const newQuantity = Math.max(item.quantity + delta, 1); // 최소 수량 1 유지
 
+  //         // 총 가격 계산
+  //         const newTotalPrice = calculateTotalPrice(
+  //           item.basePrice,
+  //           Number(item.option.plusPrice) || 0, // 추가 금액
+  //           Number(item.option.product.discount) || 0, // 기본 할인율
+  //           Number(item.option.plusdiscount) || 0, // 추가 할인율
+  //           newQuantity, // 업데이트된 수량
+  //           item.option.quantity,
+  //           item.option.deliver_price || 0 // 배송비
+  //         );
+
+  //         // 수정된 아이템 반환
+  //         return {
+  //           ...item,
+  //           quantity: newQuantity,
+  //           totalPrice: newTotalPrice,
+  //         };
+  //       }
+  //       return item; // 다른 아이템은 변경하지 않음
+  //     })
+  //   );
+  // };
   const handleQuantityChange = (id: number, delta: number) => {
     setCart((prevCart) =>
       prevCart.map((item) => {
-        if (item.id === id) {
-          // 수량 업데이트
-          const newQuantity = Math.max(item.quantity + delta, 1); // 최소 수량 1 유지
+        if (item.id !== id) return item;
 
-          // 총 가격 계산
-          const newTotalPrice = calculateTotalPrice(
-            item.basePrice,
-            Number(item.option.plusPrice) || 0, // 추가 금액
-            Number(item.option.product.discount) || 0, // 기본 할인율
-            Number(item.option.plusdiscount) || 0, // 추가 할인율
-            newQuantity, // 업데이트된 수량
-            item.option.quantity,
-            item.option.deliver_price || 0 // 배송비
-          );
+        // 최소 1 유지
+        const nextQty = Math.max(item.quantity + delta, 1);
+        const nextTotal = calculateTotalPrice(
+          item.basePrice,
+          Number(item.option.plusPrice) || 0,
+          Number(item.option.product.discount) || 0,
+          Number(item.option.plusdiscount) || 0,
+          nextQty,
+          item.option.quantity,
+          item.option.deliver_price || 0
+        );
 
-          // 수정된 아이템 반환
-          return {
-            ...item,
-            quantity: newQuantity,
-            totalPrice: newTotalPrice,
-          };
-        }
-        return item; // 다른 아이템은 변경하지 않음
+        // 1) 즉시 낙관적 갱신
+        const nextItem = { ...item, quantity: nextQty, totalPrice: nextTotal };
+
+        // 2) 디바운스로 서버 반영 (느슨한 결합)
+        schedulePersistQuantity(id, nextQty);
+
+        return nextItem;
       })
     );
   };
@@ -278,14 +354,28 @@ export default function CartList({
                       {formatToWon(item.totalPrice | 0)}원
                     </div>
                     <div className="flex gap-2 my-3 items-center">
+                      {/* <button
+                        onClick={() => handleQuantityChange(item.id, -1)}
+                        className="px-3 py-1 border rounded"
+                      >
+                        -
+                      </button> */}
                       <button
+                        disabled={isSaving}
                         onClick={() => handleQuantityChange(item.id, -1)}
                         className="px-3 py-1 border rounded"
                       >
                         -
                       </button>
                       <span>{item.quantity}</span>
+                      {/* <button
+                        onClick={() => handleQuantityChange(item.id, 1)}
+                        className="px-3 py-1 border rounded"
+                      >
+                        +
+                      </button> */}
                       <button
+                        disabled={isSaving}
                         onClick={() => handleQuantityChange(item.id, 1)}
                         className="px-3 py-1 border rounded"
                       >
