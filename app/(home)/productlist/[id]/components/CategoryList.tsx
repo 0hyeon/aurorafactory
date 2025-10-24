@@ -108,9 +108,11 @@ const CategoryList = ({
                         {Number(el.price)}원
                       </span>
                     </div>
-                    <div className="text-center my-3 text-sm text-[#333]">
-                      (리뷰 0개)
-                    </div>
+                    {el._count.cart > 0 ? (
+                      <div className="text-center mt-7 text-sm">
+                        구매건수 : 🔥{el._count.cart}
+                      </div>
+                    ) : null}
                   </div>
                 </Link>
               ))}
@@ -148,9 +150,14 @@ const CategoryList = ({
                       {Number(el.price)}원
                     </span>
                   </div>
-                  <div className="text-center mt-3 md:mt-6 text-sm text-[#333]">
+                  {/* <div className="text-center mt-3 md:mt-6 text-sm text-[#333]">
                     (리뷰 0개)
-                  </div>
+                  </div> */}
+                  {el._count.cart > 0 ? (
+                    <div className="text-center mt-7 text-sm">
+                      구매건수 : 🔥{el._count.cart}
+                    </div>
+                  ) : null}
                 </div>
               </Link>
             ))}

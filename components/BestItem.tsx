@@ -160,7 +160,9 @@ export default function BestItem({ data, title, subtitle }: NullableProduct) {
                     원
                   </div>
                 </div>
-                {/* <div>구매 : {slide._count.cart}</div> */}
+                {slide._count.cart > 0 ? (
+                  <div>구매건수 : 🔥{slide._count.cart}</div>
+                ) : null}
               </div>
             </Link>
           </SwiperSlide>

@@ -18,6 +18,12 @@ export async function getProductCategory({ category }: { category: string }) {
           photo: true,
         },
       },
+      _count: {
+        select: {
+          productoption: true,
+          cart: true,
+        },
+      },
     },
   });
   return productCategory as IProduct[];

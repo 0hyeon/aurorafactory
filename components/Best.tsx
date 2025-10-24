@@ -77,9 +77,9 @@ export default function Best({ data }: { data: IslideData[] }) {
                         원
                       </div>
                     </div>
-                    <div className="text-base text-left">
+                    {/* <div className="text-base text-left">
                       (리뷰{slide.reviews}개)
-                    </div>
+                    </div> */}
                   </div>
                 </Link>
               </SwiperSlide>

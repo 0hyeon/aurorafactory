@@ -45,6 +45,10 @@ export interface IProduct extends Product {
   } | null;
   cart?: Cart[];
   user?: User;
+  _count: {
+    productoption: number;
+    cart: number;
+  };
 }
 
 export type NullableProduct = IProduct | null;
