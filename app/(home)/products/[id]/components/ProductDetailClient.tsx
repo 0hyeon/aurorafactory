@@ -19,7 +19,7 @@ interface CartButtonProps {
   cartId: number;
 }
 
-const ProductDetailClient = ({ product, params }: ProductDetailClientProps) => {
+const ProductDetailClient = ({ product, params }: any) => {
   console.log("product : ", product);
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
   const [quantity, setQuantity] = useState<number>(1);
