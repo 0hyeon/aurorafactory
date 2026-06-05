@@ -9,6 +9,30 @@ import CategoryList from "./components/CategoryList";
 export type Mapping = {
   [key: string]: string;
 };
+
+const categoryMeta: Record<string, { title: string; description: string }> = {
+  lame: {
+    title: '라미봉투',
+    description: '가성비 탁월한 라미봉투. 오로라팩 공장직 포장재를 합리적인 가격으로 만나보세요.',
+  },
+  aircap: {
+    title: '에어캡봉투',
+    description: '완충효과 100% 에어캡봉투. 안전한 배송을 위한 오로라팩의 포장 솔루션.',
+  },
+  eunbak: {
+    title: '보냉봉투',
+    description: '온도 유지 보냉봉투. 신선식품 배송을 위한 오로라팩의 보냉 포장재.',
+  },
+};
+
+export async function generateMetadata({ params }: { params: { id: string } }) {
+  const info = categoryMeta[params.id] ?? {
+    title: '전체상품',
+    description: '오로라팩 공장직 포장재 전체 상품 목록. 발포지·에어캡봉투·보냉봉투·라미봉투.',
+  };
+  return { title: info.title, description: info.description };
+}
+
 const ProductListPage = async ({ params }: { params: { id: string } }) => {
   const category = params.id;
 

@@ -2,20 +2,7 @@
 import db from "@/lib/db";
 import { notFound } from "next/navigation";
 import { unstable_cache as nextCache, revalidateTag } from "next/cache";
-import { Product } from "@prisma/client";
 import ProductDetailClient from "./components/ProductDetailClient";
-import { getSession } from "@/lib/session";
-import { cookies } from "next/headers";
-
-async function getIsOwner(userId: number) {
-  const cookieStore = cookies();
-  const session = await getSession(cookieStore);
-
-  if (session.id) {
-    return session.id === userId;
-  }
-  return false;
-}
 
 export const getCachedProduct = nextCache(getProduct, ["product-detail"], {
   tags: ["product-detail"],
@@ -23,28 +10,33 @@ export const getCachedProduct = nextCache(getProduct, ["product-detail"], {
 export const getCachedProducts = nextCache(getProducts, ["products"], {
   tags: ["products"],
 });
-const getCachedProductTitle = nextCache(getProductTitle, ["product-title"], {
-  tags: ["product-title"],
-});
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
-  const product = await getCachedProductTitle(Number(params.id));
+  const id = Number(params.id);
+  if (isNaN(id)) return {};
+
+  const product = await getCachedProduct(id);
+  if (!product) return {};
+
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.aurorafac.co.kr';
+  const imageUrl = product.productPicture?.photo
+    ? `${product.productPicture.photo}/public`
+    : `${BASE_URL}/images/aurora_logo.jpg`;
+  const description = product.description.replace(/\s+/g, ' ').trim().slice(0, 120);
+
   return {
-    title: product?.title,
+    title: product.title,
+    description,
+    openGraph: {
+      title: product.title,
+      description,
+      url: `${BASE_URL}/products/${product.id}`,
+      type: 'website',
+      images: [{ url: imageUrl, width: 800, height: 800, alt: product.title }],
+    },
   };
 }
 
-export async function getProductTitle(id: number) {
-  const product = db.product.findUnique({
-    where: {
-      id,
-    },
-    select: {
-      title: true,
-    },
-  });
-  return product;
-}
 
 export async function getProduct(id: number) {
   const product = db.product.findUnique({
@@ -103,13 +95,32 @@ export default async function ProductDetail({
   if (!product) {
     return notFound();
   }
-  const isOwner = await getIsOwner(product.userId);
-
-  const revalidate = async () => {
-    "use server";
-    revalidateTag("product-title");
-  };
   revalidateTag("products");
 
-  return <ProductDetailClient product={product} params={id} />;
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.aurorafac.co.kr';
+  const productJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.title,
+    description: product.description,
+    image: product.productPicture?.photo ? `${product.productPicture.photo}/public` : undefined,
+    offers: {
+      '@type': 'Offer',
+      price: product.price,
+      priceCurrency: 'KRW',
+      availability: 'https://schema.org/InStock',
+      url: `${BASE_URL}/products/${product.id}`,
+      seller: { '@type': 'Organization', name: '주식회사 오로라팩' },
+    },
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd).replace(/</g, '\\u003c') }}
+      />
+      <ProductDetailClient product={product} params={id} />
+    </>
+  );
 }

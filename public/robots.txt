@@ -1,2 +1,3 @@
 User-agent: *
-Allow:/
+Allow: /
+Sitemap: https://www.aurorafac.co.kr/sitemap.xml

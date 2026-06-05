@@ -6,10 +6,40 @@ import Script from 'next/script'
 const inter = Inter({ subsets: ['latin'] })
 
 const GTM_ID = 'GTM-MHMCGJ6M'
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.aurorafac.co.kr'
 
 export const metadata: Metadata = {
+  metadataBase: new URL(BASE_URL),
   title: { template: '%s | 오로라팩', default: '오로라팩' },
-  description: '오로라팩 발포봉투 발포지 은박봉투 보냉봉투 pe폼 라미봉투',
+  description: '포장재 전문 공장직 쇼핑몰. 발포지·에어캡봉투·보냉봉투·라미봉투를 합리적인 가격으로 만나보세요.',
+  openGraph: {
+    siteName: '오로라팩',
+    locale: 'ko_KR',
+    type: 'website',
+    images: [{ url: '/images/aurora_logo.jpg', width: 800, height: 600, alt: '오로라팩 로고' }],
+  },
+}
+
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: '주식회사 오로라팩',
+  url: BASE_URL,
+  logo: `${BASE_URL}/images/aurora_logo.jpg`,
+  contactPoint: {
+    '@type': 'ContactPoint',
+    telephone: '010-2603-1599',
+    contactType: 'customer service',
+    areaServed: 'KR',
+    availableLanguage: 'Korean',
+  },
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '보개면 오두리 161',
+    addressLocality: '안성시',
+    addressRegion: '경기도',
+    addressCountry: 'KR',
+  },
 }
 
 export default function RootLayout({
@@ -18,12 +48,15 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="ko">
       <head>
-        {/* Google Tag Manager Script */}
         <meta
           name="naver-site-verification"
           content="9c48e3deaa5a2ff218864a2a479361f3f8d42829"
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd).replace(/</g, '\\u003c') }}
         />
         <Script id="gtm-script" strategy="afterInteractive">
           {`
@@ -36,7 +69,6 @@ export default function RootLayout({
         </Script>
       </head>
       <body className={`${inter.className}`}>
-        {/* Google Tag Manager NoScript */}
         <noscript>
           <iframe
             src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
