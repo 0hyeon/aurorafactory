@@ -29,7 +29,7 @@ const Footer = () => {
               <li>사업자등록번호 : 569-81-03198 [사업자정보확인]</li>
               <li>개인정보보호책임자 : 김영현</li>
               <li>
-                [KOR] 이메일 : djdjdjk@hanmail.com 신규 거래 문의 :
+                [KOR] 이메일 : djdjdjk@hanmail.net 신규 거래 문의 :
                 010-2603-1599
               </li>
               <li>[ENG, CHN] 이메일 : djdjdjk@hanmail.net</li>
